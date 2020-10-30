@@ -421,22 +421,18 @@ def main():
 
     elif(args.add != None):
         firebaseManager.addManga(args.add[0])
-        print()
         sys.exit()
 
     elif(args.delete != None):
         firebaseManager.deleteManga(args.delete[0])
-        print()
         sys.exit()
 
     elif(args.update != None):
         firebaseManager.updateManga(args.update[0])
-        print()
         sys.exit()
 
     elif(args.updateall == True):
         firebaseManager.updateAllManga()
-        print()
         sys.exit()
 
 if __name__ == "__main__":
