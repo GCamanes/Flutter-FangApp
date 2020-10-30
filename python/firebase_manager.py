@@ -14,6 +14,7 @@ import sys
 import firebase_admin
 import google.cloud
 from firebase_admin import credentials, firestore
+from operator import itemgetter
 
 #-----------------------------------------------------------------------------------
 # CONSTANTS
@@ -30,6 +31,10 @@ SERVICE_ACCOUNT_KEY_PATH = '{}/ServiceAccountKey.json'.format(PATH)
 LIST_COLLECTION = u'mangasList'
 LIST_DOCUMENT = u'mangas'
 LIST_DOCUMENT_FIELD = u'list'
+
+MANGAS_COLLECTION = u'mangasChapters'
+MANGA_LIST_FIELD = u'chaptersList'
+MANGA_CHAPTERS_COLLECTION = u'chapters'
 
 # MANGA WEBSITE
 WEBSITE = 'http://www.mangapanda.com/'
@@ -60,12 +65,43 @@ class FirebaseManager:
             sys.exit()
         return mangasList
 
+    def findMangaInMangasList(self, mangaKey, mangasList):
+        mangaToFind = None
+        for manga in mangasList:
+            if (mangaKey == manga[u'key']):
+                mangaToFind = manga
+                break
+        return mangaToFind
+
+    def removeMangaFromMangasList(self, mangaKey, mangasList):
+        mangaToFind = None
+        for manga in mangasList:
+            if (mangaKey == manga[u'key']):
+                mangaToFind = manga
+                break
+        if (mangaToFind != None):
+            mangasList.remove(mangaToFind)
+
+    def updateMangaListItem(self, mangasList, mangaInfos, strAction):
+        self.removeMangaFromMangasList(mangaInfos['key'], mangasList)
+        mangasList.append(mangaInfos)
+        try:
+            self.store.collection(LIST_COLLECTION).document(LIST_DOCUMENT).set({
+                u'list': sorted(mangasList, key=itemgetter('key')),
+            })
+            print('SUCCESS firestore list item', strAction, mangaInfos['name'])
+        except Exception as error:
+            print('\n/!\ ERROR firestore list item', strAction, mangaInfos['key'], error)
+            sys.exit()
+
     def addManga(self, mangaUrlPart):
         try:
+            mangasList = self.getMangasList()
             mangaInfos = self.mangaManager.getMangaInfos(mangaUrlPart)
-            print('MANGA INFOS', mangaInfos)
-        except Exception as e:
-            print('# ERROR ADDING MANGA', mangaUrlPart, ':', str(e))
+            self.updateMangaListItem(mangasList, mangaInfos, 'ADDING')
+            self.store.collection(MANGAS_COLLECTION).document(mangaInfos['key']).set({u'chaptersList': []})
+        except Exception as error:
+            print('# ERROR ADDING MANGA', mangaUrlPart, ':', str(error))
 
 #-----------------------------------------------------------------------------------
 # MANGA MANAGER
@@ -80,6 +116,7 @@ class MangaManager:
 
         # Initialize manga getMangaInfos
         mangaInfos = {
+            'key': mangaUrlPart,
             'name': '',
             'imgUrl': '',
             'url': url,
@@ -134,9 +171,6 @@ def main():
 
     # Init FirebaseManager
     firebaseManager = FirebaseManager()
-
-    mangasList = firebaseManager.getMangasList()
-    print('MANGA LIST', mangasList)
 
     firebaseManager.addManga('one-piece')
 
