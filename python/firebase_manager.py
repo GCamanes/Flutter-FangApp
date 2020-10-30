@@ -11,6 +11,7 @@
 # IMPORT
 import os
 import sys
+import argparse
 import firebase_admin
 import google.cloud
 from firebase_admin import credentials, firestore
@@ -71,6 +72,19 @@ class FirebaseManager:
             sys.exit()
         return mangasList
 
+    def showCollectionMangas(self):
+        try:
+            mangasList = self.getMangasList()
+            print('\n** List of manga on firebase **')
+            if (len(mangasList) == 0):
+                print('   No mangas added to firebase')
+            else:
+                for (manga, index) in zip(mangasList, range(1, len(mangasList)+1)):
+                    print('   {} : {}\n       => {} {}'.format(index, manga[u'name'], manga[u'key'], manga[u'lastChapter']))
+        except Exception as error:
+            print('\n/!\ ERROR in show manga list :', str(error))
+            sys.exit()
+
     def findMangaInMangasList(self, mangaKey, mangasList):
         mangaToFind = None
         for manga in mangasList:
@@ -89,27 +103,27 @@ class FirebaseManager:
             mangasList.remove(mangaToFind)
 
     def updateMangaListItem(self, mangasList, mangaInfos, strAction):
-        self.removeMangaFromMangasList(mangaInfos['key'], mangasList)
+        self.removeMangaFromMangasList(mangaInfos[u'key'], mangasList)
         mangasList.append(mangaInfos)
         try:
             self.store.collection(LIST_COLLECTION).document(LIST_DOCUMENT).set({
                 u'list': sorted(mangasList, key=itemgetter('name')),
             })
-            print('SUCCESS firestore list item', strAction, mangaInfos['key'])
+            print('SUCCESS firestore list item {} {}\n'.format(strAction, mangaInfos[u'key']))
         except Exception as error:
-            print('\n/!\ ERROR firestore list item', strAction, mangaInfos['key'], str(error))
+            print('\n/!\ ERROR firestore list item', strAction, mangaInfos[u'key'], str(error))
             sys.exit()
 
     def addManga(self, mangaKey):
         try:
             mangasList = self.getMangasList()
             mangaInfos = self.mangaManager.getMangaInfos(mangaKey)
-            existingManga = self.findMangaInMangasList(mangaInfos['key'], mangasList)
-            if (existingManga != None):
-                mangaInfos['lastChapter'] = existingManga['lastChapter']
-            self.updateMangaListItem(mangasList, mangaInfos, 'ADDING')
+            existingManga = self.findMangaInMangasList(mangaInfos[u'key'], mangasList)
             if (existingManga == None):
-                self.store.collection(MANGAS_COLLECTION).document(mangaInfos['key']).set({u'chaptersList': []})
+                self.updateMangaListItem(mangasList, mangaInfos, 'ADDING')
+                self.store.collection(MANGAS_COLLECTION).document(mangaInfos[u'key']).set({u'chaptersList': []})
+            else:
+                print('\n/!\ ERROR ADDING MANGA {} already in manga list'.format(mangaKey))
         except Exception as error:
             print('\n/!\ ERROR ADDING MANGA {} : {}'.format(mangaKey, str(error)))
 
@@ -130,7 +144,7 @@ class FirebaseManager:
                 self.store.collection(LIST_COLLECTION).document(LIST_DOCUMENT).set({
                     u'list': mangasList,
                 })
-                print('\nSUCCESS {} deleted from firestore'.format(mangaKey))
+                print('\nSUCCESS {} deleted from firestore\n'.format(mangaKey))
             else:
                 print('\n/!\ ERROR DELETING MANGA {} not in manga list'.format(mangaKey))
         except Exception as error:
@@ -142,47 +156,59 @@ class FirebaseManager:
         existingManga = self.findMangaInMangasList(mangaKey, mangasList)
 
         if (existingManga != None):
-            print('\nUPDATING {} ...'.format(existingManga['key']))
-            dictChapters = self.mangaManager.getMangaChaptersDico(existingManga['key'])
+            print('\nUPDATING {} ...'.format(existingManga[u'key']))
+            mangaInfos = self.mangaManager.getMangaInfos(mangaKey)
+            if (existingManga[u'status'] != mangaInfos[u'status']):
+                existingManga[u'status'] == mangaInfos[u'status']
+            dictChapters = self.mangaManager.getMangaChaptersDico(existingManga[u'key'])
             for chapter in dictChapters:
                 currentChapter = dictChapters[chapter]
-                if (existingManga['lastChapter'] == 'None' or currentChapter['number'] > existingManga['lastChapter']):
-                    self.updateMangaChapterOnFirestore(mangasList, existingManga, currentChapter)
+                if (existingManga[u'lastChapter'] == 'None' or currentChapter[u'number'] > existingManga[u'lastChapter']):
+                    self.updateMangaChapter(mangasList, existingManga, currentChapter)
                     existingManga = self.findMangaInMangasList(mangaKey, mangasList)
 
-            print('\nSUCCESS {} updated on firestore'.format(existingManga['key']))
+            print('\nSUCCESS {} updated on firestore\n'.format(existingManga[u'key']))
         else:
             print('\n/!\ ERROR manga {} not in manga list'.format(mangaKey))
 
-    def updateMangaChapterOnFirestore(self, mangasList, existingManga, chapter):
+    def updateMangaChapter(self, mangasList, existingManga, chapter):
         try:
-            print('    UPLOADING {} chapter {} at {}{} ...'.format(existingManga['name'], chapter['number'], WEBSITE, chapter['url']))
+            print('UPLOADING {} chapter {} at {}{} ...'.format(existingManga[u'name'], chapter[u'number'], WEBSITE, chapter[u'url']))
             self.mangaManager.getChapterPages(chapter)
 
-            mangaDoc = self.store.collection(MANGAS_COLLECTION).document(existingManga['key'])
+            mangaDoc = self.store.collection(MANGAS_COLLECTION).document(existingManga[u'key'])
 
             if (mangaDoc.get().to_dict() == None):
                 chaptersList = []
             else:
                 chaptersList = mangaDoc.get().to_dict()[u'chaptersList']
 
-            chaptersList.append(self.mangaManager.getChapterKey(existingManga['key'],chapter['number']))
+            chaptersList.append(self.mangaManager.getChapterKey(existingManga[u'key'],chapter[u'number']))
             mangaDoc.set({
                 u'chaptersList': chaptersList,
             })
 
             self.store.collection(MANGAS_COLLECTION) \
-                .document(existingManga['key']) \
+                .document(existingManga[u'key']) \
                 .collection(MANGA_CHAPTERS_COLLECTION) \
-                .document(self.mangaManager.getChapterKey(existingManga['key'],chapter['number'])) \
+                .document(self.mangaManager.getChapterKey(existingManga[u'key'],chapter[u'number'])) \
                 .set(chapter)
 
-            existingManga['lastChapter'] = chapter['number']
+            existingManga[u'lastChapter'] = chapter[u'number']
             self.updateMangaListItem(mangasList, existingManga, 'UPDATE CHAPTER')
 
         except Exception as error:
-            print('/!\ ERROR in UPLOADING {} chapter {} : {}'.format(existingManga['key'], chapter['number'], str(error)))
+            print('/!\ ERROR in UPLOADING {} chapter {} : {}'.format(existingManga[u'key'], chapter[u'number'], str(error)))
             sys.exit()
+
+    def updateAllManga(self):
+        print("\nUPDATING ALL ...")
+        mangasList = self.getMangasList()
+        if (len(mangasList) > 0):
+            for manga in mangasList:
+                self.updateManga(manga[u'key'])
+        else:
+            print("\n/!\ no manga to update on firestore")
 
 #-----------------------------------------------------------------------------------
 # MANGA MANAGER
@@ -223,14 +249,14 @@ class MangaManager:
 
         # Initialize manga getMangaInfos
         mangaInfos = {
-            'key': mangaKey,
-            'name': '',
-            'imgUrl': '',
-            'url': url,
-            'status': '',
-            'author': '',
-            'released': '',
-            'lastChapter': 'None',
+            u'key': mangaKey,
+            u'name': '',
+            u'imgUrl': '',
+            u'url': url,
+            u'status': '',
+            u'author': '',
+            u'released': '',
+            u'lastChapter': 'None',
         }
 
         # Get html content in a file
@@ -261,13 +287,13 @@ class MangaManager:
                     break
 
             elif (MANGA_IMG_DIV in line):
-                mangaInfos['imgUrl'] = line.split('src="')[1].split('"')[0]
+                mangaInfos[u'imgUrl'] = line.split('src="')[1].split('"')[0]
                 isImgSaved = True
 
-        mangaInfos['name'] = properties[0]
-        mangaInfos['released'] = properties[1]
-        mangaInfos['status'] = properties[2]
-        mangaInfos['author'] = properties[3]
+        mangaInfos[u'name'] = properties[0]
+        mangaInfos[u'released'] = properties[1]
+        mangaInfos[u'status'] = properties[2]
+        mangaInfos[u'author'] = properties[3]
 
         return mangaInfos
 
@@ -298,15 +324,15 @@ class MangaManager:
 
                 if (chapterNumber not in dictChapters.keys()):
                     dictChapters[chapterNumber] = {
-                        'number': chapterNumber,
-                        'title': chapterTitle,
-                        'url': chapterUrl,
+                        u'number': chapterNumber,
+                        u'title': chapterTitle,
+                        u'url': chapterUrl,
                     }
 
         return dictChapters
 
     def getChapterPages(self, chapter):
-        url = '{}{}'.format(self.website, chapter['url'])
+        url = '{}{}'.format(self.website, chapter[u'url'])
         # Get html content in a file
         os.system('curl -s {} > {}'.format(url, MANGA_CHAPTER_PATH))
         # read the file
@@ -323,25 +349,25 @@ class MangaManager:
                 break
             if (MANGA_CHAPTER_PAGE_SELECT in line):
                 inPageSelect = True
-            if (inPageSelect and chapter['url'] in line):
+            if (inPageSelect and chapter[u'url'] in line):
                 pageUrl = line.split('<option value="/')[1].split('"')[0]
                 if (len(pageUrl.split('/')) == 3):
                     pageNumber = self.getPageName(pageUrl.split('/')[-1])
                 else:
                     pageNumber = self.getPageName('1')
                 pagesList.append({
-                    'page': pageNumber,
-                    'url': pageUrl,
-                    'urlImg': '',
+                    u'page': pageNumber,
+                    u'url': pageUrl,
+                    u'urlImg': '',
                 })
 
         for page in pagesList:
             self.getPage(page)
 
-        chapter['pages'] = pagesList
+        chapter[u'pages'] = pagesList
 
     def getPage(self, page):
-        url = '{}{}'.format(self.website, page['url'])
+        url = '{}{}'.format(self.website, page[u'url'])
         # Get html content in a file
         os.system('curl -s {} | grep "<img" > {}'.format(url, MANGA_CHAPTER_PAGE_PATH))
         # read the file
@@ -351,7 +377,7 @@ class MangaManager:
         os.system('rm {}'.format(MANGA_CHAPTER_PAGE_PATH))
 
         for line in content:
-            page['urlImg'] = line.split('src="')[1].split('"')[0]
+            page[u'urlImg'] = line.split('src="')[1].split('"')[0]
 
 #-----------------------------------------------------------------------------------
 # MAIN FUNCTION
@@ -366,6 +392,52 @@ def main():
     #firebaseManager.addManga(mangaKey)
     #firebaseManager.deleteManga(mangaKey)
     #firebaseManager.updateManga(mangaKey)
+
+    # Definition of argument option
+    parser = argparse.ArgumentParser(prog="mangaReaderFirebase.py")
+    parser.add_argument('-l', '--list',
+        help='show list of mangas in firestore',
+        action="store_true")
+    parser.add_argument('-a', '--add', nargs=1,
+        help='add a manga to firestore',
+        action='store', type=str)
+    parser.add_argument('-d', '--delete', nargs=1,
+        help='delete a manga from firestore (use "MangaName")',
+        action='store', type=str)
+    parser.add_argument('-u', '--update', nargs=1,
+        help='update one manga in cloud firestore  (use "MangaName")',
+        action='store', type=str)
+    parser.add_argument('--updateall',
+        help='update all mangas in cloud firestore',
+        action='store_true')
+
+    # Parsing of command line argument
+    args = parser.parse_args(sys.argv[1:])
+
+    if(args.list == True):
+        firebaseManager.showCollectionMangas()
+        print()
+        sys.exit()
+
+    elif(args.add != None):
+        firebaseManager.addManga(args.add[0])
+        print()
+        sys.exit()
+
+    elif(args.delete != None):
+        firebaseManager.deleteManga(args.delete[0])
+        print()
+        sys.exit()
+
+    elif(args.update != None):
+        firebaseManager.updateManga(args.update[0])
+        print()
+        sys.exit()
+
+    elif(args.updateall == True):
+        firebaseManager.updateAllManga()
+        print()
+        sys.exit()
 
 if __name__ == "__main__":
     main()
