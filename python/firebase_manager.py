@@ -144,7 +144,7 @@ class FirebaseManager:
                 self.store.collection(LIST_COLLECTION).document(LIST_DOCUMENT).set({
                     u'list': mangasList,
                 })
-                print('\nSUCCESS {} deleted from firestore\n'.format(mangaKey))
+                print('SUCCESS {} deleted from firestore\n'.format(mangaKey))
             else:
                 print('\n/!\ ERROR DELETING MANGA {} not in manga list'.format(mangaKey))
         except Exception as error:
@@ -207,6 +207,15 @@ class FirebaseManager:
         if (len(mangasList) > 0):
             for manga in mangasList:
                 self.updateManga(manga[u'key'])
+        else:
+            print("\n/!\ no manga to update on firestore")
+
+    def deleteAllManga(self):
+        print("\nDELETE ALL ...")
+        mangasList = self.getMangasList()
+        if (len(mangasList) > 0):
+            for manga in mangasList:
+                self.deleteManga(manga[u'key'])
         else:
             print("\n/!\ no manga to update on firestore")
 
@@ -279,7 +288,10 @@ class MangaManager:
                 if (inPropertiesDiv and MANGA_PROPERTY_TD in line):
                     nextIsProperty = True
                     continue
-                if (nextIsProperty and '<td>' in line and '</td>' in line and len(properties) < 4):
+                if (nextIsProperty and '<h2 class="aname">' in line):
+                    properties.append(line.split('<h2 class="aname">')[1].split('</h2>')[0])
+                    nextIsProperty = False
+                if (nextIsProperty and '<td>' in line and '</td>' in line and len(properties) < 5):
                     properties.append(line.split('<td>')[1].split('</td>')[0])
                     nextIsProperty = False
                 if ('</div>' in line):
@@ -291,9 +303,9 @@ class MangaManager:
                 isImgSaved = True
 
         mangaInfos[u'name'] = properties[0]
-        mangaInfos[u'released'] = properties[1]
-        mangaInfos[u'status'] = properties[2]
-        mangaInfos[u'author'] = properties[3]
+        mangaInfos[u'released'] = properties[2]
+        mangaInfos[u'status'] = properties[3]
+        mangaInfos[u'author'] = properties[4]
 
         return mangaInfos
 
@@ -407,8 +419,11 @@ def main():
     parser.add_argument('-u', '--update', nargs=1,
         help='update one manga in cloud firestore  (use "MangaName")',
         action='store', type=str)
-    parser.add_argument('--updateall',
+    parser.add_argument('--uall',
         help='update all mangas in cloud firestore',
+        action='store_true')
+    parser.add_argument('--dall',
+        help='delete all mangas in cloud firestore',
         action='store_true')
 
     # Parsing of command line argument
@@ -431,8 +446,12 @@ def main():
         firebaseManager.updateManga(args.update[0])
         sys.exit()
 
-    elif(args.updateall == True):
+    elif(args.uall == True):
         firebaseManager.updateAllManga()
+        sys.exit()
+
+    elif(args.dall == True):
+        firebaseManager.deleteAllManga()
         sys.exit()
 
 if __name__ == "__main__":
