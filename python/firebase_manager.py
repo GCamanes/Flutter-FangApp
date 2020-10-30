@@ -61,7 +61,7 @@ class FirebaseManager:
                 .document(LIST_DOCUMENT) \
                 .get().to_dict()[LIST_DOCUMENT_FIELD]
         except:
-            print('/!\ ERROR in getting manga list')
+            print('\n/!\ ERROR in getting manga list')
             sys.exit()
         return mangasList
 
@@ -91,7 +91,7 @@ class FirebaseManager:
             })
             print('SUCCESS firestore list item', strAction, mangaInfos['name'])
         except Exception as error:
-            print('\n/!\ ERROR firestore list item', strAction, mangaInfos['key'], error)
+            print('\n/!\ ERROR firestore list item', strAction, mangaInfos['key'], str(error))
             sys.exit()
 
     def addManga(self, mangaUrlPart):
@@ -103,10 +103,33 @@ class FirebaseManager:
                 mangaInfos['lastChapter'] = exististingManga['lastChapter']
             self.updateMangaListItem(mangasList, mangaInfos, 'ADDING')
             if (exististingManga == None):
-                print ('ADDING EMPTY CHAPTERS')
                 self.store.collection(MANGAS_COLLECTION).document(mangaInfos['key']).set({u'chaptersList': []})
         except Exception as error:
-            print('# ERROR ADDING MANGA', mangaUrlPart, ':', str(error))
+            print('\n/!\ ERROR ADDING MANGA {} : {}'.format(mangaUrlPart, str(error)))
+
+    def deleteManga(self, mangaKey):
+        try:
+            mangasList = self.getMangasList()
+            exististingManga = self.findMangaInMangasList(mangaKey, mangasList)
+            if (exististingManga != None):
+                collection = self.store.collection(MANGAS_COLLECTION).document(mangaKey) \
+                    .collection(MANGA_CHAPTERS_COLLECTION).get()
+
+                for doc in collection :
+                    self.store.collection(MANGAS_COLLECTION).document(mangaKey)\
+                        .collection(MANGA_CHAPTERS_COLLECTION).document(doc.id).delete()
+                self.store.collection(MANGAS_COLLECTION).document(mangaKey).delete()
+
+                self.removeMangaFromMangasList(mangaKey, mangasList)
+                self.store.collection(LIST_COLLECTION).document(LIST_DOCUMENT).set({
+                    u'list': mangasList,
+                })
+                print('\nSUCCESS {} deleted from firestore'.format(mangaKey))
+            else:
+                print('\n/!\ ERROR manga {} not in manga list'.format(mangaKey))
+        except Exception as error:
+            print('\n/!\ ERROR DELETING MANGA {} : {}'.format(mangaKey, str(error)))
+            sys.exit()
 
 #-----------------------------------------------------------------------------------
 # MANGA MANAGER
@@ -177,7 +200,8 @@ def main():
     # Init FirebaseManager
     firebaseManager = FirebaseManager()
 
-    firebaseManager.addManga('one-piece')
+    #firebaseManager.addManga('one-piece')
+    firebaseManager.deleteManga('one-piece')
 
 if __name__ == "__main__":
     main()
