@@ -87,7 +87,7 @@ class FirebaseManager:
         mangasList.append(mangaInfos)
         try:
             self.store.collection(LIST_COLLECTION).document(LIST_DOCUMENT).set({
-                u'list': sorted(mangasList, key=itemgetter('key')),
+                u'list': sorted(mangasList, key=itemgetter('name')),
             })
             print('SUCCESS firestore list item', strAction, mangaInfos['name'])
         except Exception as error:
@@ -98,8 +98,13 @@ class FirebaseManager:
         try:
             mangasList = self.getMangasList()
             mangaInfos = self.mangaManager.getMangaInfos(mangaUrlPart)
+            exististingManga = self.findMangaInMangasList(mangaInfos['key'], mangasList)
+            if (exististingManga != None):
+                mangaInfos['lastChapter'] = exististingManga['lastChapter']
             self.updateMangaListItem(mangasList, mangaInfos, 'ADDING')
-            self.store.collection(MANGAS_COLLECTION).document(mangaInfos['key']).set({u'chaptersList': []})
+            if (exististingManga == None):
+                print ('ADDING EMPTY CHAPTERS')
+                self.store.collection(MANGAS_COLLECTION).document(mangaInfos['key']).set({u'chaptersList': []})
         except Exception as error:
             print('# ERROR ADDING MANGA', mangaUrlPart, ':', str(error))
 
