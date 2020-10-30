@@ -23,6 +23,7 @@ from operator import itemgetter
 # FILES
 PATH = './python'
 MANGA_INFOS_PATH = '{}/mangaInfos.txt'.format(PATH)
+MANGA_CHAPTERS_PATH = '{}/mangaChapterslist.txt'.format(PATH)
 
 # FIREBASE
 SERVICE_ACCOUNT_KEY_PATH = '{}/ServiceAccountKey.json'.format(PATH)
@@ -41,6 +42,8 @@ WEBSITE = 'http://www.mangapanda.com/'
 MANGA_IMG_DIV = 'mangaimg'
 MANGA_PROPERTIES_DIV = 'mangaproperties'
 MANGA_PROPERTY_TD = 'propertytitle'
+MANGA_CHAPTERS_LIST_DIV = 'chapterlist'
+MANGA_CHAPTERS_LIST_DIV_END = '<div class="clear"'
 
 #-----------------------------------------------------------------------------------
 # FIREBASE MANAGER
@@ -94,24 +97,24 @@ class FirebaseManager:
             print('\n/!\ ERROR firestore list item', strAction, mangaInfos['key'], str(error))
             sys.exit()
 
-    def addManga(self, mangaUrlPart):
+    def addManga(self, mangaKey):
         try:
             mangasList = self.getMangasList()
-            mangaInfos = self.mangaManager.getMangaInfos(mangaUrlPart)
-            exististingManga = self.findMangaInMangasList(mangaInfos['key'], mangasList)
-            if (exististingManga != None):
-                mangaInfos['lastChapter'] = exististingManga['lastChapter']
+            mangaInfos = self.mangaManager.getMangaInfos(mangaKey)
+            existingManga = self.findMangaInMangasList(mangaInfos['key'], mangasList)
+            if (existingManga != None):
+                mangaInfos['lastChapter'] = existingManga['lastChapter']
             self.updateMangaListItem(mangasList, mangaInfos, 'ADDING')
-            if (exististingManga == None):
+            if (existingManga == None):
                 self.store.collection(MANGAS_COLLECTION).document(mangaInfos['key']).set({u'chaptersList': []})
         except Exception as error:
-            print('\n/!\ ERROR ADDING MANGA {} : {}'.format(mangaUrlPart, str(error)))
+            print('\n/!\ ERROR ADDING MANGA {} : {}'.format(mangaKey, str(error)))
 
     def deleteManga(self, mangaKey):
         try:
             mangasList = self.getMangasList()
-            exististingManga = self.findMangaInMangasList(mangaKey, mangasList)
-            if (exististingManga != None):
+            existingManga = self.findMangaInMangasList(mangaKey, mangasList)
+            if (existingManga != None):
                 collection = self.store.collection(MANGAS_COLLECTION).document(mangaKey) \
                     .collection(MANGA_CHAPTERS_COLLECTION).get()
 
@@ -126,11 +129,22 @@ class FirebaseManager:
                 })
                 print('\nSUCCESS {} deleted from firestore'.format(mangaKey))
             else:
-                print('\n/!\ ERROR manga {} not in manga list'.format(mangaKey))
+                print('\n/!\ ERROR DELETING MANGA {} not in manga list'.format(mangaKey))
         except Exception as error:
             print('\n/!\ ERROR DELETING MANGA {} : {}'.format(mangaKey, str(error)))
             sys.exit()
 
+    def updateManga(self, mangaKey):
+        mangasList = self.getMangasList()
+        existingManga = self.findMangaInMangasList(mangaKey, mangasList)
+
+        if (existingManga != None):
+            print('\nUPDATING {} ...'.format(existingManga['key']))
+            dico_chapters = self.mangaManager.getMangaChaptersDico(existingManga['key'])
+            print(dico_chapters)
+            print('\nSUCCESS {} updated on firestore'.format(existingManga['key']))
+        else:
+            print('\n/!\ ERROR manga {} not in manga list'.format(mangaKey))
 #-----------------------------------------------------------------------------------
 # MANGA MANAGER
 #-----------------------------------------------------------------------------------
@@ -138,13 +152,35 @@ class MangaManager:
     def __init__(self):
         self.website = WEBSITE
 
-    def getMangaInfos(self, mangaUrlPart):
-        url = '{}{}'.format(WEBSITE, mangaUrlPart)
-        print('# GETTING INFO ON {} at {} ...'.format(mangaUrlPart, url))
+    # Function to get the complete name of a chapter
+    def getChapterName(self, chap):
+    	chapName = ""
+    	if (len(chap.split(".")[0]) == 1):
+    		chapName = "000"+chap
+    	elif (len(chap.split(".")[0]) == 2):
+    		chapName = "00"+chap
+    	elif (len(chap.split(".")[0]) == 3):
+    		chapName = "0"+chap
+    	else:
+    		chapName = chap
+    	return chapName
+
+    # Function to get the string page number (3 digits)
+    def getPageName(self, page):
+    	strPage = str(page)
+    	if (len(strPage) == 1):
+    		strPage = "00"+strPage
+    	elif (len(strPage) == 2):
+    		strPage = "0"+strPage
+    	return strPage
+
+    def getMangaInfos(self, mangaKey):
+        url = '{}{}'.format(self.website, mangaKey)
+        print('# GETTING INFO ON {} at {} ...'.format(mangaKey, url))
 
         # Initialize manga getMangaInfos
         mangaInfos = {
-            'key': mangaUrlPart,
+            'key': mangaKey,
             'name': '',
             'imgUrl': '',
             'url': url,
@@ -192,6 +228,35 @@ class MangaManager:
 
         return mangaInfos
 
+    def getMangaChaptersDico(self, mangaKey):
+        url = '{}{}'.format(self.website, mangaKey)
+        # Get html content in a file
+        os.system('curl -s {} > {}'.format(url, MANGA_CHAPTERS_PATH))
+        # read the file
+        f = open(MANGA_CHAPTERS_PATH, 'r')
+        content = f.readlines()
+        f.close()
+        os.system('rm {}'.format(MANGA_CHAPTERS_PATH))
+
+        dico_chapters = {}
+
+        inChaptersListDiv = False
+        for line in content:
+            if (inChaptersListDiv and MANGA_CHAPTERS_LIST_DIV_END in line):
+                inChaptersListDiv = False
+                break
+            if (MANGA_CHAPTERS_LIST_DIV in line):
+                inChaptersListDiv = True
+                continue
+            if (inChaptersListDiv and mangaKey in line):
+                chapterUrl = line.split('<a href="')[1].split('"')[0]
+                chapterNumber = self.getChapterName(chapterUrl.split('/')[-1])
+                chapterTitle = line.split('</td>')[0].split(' : ')[1]
+
+                if (chapterNumber not in dico_chapters.keys()):
+                    dico_chapters[chapterNumber] = {'title': chapterTitle, 'url': chapterUrl}
+
+        return dico_chapters
 #-----------------------------------------------------------------------------------
 # MAIN FUNCTION
 #-----------------------------------------------------------------------------------
@@ -200,8 +265,11 @@ def main():
     # Init FirebaseManager
     firebaseManager = FirebaseManager()
 
-    #firebaseManager.addManga('one-piece')
-    firebaseManager.deleteManga('one-piece')
+    mangaKey = 'one-piece'
+
+    #firebaseManager.addManga(mangaKey)
+    #firebaseManager.deleteManga(mangaKey)
+    firebaseManager.updateManga(mangaKey)
 
 if __name__ == "__main__":
     main()

@@ -48,3 +48,4 @@ app.*.map.json
 # Python
 /python/ServiceAccountKey.json
 mangaInfos.txt
+mangaChapterslist.txt
