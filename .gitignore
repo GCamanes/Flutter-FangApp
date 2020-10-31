@@ -45,6 +45,9 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# iOS
+/ios/build
+
 # Python
 /python/ServiceAccountKey.json
 mangaInfos.txt
