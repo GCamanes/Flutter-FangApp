@@ -54,3 +54,7 @@ mangaInfos.txt
 mangaChapterslist.txt
 mangaChapter.txt
 mangaChapterPage.txt
+
+# Firebase
+/android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist
