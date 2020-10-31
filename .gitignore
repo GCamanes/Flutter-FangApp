@@ -45,9 +45,16 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# iOS
+/ios/build
+
 # Python
 /python/ServiceAccountKey.json
 mangaInfos.txt
 mangaChapterslist.txt
 mangaChapter.txt
 mangaChapterPage.txt
+
+# Firebase
+/android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist
