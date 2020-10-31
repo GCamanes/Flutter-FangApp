@@ -167,7 +167,7 @@ class FirebaseManager:
                     self.updateMangaChapter(mangasList, existingManga, currentChapter)
                     existingManga = self.findMangaInMangasList(mangaKey, mangasList)
 
-            print('\nSUCCESS {} updated on firestore\n'.format(existingManga[u'key']))
+            print('\nSUCCESS {} updated on firestore'.format(existingManga[u'key']))
         else:
             print('\n/!\ ERROR manga {} not in manga list'.format(mangaKey))
 
