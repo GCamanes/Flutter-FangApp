@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -48,6 +49,20 @@ class LoadingAppPage extends StatefulWidget {
 }
 
 class _LoadingAppPageState extends State<LoadingAppPage> {
+  FirebaseUser _user;
+
+  void _checkUser() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final FirebaseUser user = await auth.currentUser();
+    Future.delayed(const Duration(seconds: 3), () => setState(() { _user = user; }));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -80,7 +95,7 @@ class _LoadingAppPageState extends State<LoadingAppPage> {
                   right: 0,
                   left: 0,
                   child: Center(
-                    child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.yellow), backgroundColor: Colors.black)
+                    child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(_user != null ? Colors.yellow : Colors.blue), backgroundColor: Colors.black)
                   )
               )
             ],
