@@ -60,24 +60,18 @@ class _LoadingAppPageState extends State<LoadingAppPage> {
           child: Stack(
             children: [
               Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset(
-                      'lib/src/assets/fangapp-logo.png',
-                      height: 300,
-                      width: 300,
-                    ),
-                  ],
-                ),
+                 child: Image.asset(
+                    'lib/src/assets/fangapp-logo.png',
+                    height: 300,
+                    width: 300,
+                  ),
               ),
               Positioned(
                   bottom: 70,
                   right: 0,
                   left: 0,
                   child: Center(
-                      child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(_user != null ? Colors.yellow : Colors.blue), backgroundColor: Colors.black)
+                      child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(_user != null ? Colors.amber : Colors.blue), backgroundColor: Colors.black)
                   )
               )
             ],
