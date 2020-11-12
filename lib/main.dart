@@ -54,7 +54,18 @@ class _LoadingAppPageState extends State<LoadingAppPage> {
   void _checkUser() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final FirebaseUser user = await auth.currentUser();
-    Future.delayed(const Duration(seconds: 3), () => setState(() { _user = user; }));
+    Future.delayed(const Duration(seconds: 1), () => manageUserStatus(user));
+  }
+
+  void manageUserStatus(user)  {
+    setState(() { _user = user; });
+    Future.delayed(const Duration(seconds: 1), () => {
+      if (user != null) {
+
+      } else {
+
+      }
+    });
   }
 
   @override
