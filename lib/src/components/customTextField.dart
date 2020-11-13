@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final ValueChanged<String> onChangedValue;
   final IconData icon;
   final String hintText;
   final bool isObscure;
 
   CustomTextField({Key key, this.onChangedValue, this.icon, this.hintText, this.isObscure = false}) : super(key: key);
+
+  @override
+  _CustomTextFieldState createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  bool _isVisible;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() { _isVisible = !widget.isObscure; });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +33,23 @@ class CustomTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(30)
         ),
         child: TextField(
-          onChanged: onChangedValue,
-          obscureText: isObscure,
+          onChanged: widget.onChangedValue,
+          obscureText: !_isVisible,
           decoration: InputDecoration(
             hintStyle: TextStyle(fontSize: 17),
-            hintText: hintText,
-            prefixIcon: icon != null ? Icon(
-              icon,
+            hintText: widget.hintText,
+            prefixIcon: widget.icon != null ? Icon(
+              widget.icon,
               color: Colors.amber,
             ) : null,
-            suffixIcon: isObscure ? Icon(Icons.visibility) : null,
+            suffixIcon: !widget.isObscure
+                ? null
+                : IconButton(
+                    icon: Icon(_isVisible ? Icons.visibility : Icons.visibility_off),
+                    onPressed: () {setState(() { _isVisible = !_isVisible; });},
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                ),
             border: InputBorder.none,
           ),
         )
