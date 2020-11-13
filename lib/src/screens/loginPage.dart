@@ -13,6 +13,9 @@ class _LoginPageState extends State<LoginPage> {
   final _mailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  bool _connecting = false;
+  String _connectingError;
+
   @override
   void initState() {
     super.initState();
@@ -30,6 +33,12 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  void login() {
+    setState(() {
+      _connecting = !_connecting;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -41,30 +50,29 @@ class _LoginPageState extends State<LoginPage> {
             body: Stack(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: size.height * 0.35),
-                  child: Center(
-                      child: Column(
-                        children: [
-                          CustomTextField(
-                            autoFocus: true,
-                            controller: _mailController,
-                            icon: Icons.person,
-                            hintText: 'Mail',
-                            focusNode: _mailNode,
-                            onSubmitted: (String str) {FocusScope.of(context).requestFocus(_passwordNode);},
-                            inputAction: TextInputAction.next,
-                          ),
-                          CustomTextField(
-                            controller: _passwordController,
-                            icon: Icons.lock,
-                            hintText: 'Password',
-                            isObscure: true,
-                            focusNode: _passwordNode,
-                            inputAction: TextInputAction.go,
-                          ),
-                        ],
-                      )
-                  ),
+                    padding: EdgeInsets.only(top: size.height * 0.35),
+                    child: Center(
+                        child: Column(
+                          children: [
+                            CustomTextField(
+                              controller: _mailController,
+                              icon: Icons.person,
+                              hintText: 'Mail',
+                              focusNode: _mailNode,
+                              onSubmitted: (String str) {FocusScope.of(context).requestFocus(_passwordNode);},
+                              inputAction: TextInputAction.next,
+                            ),
+                            CustomTextField(
+                              controller: _passwordController,
+                              icon: Icons.lock,
+                              hintText: 'Password',
+                              isObscure: true,
+                              focusNode: _passwordNode,
+                              inputAction: TextInputAction.go,
+                            ),
+                          ],
+                        )
+                    ),
                 ),
                 Positioned(
                   top: 0,
@@ -81,21 +89,39 @@ class _LoginPageState extends State<LoginPage> {
                     'lib/src/assets/login-cloud-bottom.png',
                     width: size.width * 0.7,
                   ),
+                ),
+                Positioned(
+                    bottom: size.height * 0.25,
+                    right: 0,
+                    left: 0,
+                    child: Center(
+                        child: TextButton(
+                          child: Container(
+                              width: size.width * 0.755,
+                              height: 35,
+                              child: Align(
+                                child: _connecting
+                                  ? Container(
+                                    height: 30,
+                                    width: 30,
+                                    child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.white), backgroundColor: Colors.amber)
+                                  )
+                                  : Text(
+                                    'GO !',
+                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
+                                  ),
+                              ),
+                          ),
+                          style: TextButton.styleFrom(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                            backgroundColor: Colors.amber,
+                          ),
+                          onPressed: _connecting ? null : () {login();},
+                        ),
+                    )
                 )
               ],
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                return showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      content: Text(_mailController.text + ' ' + _passwordController.text),
-                    );
-                  }
-                );
-              },
-            ) ,
         )
     );
   }
