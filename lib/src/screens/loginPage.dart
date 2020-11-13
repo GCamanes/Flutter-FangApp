@@ -19,15 +19,20 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _connecting = false;
 
+  double _loginBottom;
+  double _loginOpacity;
+
   @override
   void initState() {
     super.initState();
-
-    _mailController.text = 'guillaume.camaes@gmail.com';
-    _passwordController.text = 'FAbalaisee';
+    _loginBottom = -100;
+    _loginOpacity = 0;
+    _mailController.text = 'guillaume.camanes@gmail.com';
+    _passwordController.text = 'FAbalaise';
 
     _mailNode = FocusNode();
     _passwordNode = FocusNode();
+    Future.delayed(const Duration(milliseconds: 500), () => showLogin());
   }
 
   @override
@@ -39,10 +44,26 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  void showLogin() {
+    Size size = MediaQuery.of(context).size;
+    setState(() {
+      _loginBottom = size.height * 0.25;
+      _loginOpacity = 1;
+    });
+  }
+
+  void hideLogin() {
+    setState(() {
+      _loginBottom = -100;
+      _loginOpacity = 0;
+    });
+  }
+
   void login() async {
     setState(() {
       _connecting = true;
     });
+    hideLogin();
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       await auth.signInWithEmailAndPassword(email: _mailController.text, password: _passwordController.text);
@@ -64,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _connecting = false;
       });
+      showLogin();
     }
   }
 
@@ -117,27 +139,31 @@ class _LoginPageState extends State<LoginPage> {
                     width: size.width * 0.7,
                   ),
                 ),
-                Positioned(
-                    bottom: size.height * 0.25,
+                AnimatedPositioned(
+                    bottom: _loginBottom,
                     right: 0,
                     left: 0,
-                    child: Center(
+                    duration: Duration(seconds: 1),
+                    child: AnimatedOpacity(
+                      duration: Duration(seconds: 1),
+                      opacity: _loginOpacity,
+                      child: Center(
                         child: TextButton(
                           child: Container(
-                              width: size.width * 0.755,
-                              height: 35,
-                              child: Align(
-                                child: _connecting
+                            width: size.width * 0.755,
+                            height: 35,
+                            child: Align(
+                              child: _connecting
                                   ? Container(
-                                    height: 30,
-                                    width: 30,
-                                    child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.white), backgroundColor: Colors.amber)
-                                  )
+                                  height: 30,
+                                  width: 30,
+                                  child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.white), backgroundColor: Colors.amber)
+                              )
                                   : Text(
-                                    'GO !',
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
-                                  ),
+                                'GO !',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
                               ),
+                            ),
                           ),
                           style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
@@ -145,7 +171,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           onPressed: _connecting ? null : () {login();},
                         ),
-                    )
+                      ),
+                    ),
                 )
               ],
             ),
