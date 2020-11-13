@@ -5,8 +5,16 @@ class CustomTextField extends StatefulWidget {
   final IconData icon;
   final String hintText;
   final bool isObscure;
+  final bool autoFocus;
 
-  CustomTextField({Key key, this.onChangedValue, this.icon, this.hintText, this.isObscure = false}) : super(key: key);
+  CustomTextField({
+    Key key,
+    this.onChangedValue,
+    this.icon,
+    this.hintText,
+    this.isObscure = false,
+    this.autoFocus = false,
+  }) : super(key: key);
 
   @override
   _CustomTextFieldState createState() => _CustomTextFieldState();
@@ -33,6 +41,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             borderRadius: BorderRadius.circular(30)
         ),
         child: TextField(
+          autofocus: widget.autoFocus,
           onChanged: widget.onChangedValue,
           obscureText: !_isVisible,
           decoration: InputDecoration(
