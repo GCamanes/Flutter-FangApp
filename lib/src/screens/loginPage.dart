@@ -7,8 +7,28 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String _userName;
-  String _password;
+  FocusNode _mailNode;
+  FocusNode _passwordNode;
+
+  final _mailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _mailNode = FocusNode();
+    _passwordNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _mailNode.dispose();
+    _passwordNode.dispose();
+    _mailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,19 +47,20 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           CustomTextField(
                             autoFocus: true,
-                            onChangedValue: (String text) async {
-                              setState(() { _userName = text; });
-                            },
+                            controller: _mailController,
                             icon: Icons.person,
-                            hintText: 'Username',
+                            hintText: 'Mail',
+                            focusNode: _mailNode,
+                            onSubmitted: (String str) {FocusScope.of(context).requestFocus(_passwordNode);},
+                            inputAction: TextInputAction.next,
                           ),
                           CustomTextField(
-                            onChangedValue: (String text) async {
-                              setState(() { _password = text; });
-                            },
+                            controller: _passwordController,
                             icon: Icons.lock,
                             hintText: 'Password',
                             isObscure: true,
+                            focusNode: _passwordNode,
+                            inputAction: TextInputAction.go,
                           ),
                         ],
                       )
@@ -62,7 +83,19 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 )
               ],
-            )
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                return showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: Text(_mailController.text + ' ' + _passwordController.text),
+                    );
+                  }
+                );
+              },
+            ) ,
         )
     );
   }

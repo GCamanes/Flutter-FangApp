@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
-  final ValueChanged<String> onChangedValue;
+  final TextEditingController controller;
   final IconData icon;
   final String hintText;
   final bool isObscure;
   final bool autoFocus;
+  final FocusNode focusNode;
+  final Function onSubmitted;
+  final TextInputAction inputAction;
 
   CustomTextField({
     Key key,
-    this.onChangedValue,
+    this.controller,
     this.icon,
     this.hintText,
     this.isObscure = false,
     this.autoFocus = false,
+    this.focusNode,
+    this.onSubmitted,
+    this.inputAction
   }) : super(key: key);
 
   @override
@@ -42,7 +48,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         child: TextField(
           autofocus: widget.autoFocus,
-          onChanged: widget.onChangedValue,
+          focusNode: widget.focusNode,
+          controller: widget.controller,
+          onSubmitted: widget.onSubmitted,
+          textInputAction: widget.inputAction,
           obscureText: !_isVisible,
           decoration: InputDecoration(
             hintStyle: TextStyle(fontSize: 17),
