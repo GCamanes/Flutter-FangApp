@@ -1,5 +1,9 @@
 import 'package:fangapp/src/components/customTextField.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'mangasListPage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -14,11 +18,13 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
 
   bool _connecting = false;
-  String _connectingError;
 
   @override
   void initState() {
     super.initState();
+
+    _mailController.text = 'guillaume.camaes@gmail.com';
+    _passwordController.text = 'FAbalaisee';
 
     _mailNode = FocusNode();
     _passwordNode = FocusNode();
@@ -33,10 +39,32 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void login() {
+  void login() async {
     setState(() {
-      _connecting = !_connecting;
+      _connecting = true;
     });
+    try {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      await auth.signInWithEmailAndPassword(email: _mailController.text, password: _passwordController.text);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => MangasListPage()),
+            (route) => false,
+      );
+    } catch(e) {
+      final scaffold = ScaffoldMessenger.of(context);
+      scaffold.showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+          behavior: SnackBarBehavior.floating,
+          action: SnackBarAction(
+              label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
+        ),
+      );
+      setState(() {
+        _connecting = false;
+      });
+    }
   }
 
   @override
@@ -68,7 +96,6 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Password',
                               isObscure: true,
                               focusNode: _passwordNode,
-                              inputAction: TextInputAction.go,
                             ),
                           ],
                         )
