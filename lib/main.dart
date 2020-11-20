@@ -1,8 +1,19 @@
 import 'package:fangapp/src/screens/loadingAppPage.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:fangapp/src/utils/connectivity-service.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    /// Providers are above [MyApp] instead of inside it, so that tests
+    /// can use [MyApp] while mocking the providers
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ConnectivityService()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
