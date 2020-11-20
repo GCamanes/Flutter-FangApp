@@ -73,8 +73,16 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(builder: (context) => MangasListPage()),
             (route) => false,
       );
-    } catch(e) {
-      SnackBarManager.showMessage(context, e.message);
+    } on FirebaseAuthException catch(e) {
+      String errorMessage = "";
+      switch(e.code) {
+        case 'network-request-failed':
+          errorMessage = "No connectivity. Please check your internet connection";
+          break;
+        default:
+          errorMessage = "Mail not found or incorrect password. Please try again";
+      }
+      SnackBarManager.showMessage(context, errorMessage);
       setState(() {
         _connecting = false;
       });

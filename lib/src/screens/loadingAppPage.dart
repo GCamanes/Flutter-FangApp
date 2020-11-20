@@ -1,6 +1,7 @@
 import 'package:fangapp/src/screens/loginPage.dart';
 import 'package:fangapp/src/screens/mangasListPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,11 +13,11 @@ class LoadingAppPage extends StatefulWidget {
 }
 
 class _LoadingAppPageState extends State<LoadingAppPage> {
-  FirebaseUser _user;
+  User _user;
 
   void _checkUser() async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final FirebaseUser user = await auth.currentUser();
+    await Firebase.initializeApp();
+    final User user = FirebaseAuth.instance.currentUser;
     Future.delayed(const Duration(seconds: 1), () => manageUserStatus(user));
   }
 
