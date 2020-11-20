@@ -1,8 +1,9 @@
-import 'package:fangapp/src/components/customTextField.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:fangapp/src/components/customTextField.dart';
+import 'package:fangapp/src/utils/snack-bar.dart';
 import 'mangasListPage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -73,15 +74,7 @@ class _LoginPageState extends State<LoginPage> {
             (route) => false,
       );
     } catch(e) {
-      final scaffold = ScaffoldMessenger.of(context);
-      scaffold.showSnackBar(
-        SnackBar(
-          content: Text(e.message),
-          behavior: SnackBarBehavior.floating,
-          action: SnackBarAction(
-              label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
-        ),
-      );
+      SnackBarManager.showMessage(context, e.message);
       setState(() {
         _connecting = false;
       });
