@@ -23,4 +23,20 @@ class MangaInfo {
     this._status = status;
     this._url = url;
   }
+
+  String get author => _author;
+
+  String get imgUrl => _imgUrl;
+
+  String get key => _key;
+
+  String get lastChapter => _lastChapter;
+
+  String get name => _name;
+
+  String get release => _release;
+
+  String get status => _status;
+
+  String get url => _url;
 }

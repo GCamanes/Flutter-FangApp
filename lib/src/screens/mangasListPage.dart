@@ -1,3 +1,5 @@
+import 'package:fangapp/src/components/manga-tile.dart';
+import 'package:fangapp/src/models/manga-info.dart';
 import 'package:fangapp/src/utils/mangas-service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,13 +20,19 @@ class _MangasListPageState extends State<MangasListPage> {
   @override
   Widget build(BuildContext context) {
     bool loading = context.watch<MangasService>().loading;
+    List<MangaInfo> mangasList= context.watch<MangasService>().mangasList;
     return Scaffold(
       appBar: AppBar(
         title: Text("Mangas"),
       ),
-      body: Center(
-        child: loading ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.amber), backgroundColor: Colors.white) : null,
-    ),
+      body: loading
+          ? Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.amber), backgroundColor: Colors.white))
+          : ListView.builder(
+              itemCount: mangasList.length,
+              itemBuilder: (context, index) {
+                return MangaTile(manga: mangasList[index]);
+              },
+            ),
     );
   }
 }
