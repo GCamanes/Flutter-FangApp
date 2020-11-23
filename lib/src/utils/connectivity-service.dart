@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
-
-enum ConnectivityStatus { Online, Offline }
+import 'package:flutter/material.dart';
 
 class ConnectivityService extends ChangeNotifier {
   bool _connectivityStatus = false;

@@ -1,4 +1,5 @@
 import 'package:fangapp/src/screens/loadingAppPage.dart';
+import 'package:fangapp/src/utils/mangas-service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fangapp/src/utils/connectivity-service.dart';
@@ -10,6 +11,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ConnectivityService()),
+        ChangeNotifierProvider(create: (_) => MangasService()),
       ],
       child: MyApp(),
     ),
