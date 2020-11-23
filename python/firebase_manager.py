@@ -41,7 +41,8 @@ MANGA_LIST_FIELD = u'chaptersList'
 MANGA_CHAPTERS_COLLECTION = u'chapters'
 
 # MANGA WEBSITE
-WEBSITE = 'http://www.mangapanda.com/'
+WEBSITE = 'https://www.mangareader.net/'
+HTTPS = 'https:'
 MANGA_IMG_DIV = 'mangaimg'
 MANGA_PROPERTIES_DIV = 'mangaproperties'
 MANGA_PROPERTY_TD = 'propertytitle'
@@ -264,7 +265,6 @@ class MangaManager:
             u'url': url,
             u'status': '',
             u'author': '',
-            u'released': '',
             u'lastChapter': 'None',
         }
 
@@ -276,36 +276,16 @@ class MangaManager:
         f.close()
         os.system('rm {}'.format(MANGA_INFOS_PATH))
 
-        isImgSaved = False
-        inPropertiesDiv = False
-        nextIsProperty = False
-        properties = []
-        for line in content:
-            if (isImgSaved):
-                if (MANGA_PROPERTIES_DIV in line):
-                    inPropertiesDiv = True
-                    continue
-                if (inPropertiesDiv and MANGA_PROPERTY_TD in line):
-                    nextIsProperty = True
-                    continue
-                if (nextIsProperty and '<h2 class="aname">' in line):
-                    properties.append(line.split('<h2 class="aname">')[1].split('</h2>')[0])
-                    nextIsProperty = False
-                if (nextIsProperty and '<td>' in line and '</td>' in line and len(properties) < 5):
-                    properties.append(line.split('<td>')[1].split('</td>')[0])
-                    nextIsProperty = False
-                if ('</div>' in line):
-                    inPropertiesDiv = False
-                    break
-
-            elif (MANGA_IMG_DIV in line):
-                mangaInfos[u'imgUrl'] = line.split('src="')[1].split('"')[0]
-                isImgSaved = True
-
-        mangaInfos[u'name'] = properties[0]
-        mangaInfos[u'released'] = properties[2]
-        mangaInfos[u'status'] = properties[3]
-        mangaInfos[u'author'] = properties[4]
+        for lineContent in content:
+            lines = '</div>\n'.join(lineContent.split('</div>')).split('\n')
+            for line in lines:
+                if ('<div class="d38"><img src="' in line):
+                    mangaInfos[u'imgUrl'] = HTTPS + line.split('src="')[1].split('"')[0]
+                if ('<table class="d41"><tr><td>Name :</td>' in line):
+                    contentInfos = line.split('</tr>')
+                    mangaInfos[u'name'] = contentInfos[0].split('<span class="name">')[1].split('</span>')[0]
+                    mangaInfos[u'status'] = contentInfos[3].split('<td>')[-1].split('</td>')[0]
+                    mangaInfos[u'author'] = contentInfos[4].split('<td>')[-1].split('</td>')[0]
 
         return mangaInfos
 
