@@ -11,6 +11,7 @@
 # IMPORT
 import os
 import sys
+import html
 import argparse
 import firebase_admin
 import google.cloud
@@ -164,9 +165,9 @@ class FirebaseManager:
             dictChapters = self.mangaManager.getMangaChaptersDico(existingManga[u'key'])
             for chapter in dictChapters:
                 currentChapter = dictChapters[chapter]
-                if (existingManga[u'lastChapter'] == 'None' or currentChapter[u'number'] > existingManga[u'lastChapter']):
-                    self.updateMangaChapter(mangasList, existingManga, currentChapter)
-                    existingManga = self.findMangaInMangasList(mangaKey, mangasList)
+#                 if (existingManga[u'lastChapter'] == 'None' or currentChapter[u'number'] > existingManga[u'lastChapter']):
+#                     self.updateMangaChapter(mangasList, existingManga, currentChapter)
+#                     existingManga = self.findMangaInMangasList(mangaKey, mangasList)
 
             print('\nSUCCESS {} updated on firestore'.format(existingManga[u'key']))
         else:
@@ -301,25 +302,25 @@ class MangaManager:
 
         dictChapters = {}
 
-        inChaptersListDiv = False
-        for line in content:
-            if (inChaptersListDiv and MANGA_CHAPTERS_LIST_DIV_END in line):
-                inChaptersListDiv = False
-                break
-            if (MANGA_CHAPTERS_LIST_DIV in line):
-                inChaptersListDiv = True
-                continue
-            if (inChaptersListDiv and mangaKey in line):
-                chapterUrl = line.split('<a href="/')[1].split('"')[0]
-                chapterNumber = self.getChapterNumber(chapterUrl.split('/')[-1])
-                chapterTitle = line.split('</td>')[0].split(' : ')[1]
+        for lineContent in content:
+            lines = '</div>\n'.join(lineContent.split('</div>')).split('\n')
+            for line in lines:
+                if ('<td>Chapter Name</td><td>Date Added</td>' in line):
+                    tmpChapters = line.split('<td>Chapter Name</td><td>Date Added</td></tr>')[1] \
+                                      .split('</table>')[0] \
+                                      .split('<tr>')[1:]
 
-                if (chapterNumber not in dictChapters.keys()):
-                    dictChapters[chapterNumber] = {
-                        u'number': chapterNumber,
-                        u'title': chapterTitle,
-                        u'url': chapterUrl,
-                    }
+                    for tmpChapter in tmpChapters:
+                        chapterUrl = tmpChapter.split('<a href="/')[1].split('"')[0]
+                        chapterNumber = self.getChapterNumber(chapterUrl.split('/')[-1])
+                        chapterTitle = html.unescape(tmpChapter.split('</td>')[0].split(' : ')[1])
+
+                        if (chapterNumber not in dictChapters.keys()):
+                            dictChapters[chapterNumber] = {
+                                u'number': chapterNumber,
+                                u'title': chapterTitle,
+                                u'url': chapterUrl,
+                            }
 
         return dictChapters
 
