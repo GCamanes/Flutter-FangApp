@@ -165,9 +165,9 @@ class FirebaseManager:
             dictChapters = self.mangaManager.getMangaChaptersDico(existingManga[u'key'])
             for chapter in dictChapters:
                 currentChapter = dictChapters[chapter]
-#                 if (existingManga[u'lastChapter'] == 'None' or currentChapter[u'number'] > existingManga[u'lastChapter']):
-#                     self.updateMangaChapter(mangasList, existingManga, currentChapter)
-#                     existingManga = self.findMangaInMangasList(mangaKey, mangasList)
+                if (existingManga[u'lastChapter'] == 'None' or currentChapter[u'number'] > existingManga[u'lastChapter']):
+                    self.updateMangaChapter(mangasList, existingManga, currentChapter)
+                    existingManga = self.findMangaInMangasList(mangaKey, mangasList)
 
             print('\nSUCCESS {} updated on firestore'.format(existingManga[u'key']))
         else:
@@ -325,52 +325,44 @@ class MangaManager:
         return dictChapters
 
     def getChapterPages(self, chapter):
-        url = '{}{}'.format(self.website, chapter[u'url'])
-        # Get html content in a file
-        os.system('curl -s {} > {}'.format(url, MANGA_CHAPTER_PATH))
-        # read the file
-        f = open(MANGA_CHAPTER_PATH, 'r')
-        content = f.readlines()
-        f.close()
-        os.system('rm {}'.format(MANGA_CHAPTER_PATH))
-
         pagesList = []
+        needToStop = False
+        pageNumber = 1
 
-        inPageSelect = False
-        for line in content:
-            if (inPageSelect and '</select>' in line):
-                break
-            if (MANGA_CHAPTER_PAGE_SELECT in line):
-                inPageSelect = True
-            if (inPageSelect and chapter[u'url'] in line):
-                pageUrl = line.split('<option value="/')[1].split('"')[0]
-                if (len(pageUrl.split('/')) == 3):
-                    pageNumber = self.getPageName(pageUrl.split('/')[-1])
-                else:
-                    pageNumber = self.getPageName('1')
-                pagesList.append({
-                    u'page': pageNumber,
-                    u'url': pageUrl,
-                    u'urlImg': '',
-                })
+        while(not needToStop):
+            urlPrefix = ''
+            if (pageNumber != 1):
+                urlPrefix = '/{}'.format(pageNumber)
+            url = '{}{}{}'.format(self.website, chapter[u'url'], urlPrefix)
+            # Get html content in a file
+            os.system('curl -s {} > {}'.format(url, MANGA_CHAPTER_PATH))
+            # read the file
+            f = open(MANGA_CHAPTER_PATH, 'r')
+            content = f.readlines()
+            f.close()
+            os.system('rm {}'.format(MANGA_CHAPTER_PATH))
 
-        for page in pagesList:
-            self.getPage(page)
+            page = {
+                u'page': '',
+                u'url': url,
+                u'urlImg': '',
+            }
+
+            for lineContent in content:
+                lines = '</div>\n'.join(lineContent.split('</div>')).split('\n')
+                for line in lines:
+                    if ('<img id="ci"' in line):
+                        page[u'urlImg'] = HTTPS + line.split('src="')[1].split('"')[0]
+                    if ('<div id="mci"' in line):
+                        page[u'page'] = self.getPageName(line.split('data-id="')[1].split('"')[0])
+
+            pageNumber += 1
+            if (page[u'page'] == ''):
+                needToStop = True
+            else:
+                pagesList.append(page)
 
         chapter[u'pages'] = pagesList
-
-    def getPage(self, page):
-        url = '{}{}'.format(self.website, page[u'url'])
-        # Get html content in a file
-        os.system('curl -s {} | grep "<img" > {}'.format(url, MANGA_CHAPTER_PAGE_PATH))
-        # read the file
-        f = open(MANGA_CHAPTER_PAGE_PATH, 'r')
-        content = f.readlines()
-        f.close()
-        os.system('rm {}'.format(MANGA_CHAPTER_PAGE_PATH))
-
-        for line in content:
-            page[u'urlImg'] = line.split('src="')[1].split('"')[0]
 
 #-----------------------------------------------------------------------------------
 # MAIN FUNCTION
