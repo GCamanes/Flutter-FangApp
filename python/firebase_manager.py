@@ -44,12 +44,6 @@ MANGA_CHAPTERS_COLLECTION = u'chapters'
 # MANGA WEBSITE
 WEBSITE = 'https://www.mangareader.net/'
 HTTPS = 'https:'
-MANGA_IMG_DIV = 'mangaimg'
-MANGA_PROPERTIES_DIV = 'mangaproperties'
-MANGA_PROPERTY_TD = 'propertytitle'
-MANGA_CHAPTERS_LIST_DIV = 'chapterlist'
-MANGA_CHAPTERS_LIST_DIV_END = '<div class="clear"'
-MANGA_CHAPTER_PAGE_SELECT = 'pageMenu'
 
 #-----------------------------------------------------------------------------------
 # FIREBASE MANAGER
