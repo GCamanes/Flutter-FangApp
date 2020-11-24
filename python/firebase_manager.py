@@ -11,6 +11,7 @@
 # IMPORT
 import os
 import sys
+import html
 import argparse
 import firebase_admin
 import google.cloud
@@ -41,7 +42,8 @@ MANGA_LIST_FIELD = u'chaptersList'
 MANGA_CHAPTERS_COLLECTION = u'chapters'
 
 # MANGA WEBSITE
-WEBSITE = 'http://www.mangapanda.com/'
+WEBSITE = 'https://www.mangareader.net/'
+HTTPS = 'https:'
 MANGA_IMG_DIV = 'mangaimg'
 MANGA_PROPERTIES_DIV = 'mangaproperties'
 MANGA_PROPERTY_TD = 'propertytitle'
@@ -264,7 +266,6 @@ class MangaManager:
             u'url': url,
             u'status': '',
             u'author': '',
-            u'released': '',
             u'lastChapter': 'None',
         }
 
@@ -276,36 +277,16 @@ class MangaManager:
         f.close()
         os.system('rm {}'.format(MANGA_INFOS_PATH))
 
-        isImgSaved = False
-        inPropertiesDiv = False
-        nextIsProperty = False
-        properties = []
-        for line in content:
-            if (isImgSaved):
-                if (MANGA_PROPERTIES_DIV in line):
-                    inPropertiesDiv = True
-                    continue
-                if (inPropertiesDiv and MANGA_PROPERTY_TD in line):
-                    nextIsProperty = True
-                    continue
-                if (nextIsProperty and '<h2 class="aname">' in line):
-                    properties.append(line.split('<h2 class="aname">')[1].split('</h2>')[0])
-                    nextIsProperty = False
-                if (nextIsProperty and '<td>' in line and '</td>' in line and len(properties) < 5):
-                    properties.append(line.split('<td>')[1].split('</td>')[0])
-                    nextIsProperty = False
-                if ('</div>' in line):
-                    inPropertiesDiv = False
-                    break
-
-            elif (MANGA_IMG_DIV in line):
-                mangaInfos[u'imgUrl'] = line.split('src="')[1].split('"')[0]
-                isImgSaved = True
-
-        mangaInfos[u'name'] = properties[0]
-        mangaInfos[u'released'] = properties[2]
-        mangaInfos[u'status'] = properties[3]
-        mangaInfos[u'author'] = properties[4]
+        for lineContent in content:
+            lines = '</div>\n'.join(lineContent.split('</div>')).split('\n')
+            for line in lines:
+                if ('<div class="d38"><img src="' in line):
+                    mangaInfos[u'imgUrl'] = HTTPS + line.split('src="')[1].split('"')[0]
+                if ('<table class="d41"><tr><td>Name :</td>' in line):
+                    contentInfos = line.split('</tr>')
+                    mangaInfos[u'name'] = contentInfos[0].split('<span class="name">')[1].split('</span>')[0]
+                    mangaInfos[u'status'] = contentInfos[3].split('<td>')[-1].split('</td>')[0]
+                    mangaInfos[u'author'] = contentInfos[4].split('<td>')[-1].split('</td>')[0]
 
         return mangaInfos
 
@@ -321,75 +302,67 @@ class MangaManager:
 
         dictChapters = {}
 
-        inChaptersListDiv = False
-        for line in content:
-            if (inChaptersListDiv and MANGA_CHAPTERS_LIST_DIV_END in line):
-                inChaptersListDiv = False
-                break
-            if (MANGA_CHAPTERS_LIST_DIV in line):
-                inChaptersListDiv = True
-                continue
-            if (inChaptersListDiv and mangaKey in line):
-                chapterUrl = line.split('<a href="/')[1].split('"')[0]
-                chapterNumber = self.getChapterNumber(chapterUrl.split('/')[-1])
-                chapterTitle = line.split('</td>')[0].split(' : ')[1]
+        for lineContent in content:
+            lines = '</div>\n'.join(lineContent.split('</div>')).split('\n')
+            for line in lines:
+                if ('<td>Chapter Name</td><td>Date Added</td>' in line):
+                    tmpChapters = line.split('<td>Chapter Name</td><td>Date Added</td></tr>')[1] \
+                                      .split('</table>')[0] \
+                                      .split('<tr>')[1:]
 
-                if (chapterNumber not in dictChapters.keys()):
-                    dictChapters[chapterNumber] = {
-                        u'number': chapterNumber,
-                        u'title': chapterTitle,
-                        u'url': chapterUrl,
-                    }
+                    for tmpChapter in tmpChapters:
+                        chapterUrl = tmpChapter.split('<a href="/')[1].split('"')[0]
+                        chapterNumber = self.getChapterNumber(chapterUrl.split('/')[-1])
+                        chapterTitle = html.unescape(tmpChapter.split('</td>')[0].split(' : ')[1])
+
+                        if (chapterNumber not in dictChapters.keys()):
+                            dictChapters[chapterNumber] = {
+                                u'number': chapterNumber,
+                                u'title': chapterTitle,
+                                u'url': chapterUrl,
+                            }
 
         return dictChapters
 
     def getChapterPages(self, chapter):
-        url = '{}{}'.format(self.website, chapter[u'url'])
-        # Get html content in a file
-        os.system('curl -s {} > {}'.format(url, MANGA_CHAPTER_PATH))
-        # read the file
-        f = open(MANGA_CHAPTER_PATH, 'r')
-        content = f.readlines()
-        f.close()
-        os.system('rm {}'.format(MANGA_CHAPTER_PATH))
-
         pagesList = []
+        needToStop = False
+        pageNumber = 1
 
-        inPageSelect = False
-        for line in content:
-            if (inPageSelect and '</select>' in line):
-                break
-            if (MANGA_CHAPTER_PAGE_SELECT in line):
-                inPageSelect = True
-            if (inPageSelect and chapter[u'url'] in line):
-                pageUrl = line.split('<option value="/')[1].split('"')[0]
-                if (len(pageUrl.split('/')) == 3):
-                    pageNumber = self.getPageName(pageUrl.split('/')[-1])
-                else:
-                    pageNumber = self.getPageName('1')
-                pagesList.append({
-                    u'page': pageNumber,
-                    u'url': pageUrl,
-                    u'urlImg': '',
-                })
+        while(not needToStop):
+            urlPrefix = ''
+            if (pageNumber != 1):
+                urlPrefix = '/{}'.format(pageNumber)
+            url = '{}{}{}'.format(self.website, chapter[u'url'], urlPrefix)
+            # Get html content in a file
+            os.system('curl -s {} > {}'.format(url, MANGA_CHAPTER_PATH))
+            # read the file
+            f = open(MANGA_CHAPTER_PATH, 'r')
+            content = f.readlines()
+            f.close()
+            os.system('rm {}'.format(MANGA_CHAPTER_PATH))
 
-        for page in pagesList:
-            self.getPage(page)
+            page = {
+                u'page': '',
+                u'url': url,
+                u'urlImg': '',
+            }
+
+            for lineContent in content:
+                lines = '</div>\n'.join(lineContent.split('</div>')).split('\n')
+                for line in lines:
+                    if ('<img id="ci"' in line):
+                        page[u'urlImg'] = HTTPS + line.split('src="')[1].split('"')[0]
+                    if ('<div id="mci"' in line):
+                        page[u'page'] = self.getPageName(line.split('data-id="')[1].split('"')[0])
+
+            pageNumber += 1
+            if (page[u'page'] == ''):
+                needToStop = True
+            else:
+                pagesList.append(page)
 
         chapter[u'pages'] = pagesList
-
-    def getPage(self, page):
-        url = '{}{}'.format(self.website, page[u'url'])
-        # Get html content in a file
-        os.system('curl -s {} | grep "<img" > {}'.format(url, MANGA_CHAPTER_PAGE_PATH))
-        # read the file
-        f = open(MANGA_CHAPTER_PAGE_PATH, 'r')
-        content = f.readlines()
-        f.close()
-        os.system('rm {}'.format(MANGA_CHAPTER_PAGE_PATH))
-
-        for line in content:
-            page[u'urlImg'] = line.split('src="')[1].split('"')[0]
 
 #-----------------------------------------------------------------------------------
 # MAIN FUNCTION
