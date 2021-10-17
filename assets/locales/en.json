@@ -1,0 +1,41 @@
+{
+  "common.yes": "Yes",
+  "common.no": "No",
+  "common.ok": "Ok",
+  "common.welcomeBack": "Welcome back to FangApp !",
+  "common.all": "All",
+  "common.favorites": "Favorites",
+
+  "login.title": "Login",
+  "login.enterApp": "Let's go",
+  "login.email": "Email",
+  "login.pwd": "Password",
+
+  "error.OfflineException": "Please check your internet connection",
+  "error.EmptyFieldException": "Please fill all fields in the form",
+  "error.UnexpectedException": "An unexpected error happened",
+  "error.UserNotFoundException": "User not found",
+  "error.WrongPasswordException": "Wrong password, please try again",
+  "error.InvalidEmailException": "Invalid email",
+  "error.UserDisabledException": "Your account has been disabled",
+  "error.TooManyRequestException": "Too many failed login, please wait and try again",
+  "error.NoChapterFoundException": "No available chapter",
+  "error.ChapterNotFoundException": "This chapter is not available",
+
+  "bottomBar.home": "Home",
+  "bottomBar.settings": "Settings",
+  "bottomBar.bonus": "Bonus",
+
+  "page.notFound": "Page not found",
+
+  "language.selected": "Selected language",
+  "language.en": "English",
+  "language.fr": "French",
+
+  "settings.logoutConfirm": "Do you really want to logout ?",
+
+  "mangas.noMangas": "No manga available",
+  "mangas.noFavorites": "You don't have any manga in your favorites",
+
+  "reading.considerChapterAsRead": "Do you want to consider the chapter %s as read ?"
+}
