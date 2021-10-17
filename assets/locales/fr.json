@@ -1,0 +1,41 @@
+{
+  "common.yes": "Oui",
+  "common.no": "Non",
+  "common.ok": "Ok",
+  "common.welcomeBack": "Bon retour sur FangApp !",
+  "common.all": "Tous",
+  "common.favorites": "Favoris",
+
+  "login.title": "Connexion",
+  "login.enterApp": "C'est parti !",
+  "login.email": "Email",
+  "login.pwd": "Mot de passe",
+
+  "error.OfflineException": "Merci de vérifier votre connexion internet",
+  "error.EmptyFieldException": "Merci de remplir tous les champs du formulaire",
+  "error.UnexpectedException": "Une erreur innatendue est survenue",
+  "error.UserNotFoundException": "Utilisateur inconnu",
+  "error.WrongPasswordException": "Mauvais mot de passe, merci de rééssayer",
+  "error.InvalidEmailException": "Email invalidel",
+  "error.UserDisabledException": "Votre compte a été suspendu",
+  "error.TooManyRequestException": "Trop de tentatives de connexion, merci d'attendre puis de rééssayer",
+  "error.NoChapterFoundException": "Aucun chapitre disponible",
+  "error.ChapterNotFoundException": "Ce chapitre n'est pas disponible",
+
+  "bottomBar.home": "Accueil",
+  "bottomBar.settings": "Paramètres",
+  "bottomBar.bonus": "Bonus",
+
+  "page.notFound": "Page introuvable",
+
+  "language.selected": "Langage sélectionné",
+  "language.en": "Anglais",
+  "language.fr": "Français",
+
+  "settings.logoutConfirm": "Vous voulez vraiment vous déconnecter ?",
+
+  "mangas.noMangas": "Aucun manga disponible",
+  "mangas.noFavorites": "Vous n'avez pas de manga dans vos favoris",
+
+  "reading.considerChapterAsRead": "voulez-vous considérer le chapitre %s comme lu ?"
+}
