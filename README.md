@@ -30,6 +30,11 @@ Back managed with Python3 and Firebase.
 # Android signing
 
 ```
-keytool -genkey -v -keystore KS_NAME.jks -alias ALIAS -keyalg RSA -sigalg SHA256withRSA -keysize 2048 -validity 10000 -storetype JKS
-keytool -importkeystore -srckeystore KS_NAME.jks -destkeystore KS_NAME.p12 -deststoretype pkcs12
+/Applications/Android\ Studio.app/Contents/jre/Contents/Home/bin/keytool -genkeypair -v -keyalg RSA -keysize 2048 -validity 10000 -keystore YOUR_KS.keystore -storepass KS_PASSWORD -alias ALIAS
+```
+
+you can find your java path with the command
+
+```
+flutter doctor -v
 ```
