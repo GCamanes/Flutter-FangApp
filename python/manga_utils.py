@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from constants import ConstantsHandler
 from function_helper import FunctionHelper
@@ -21,21 +22,13 @@ class MangaManager:
         # build search url
         url = FunctionHelper.buildSearchUrl(searchTerm)
         # build command line
-        commandLine = "curl -s '{}' | grep '<div class=\"book-item' | grep 'img' > {}" \
-            .format(url, Constants.MANGA_SEARCH_PATH)
-
-        # Get html content
-        os.system(commandLine)
-        # read the file
-        f = open(Constants.MANGA_SEARCH_PATH, 'r')
-        content = f.readlines()
-        f.close()
-        # delete temporary file
-        os.system('rm {}'.format(Constants.MANGA_SEARCH_PATH))
+        output = subprocess.check_output(
+            "curl -s '{}' | grep '<div class=\"book-item' | grep 'img'"
+            .format(url, Constants.MANGA_SEARCH_PATH), shell=True, text=True)
 
         # format raw content
-        lines = ''.join(content).replace('\n                     ', ' ').split('<div class="book'
-                                                                               '-item">')[1:]
+        lines = ''.join(output).replace('\n                     ', ' ').split('<div class="book'
+                                                                              '-item">')[1:]
 
         return FunctionHelper.mapEasy(lines, MangaSearchModel)
 
