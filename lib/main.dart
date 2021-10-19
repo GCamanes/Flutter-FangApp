@@ -165,7 +165,7 @@ class _FangAppState extends State<FangApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'FangApp',
       localizationsDelegates: <LocalizationsDelegate<dynamic>>[
         // A class which loads the translations from JSON files
         injection.getIt<AppLocalizations>().delegate,
