@@ -93,7 +93,13 @@ class DataManager:
     def updateDownloadManga(self, link):
         print("\nUPDATING DOWNLOAD {}...".format(link))
 
-        mangaInfo = self.mangaManager.getMangaInfo(link)
+        mangaLink = link
+        mangaChapterLink = None
+        if len(link.split('/')) == 3:
+            mangaLink = '/'.join(link.split('/')[:-1])
+            mangaChapterLink = link
+
+        mangaInfo = self.mangaManager.getMangaInfo(mangaLink)
 
         if mangaInfo.checking():
             # Create directory if needed
@@ -101,7 +107,7 @@ class DataManager:
             # Save info to json
             mangaInfo.saveMangaInfoToJson()
             # Download chapters
-            self.updateDownloadMangaChapters(mangaInfo)
+            self.updateDownloadMangaChapters(mangaInfo, mangaChapterLink)
 
         else:
             print('\n/!\\ No result on link {}'.format(link))
@@ -120,8 +126,10 @@ class DataManager:
                 print(chapterInfo.toString())
 
     # Function to update downloaded chapters
-    def updateDownloadMangaChapters(self, mangaInfo):
+    def updateDownloadMangaChapters(self, mangaInfo, mangaChapterLink):
         chapterLinkToDownload = mangaInfo.lastChapter
+        if mangaChapterLink is not None:
+            chapterLinkToDownload = mangaChapterLink
         needToDownload = True
         while needToDownload:
             chapterInfo = self.mangaManager.getChapterInfo(chapterLinkToDownload)
