@@ -1,6 +1,7 @@
 import os
 import subprocess
 import glob
+import re
 
 from constants import ConstantsHandler
 
@@ -84,3 +85,24 @@ class FunctionHelper:
                     newFilePath = '{}/{}_page_{}'.format(chapterPath, baseFileName, page)
                     commandLine = 'mv "{}" "{}"'.format(file, newFilePath)
                     os.system(commandLine)
+
+    @staticmethod
+    def checkMissingChapter(mangaPath):
+        print('Checking {}'.format(mangaPath))
+        elementsInPath = glob.glob(mangaPath + '/*')
+        previous = None
+        for fileOrDir in sorted(elementsInPath):
+            if os.path.isdir(fileOrDir):
+                searchForNumber = re.findall(r"([\d.]*\d+)", fileOrDir)
+                if len(searchForNumber) == 1:
+                    number = float(searchForNumber[0])
+                    if previous is not None:
+                        previousInt = int(previous)
+                        possiblePreviousChapters = [previousInt + round(x * 0.1, 1) for x in
+                                                    range(1, 11)]
+                        if number not in possiblePreviousChapters:
+                            print('=> missing chapter(s) between {} to {}'.format(previous, number))
+
+                    previous = number
+                else:
+                    print(fileOrDir)
