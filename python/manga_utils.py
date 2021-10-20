@@ -39,7 +39,7 @@ class MangaManager:
         url = FunctionHelper.buildMangaInfoUrl(link)
         # build command line
         output = subprocess.check_output(
-            "curl -s '{}'".format(url, Constants.MANGA_INFO_PATH), shell=True, text=True)
+            "curl -s '{}'".format(url), shell=True, text=True)
         content = output.split('\n')
 
         return MangaInfoModel.fromHtmlContent(link, content)
@@ -50,16 +50,9 @@ class MangaManager:
         # build search url
         url = FunctionHelper.buildMangaInfoUrl(link)
         # build command line
-        commandLine = "curl -s '{}' > {}" \
-            .format(url, Constants.CHAPTER_INFO_PATH)
 
-        # Get html content
-        os.system(commandLine)
-        # read the file
-        f = open(Constants.CHAPTER_INFO_PATH, 'r')
-        content = f.readlines()
-        f.close()
-        # delete temporary file
-        os.system('rm {}'.format(Constants.CHAPTER_INFO_PATH))
+        output = subprocess.check_output(
+            "curl -s '{}'".format(url), shell=True, text=True)
+        content = output.split('\n')
 
         return ChapterInfoModel(link, content)
