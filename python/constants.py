@@ -18,26 +18,6 @@ class ConstantsHandler(object):
     def PATH(self):
         return './python'
 
-    @constant
-    def MANGA_SEARCH_PATH(self):
-        return '{}/search.txt'.format(self.PATH)
-
-    @constant
-    def MANGA_INFO_PATH(self):
-        return '{}/mangaInfo.txt'.format(self.PATH)
-
-    @constant
-    def MANGA_CHAPTERS_PATH(self):
-        return '{}/mangaChapterslist.txt'.format(self.PATH)
-
-    @constant
-    def CHAPTER_INFO_PATH(self):
-        return '{}/chapterInfo.txt'.format(self.PATH)
-
-    @constant
-    def MANGA_CHAPTER_PAGE_PATH(self):
-        return '{}/mangaChapterPage.txt'.format(self.PATH)
-
     # DOWNLOAD
     @constant
     def MANGA_DL_PATH(self):

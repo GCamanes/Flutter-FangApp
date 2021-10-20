@@ -24,7 +24,7 @@ class MangaManager:
         # build command line
         output = subprocess.check_output(
             "curl -s '{}' | grep '<div class=\"book-item' | grep 'img'"
-            .format(url, Constants.MANGA_SEARCH_PATH), shell=True, text=True)
+            .format(url), shell=True, text=True)
 
         # format raw content
         lines = ''.join(output).replace('\n                     ', ' ').split('<div class="book'
