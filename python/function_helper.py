@@ -96,10 +96,12 @@ class FunctionHelper:
                 searchForNumber = re.findall(r"([\d.]*\d+)", fileOrDir)
                 if len(searchForNumber) == 1:
                     number = float(searchForNumber[0])
-                    print('{} {}'.format(previous, number))
                     if previous is not None:
-                        previousWithoutDec = round(previous, 0)
-                        print([previousWithoutDec + round(x * 0.1, 1) for x in range(1, 11)])
+                        previousInt = int(previous)
+                        possiblePreviousChapters = [previousInt + round(x * 0.1, 1) for x in
+                                                    range(1, 11)]
+                        if number not in possiblePreviousChapters:
+                            print('=> missing chapter(s) between {} to {}'.format(previous, number))
 
                     previous = number
                 else:
