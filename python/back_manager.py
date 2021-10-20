@@ -290,6 +290,9 @@ def main():
     parser.add_argument('-f', '--fixe', nargs=1,
                         help='fixe file page names in path',
                         action='store', type=str)
+    parser.add_argument('-c', '--check', nargs=1,
+                        help='check missing chapter',
+                        action='store', type=str)
 
     # Parsing of command line argument
     args = parser.parse_args(sys.argv[1:])
@@ -320,6 +323,10 @@ def main():
 
     elif args.delete is not None:
         dataManager.deleteManga(args.delete[0])
+        sys.exit()
+
+    elif args.check is not None:
+        FunctionHelper.checkMissingChapter(args.check[0])
         sys.exit()
 
 
