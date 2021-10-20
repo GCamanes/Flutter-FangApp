@@ -105,5 +105,4 @@ class FunctionHelper:
 
                     previous = number
                 else:
-                    previous = None
                     print(fileOrDir)
