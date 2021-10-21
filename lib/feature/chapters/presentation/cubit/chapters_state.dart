@@ -28,6 +28,19 @@ class ChaptersLoaded extends ChaptersState {
     return indexFound;
   }
 
+  LightChapterEntity? getLastReadChapter() {
+    LightChapterEntity? lastReadChapter;
+    for (final String key in chapterTabs.keys) {
+      for (final LightChapterEntity chapter in chapterTabs[key]!) {
+        if (!chapter.isRead) {
+          return lastReadChapter;
+        }
+        lastReadChapter = chapter;
+      }
+    }
+    return lastReadChapter;
+  }
+
   LightChapterEntity findChapter(LightChapterEntity chapterToFind) {
     for (final String key in chapterTabs.keys) {
       for (final LightChapterEntity chapter in chapterTabs[key]!) {

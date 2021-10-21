@@ -74,4 +74,7 @@ abstract class AppConstants {
   // Chapters
   static const int maxChaptersPerTab = 100;
   static const String splitCharsInChapterKey = '_chap_';
+  static const int numberOfTilePerLine = 4;
+  static const double spacingBetweenTile = 1;
+  static const double tileAspectRatio = 2;
 }

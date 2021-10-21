@@ -33,6 +33,7 @@ class _ChaptersPageState extends State<ChaptersPage>
 
   late MangaEntity? _manga;
   late Map<String, List<LightChapterEntity>> _chapterTabs;
+  LightChapterEntity? _lastReadChapter;
   bool _hasLoadAtLeastOnce = false;
 
   @override
@@ -81,6 +82,7 @@ class _ChaptersPageState extends State<ChaptersPage>
               }
               setState(() {
                 _chapterTabs = state.chapterTabs;
+                _lastReadChapter = state.getLastReadChapter();
                 _tabController = TabController(
                   vsync: this,
                   length: _chapterTabs.length,
@@ -147,6 +149,7 @@ class _ChaptersPageState extends State<ChaptersPage>
                         .map(
                           (String key) => ChaptersListWidget(
                             chapters: _chapterTabs[key]!,
+                            lastChapterRead: _lastReadChapter,
                             manga: widget.manga!,
                             pageKey: key,
                           ),
