@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fangapp/core/extensions/int_extension.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +27,8 @@ class _ReadIconWidgetState extends State<ReadIconWidget>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: 1.seconds,
-      reverseDuration: 1.seconds,
+      duration: 300.milliseconds,
+      reverseDuration: 200.milliseconds,
     );
   }
 
@@ -36,8 +38,19 @@ class _ReadIconWidgetState extends State<ReadIconWidget>
     super.dispose();
   }
 
+  void startAnimation() {
+    if (mounted) {
+      _controller.forward();
+      Timer(
+        300.milliseconds,
+            () => _controller.reverse(),
+      );
+    }
+  }
+
   @override
   void didUpdateWidget(covariant ReadIconWidget oldWidget) {
+    startAnimation();
     super.didUpdateWidget(oldWidget);
   }
 
@@ -46,24 +59,20 @@ class _ReadIconWidgetState extends State<ReadIconWidget>
     return AnimatedBuilder(
       animation: _controller,
       builder: (_, Widget? child) {
-        return Transform.rotate(
-          angle: 0,
-          child: child,
+        return IconButton(
+          onPressed: widget.onPress,
+          iconSize: 30 + _controller.value * 5,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          icon: Icon(
+            widget.isRead
+                ? Icons.bookmark_added_outlined
+                : Icons.bookmark_add_outlined,
+            color: widget.isRead ? AppColors.orange : AppColors.white,
+            size: 30 + _controller.value * 5,
+          ),
         );
       },
-      child: IconButton(
-        onPressed: widget.onPress,
-        iconSize: 30,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        icon: Icon(
-          widget.isRead
-              ? Icons.bookmark_added_outlined
-              : Icons.bookmark_add_outlined,
-          color: widget.isRead ? AppColors.orange : AppColors.white,
-          size: 30,
-        ),
-      ),
     );
   }
 }
