@@ -1,8 +1,14 @@
 import 'dart:async';
 
-import 'package:fangapp/core/extensions/int_extension.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+
+const double minIconSize = 30;
+const double maxIconSize = 35;
+const double deltaIconSize = maxIconSize - minIconSize;
+
+const Duration forwardDuration = Duration(milliseconds: 300);
+const Duration reverseDuration = Duration(milliseconds: 200);
 
 class ReadIconWidget extends StatefulWidget {
   const ReadIconWidget({
@@ -27,8 +33,8 @@ class _ReadIconWidgetState extends State<ReadIconWidget>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: 300.milliseconds,
-      reverseDuration: 200.milliseconds,
+      duration: forwardDuration,
+      reverseDuration: reverseDuration,
     );
   }
 
@@ -41,16 +47,13 @@ class _ReadIconWidgetState extends State<ReadIconWidget>
   void startAnimation() {
     if (mounted) {
       _controller.forward();
-      Timer(
-        300.milliseconds,
-            () => _controller.reverse(),
-      );
+      Timer(forwardDuration, () => _controller.reverse());
     }
   }
 
   @override
   void didUpdateWidget(covariant ReadIconWidget oldWidget) {
-    startAnimation();
+    if (oldWidget.isRead != widget.isRead) startAnimation();
     super.didUpdateWidget(oldWidget);
   }
 
@@ -61,15 +64,17 @@ class _ReadIconWidgetState extends State<ReadIconWidget>
       builder: (_, Widget? child) {
         return IconButton(
           onPressed: widget.onPress,
-          iconSize: 30 + _controller.value * 5,
+          iconSize: maxIconSize,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
-          icon: Icon(
-            widget.isRead
-                ? Icons.bookmark_added_outlined
-                : Icons.bookmark_add_outlined,
-            color: widget.isRead ? AppColors.orange : AppColors.white,
-            size: 30 + _controller.value * 5,
+          icon: Center(
+            child: Icon(
+              widget.isRead
+                  ? Icons.bookmark_added_outlined
+                  : Icons.bookmark_add_outlined,
+              color: widget.isRead ? AppColors.orange : AppColors.white,
+              size: minIconSize + _controller.value * deltaIconSize,
+            ),
           ),
         );
       },

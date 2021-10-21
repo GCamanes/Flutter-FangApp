@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:fangapp/core/extensions/int_extension.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
-import 'package:fangapp/core/theme/app_styles.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/core/widget/loading_widget.dart';
 import 'package:fangapp/core/widget/message_widget.dart';
@@ -17,6 +17,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+
+import '../page_counter_widget.dart';
 
 class ChapterReadingPage extends StatefulWidget {
   const ChapterReadingPage({
@@ -101,26 +103,17 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
               subTitle: _chapter?.number ?? '',
               actionsList: state is ChapterReadingLoaded
                   ? <Widget>[
-                ReadIconWidget(
-                  isRead: _chapter?.isRead ?? false,
-                  onPress: () {
-                    _markChapterAsRead();
-                  },
-                ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Text(
-                      '$_currentPage / $_numberOfPage',
-                      style: AppStyles.mediumTitle(
-                        context,
-                        color: AppColors.white,
-                        size: 12,
+                      ReadIconWidget(
+                        isRead: _chapter?.isRead ?? false,
+                        onPress: () {
+                          _markChapterAsRead();
+                        },
                       ),
-                    ),
-                  ),
-                ),
-              ]
+                      PageCounterWidget(
+                        currentPage: _currentPage,
+                        numberOfPage: _numberOfPage,
+                      ),
+                    ]
                   : <Widget>[],
             ),
             body: _buildBody(state),
@@ -146,7 +139,7 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
           setState(() {
             _currentPage = index + 1;
             if (index == _numberOfPage - 1) {
-              _markChapterAsRead();
+              Timer(300.milliseconds, () => _markChapterAsRead());
             }
           });
         },
