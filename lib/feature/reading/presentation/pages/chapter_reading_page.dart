@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fangapp/core/extensions/int_extension.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
+import 'package:fangapp/core/utils/interaction_helper.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/core/widget/loading_widget.dart';
 import 'package:fangapp/core/widget/message_widget.dart';
@@ -39,7 +40,6 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
   late LightChapterEntity? _chapter;
   int _currentPage = 0;
   late int _numberOfPage;
-  bool _loadedWithoutError = false;
 
   @override
   void initState() {
@@ -61,10 +61,25 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
   }
 
   Future<void> _markChapterAsRead() async {
-    if (_loadedWithoutError && !(_chapter?.isRead ?? false)) {
+    if (!(_chapter?.isRead ?? false)) {
       BlocProvider.of<ChaptersCubit>(context).updateLastReadChapter(
         number: _chapter?.number ?? '',
       );
+    }
+  }
+
+  Future<void> _askMarkChapterAsRead() async {
+    if (!(_chapter?.isRead ?? false)) {
+      final bool needToMarkChapterAsRead = await InteractionHelper.showModal(
+            text: 'reading.considerChapterAsRead'.translateWithArgs(
+              args: <String>[widget.chapter?.number ?? ''],
+            ),
+            isDismissible: true,
+          ) ??
+          false;
+      if (needToMarkChapterAsRead) {
+        _markChapterAsRead();
+      }
     }
   }
 
@@ -79,7 +94,6 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
               setState(() {
                 _currentPage = 1;
                 _numberOfPage = state.pageUrls.length;
-                _loadedWithoutError = true;
               });
             }
           },
@@ -106,7 +120,7 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
                       ReadIconWidget(
                         isRead: _chapter?.isRead ?? false,
                         onPress: () {
-                          _markChapterAsRead();
+                          _askMarkChapterAsRead();
                         },
                       ),
                       PageCounterWidget(
