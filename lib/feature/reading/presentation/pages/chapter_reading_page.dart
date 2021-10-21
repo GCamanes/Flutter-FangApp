@@ -19,7 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
-import '../page_counter_widget.dart';
+import '../widgets/page_counter_widget.dart';
 
 class ChapterReadingPage extends StatefulWidget {
   const ChapterReadingPage({
@@ -117,15 +117,15 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
               subTitle: _chapter?.number ?? '',
               actionsList: state is ChapterReadingLoaded
                   ? <Widget>[
+                      PageCounterWidget(
+                        currentPage: _currentPage,
+                        numberOfPage: _numberOfPage,
+                      ),
                       ReadIconWidget(
                         isRead: _chapter?.isRead ?? false,
                         onPress: () {
                           _askMarkChapterAsRead();
                         },
-                      ),
-                      PageCounterWidget(
-                        currentPage: _currentPage,
-                        numberOfPage: _numberOfPage,
                       ),
                     ]
                   : <Widget>[],
