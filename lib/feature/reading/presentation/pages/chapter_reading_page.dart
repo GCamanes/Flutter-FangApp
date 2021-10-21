@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/theme/app_styles.dart';
@@ -37,9 +36,8 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
   late final ChapterReadingCubit _chapterReadingCubit;
   int _currentPage = 0;
   late int _numberOfPage;
-  Timer? _timerBeforeMarkChapterAsRead;
-  bool _alreadyAskedMarkChapterAsRead = false;
   bool _loadedWithoutError = false;
+  bool _lastPageRead = false;
 
   @override
   void initState() {
@@ -56,41 +54,28 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
   @override
   void dispose() {
     _chapterReadingCubit.close();
-    _timerBeforeMarkChapterAsRead?.cancel();
     super.dispose();
   }
 
-  Future<void> _markChapterAsRead({
-    Duration durationBeforeAsk = AppConstants.durationBeforeAskChapterAsRead,
-    bool popAfter = false,
-  }) async {
+  Future<void> _markChapterAsRead() async {
     if (_loadedWithoutError &&
-        !(widget.chapter?.isRead ?? true) &&
-        !_alreadyAskedMarkChapterAsRead) {
-      _timerBeforeMarkChapterAsRead = Timer(
-        durationBeforeAsk,
-        () async {
-          if (mounted) {
-            final bool needToMarkChapterAsRead =
-                await InteractionHelper.showModal(
-                      text: 'reading.considerChapterAsRead'.translateWithArgs(
-                        args: <String>[widget.chapter?.number ?? ''],
-                      ),
-                      isDismissible: true,
-                    ) ??
-                    false;
-            _alreadyAskedMarkChapterAsRead = true;
-            if (needToMarkChapterAsRead) {
-              BlocProvider.of<ChaptersCubit>(context).updateLastReadChapter(
-                number: widget.chapter?.number ?? '',
-              );
-            }
-            if (popAfter) Navigator.of(context).pop();
-          }
-        },
-      );
+        !(widget.chapter?.isRead ?? false) &&
+        _lastPageRead) {
+      final bool needToMarkChapterAsRead = await InteractionHelper.showModal(
+            text: 'reading.considerChapterAsRead'.translateWithArgs(
+              args: <String>[widget.chapter?.number ?? ''],
+            ),
+            isDismissible: true,
+          ) ??
+          false;
+      if (needToMarkChapterAsRead) {
+        BlocProvider.of<ChaptersCubit>(context).updateLastReadChapter(
+          number: widget.chapter?.number ?? '',
+        );
+      }
+      Navigator.of(context).pop();
     } else {
-      if (popAfter) Navigator.of(context).pop();
+      Navigator.of(context).pop();
     }
   }
 
@@ -113,11 +98,7 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
             title: widget.manga?.title ?? '',
             subTitle: widget.chapter?.number ?? '',
             onBackPressed: () {
-              _timerBeforeMarkChapterAsRead?.cancel();
-              _markChapterAsRead(
-                durationBeforeAsk: Duration.zero,
-                popAfter: true,
-              );
+              _markChapterAsRead();
             },
             actionsList: <Widget>[
               if (state is ChapterReadingLoaded)
@@ -155,13 +136,10 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
           color: AppColors.white,
         ),
         onPageChanged: (int index) {
-          _timerBeforeMarkChapterAsRead?.cancel();
           setState(() {
             _currentPage = index + 1;
+            _lastPageRead = index == _numberOfPage - 1;
           });
-          if (index == _numberOfPage - 1) {
-            _markChapterAsRead();
-          }
         },
         builder: (BuildContext context, int index) {
           return PhotoViewGalleryPageOptions(

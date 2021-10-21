@@ -72,9 +72,6 @@ abstract class AppConstants {
       'mangasFavoritesPageStorageKey';
 
   // Chapters
-  static const int maxChaptersPerTab = 80;
+  static const int maxChaptersPerTab = 100;
   static const String splitCharsInChapterKey = '_chap_';
-
-  // Reading
-  static const Duration durationBeforeAskChapterAsRead = Duration(seconds: 10);
 }
