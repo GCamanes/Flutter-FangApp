@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/theme/app_styles.dart';
-import 'package:fangapp/core/utils/interaction_helper.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/core/widget/loading_widget.dart';
 import 'package:fangapp/core/widget/message_widget.dart';
+import 'package:fangapp/core/widget/read_icon_widget.dart';
 import 'package:fangapp/feature/chapters/domain/entities/light_chapter_entity.dart';
 import 'package:fangapp/feature/chapters/presentation/cubit/chapters_cubit.dart';
 import 'package:fangapp/feature/mangas/domain/entities/manga_entity.dart';
@@ -34,19 +34,20 @@ class ChapterReadingPage extends StatefulWidget {
 
 class _ChapterReadingPageState extends State<ChapterReadingPage> {
   late final ChapterReadingCubit _chapterReadingCubit;
+  late LightChapterEntity? _chapter;
   int _currentPage = 0;
   late int _numberOfPage;
   bool _loadedWithoutError = false;
-  bool _lastPageRead = false;
 
   @override
   void initState() {
     super.initState();
+    _chapter = widget.chapter;
     _currentPage = 0;
     _numberOfPage = 0;
     _chapterReadingCubit = ChapterReadingCubit(getPageUrls: getIt());
     _chapterReadingCubit.getPageUrls(
-      chapterKey: widget.chapter?.key ?? '',
+      chapterKey: _chapter?.key ?? '',
       mangaKey: widget.manga?.key ?? '',
     );
   }
@@ -58,50 +59,54 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
   }
 
   Future<void> _markChapterAsRead() async {
-    if (_loadedWithoutError &&
-        !(widget.chapter?.isRead ?? false) &&
-        _lastPageRead) {
-      final bool needToMarkChapterAsRead = await InteractionHelper.showModal(
-            text: 'reading.considerChapterAsRead'.translateWithArgs(
-              args: <String>[widget.chapter?.number ?? ''],
-            ),
-            isDismissible: true,
-          ) ??
-          false;
-      if (needToMarkChapterAsRead) {
-        BlocProvider.of<ChaptersCubit>(context).updateLastReadChapter(
-          number: widget.chapter?.number ?? '',
-        );
-      }
-      Navigator.of(context).pop();
-    } else {
-      Navigator.of(context).pop();
+    if (_loadedWithoutError && !(_chapter?.isRead ?? false)) {
+      BlocProvider.of<ChaptersCubit>(context).updateLastReadChapter(
+        number: _chapter?.number ?? '',
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ChapterReadingCubit, ChapterReadingState>(
-      bloc: _chapterReadingCubit,
-      listener: (BuildContext context, ChapterReadingState state) {
-        if (state is ChapterReadingLoaded) {
-          setState(() {
-            _currentPage = 1;
-            _numberOfPage = state.pageUrls.length;
-            _loadedWithoutError = true;
-          });
-        }
-      },
-      builder: (BuildContext context, ChapterReadingState state) {
-        return Scaffold(
-          appBar: AppBarWidget(
-            title: widget.manga?.title ?? '',
-            subTitle: widget.chapter?.number ?? '',
-            onBackPressed: () {
-              _markChapterAsRead();
-            },
-            actionsList: <Widget>[
-              if (state is ChapterReadingLoaded)
+    return MultiBlocListener(
+      listeners: <BlocListener<dynamic, dynamic>>[
+        BlocListener<ChapterReadingCubit, ChapterReadingState>(
+          bloc: _chapterReadingCubit,
+          listener: (BuildContext context, ChapterReadingState state) {
+            if (state is ChapterReadingLoaded) {
+              setState(() {
+                _currentPage = 1;
+                _numberOfPage = state.pageUrls.length;
+                _loadedWithoutError = true;
+              });
+            }
+          },
+        ),
+        BlocListener<ChaptersCubit, ChaptersState>(
+          listener: (BuildContext context, ChaptersState state) {
+            if (state is ChaptersLoaded) {
+              setState(() {
+                _chapter = state.findChapter(_chapter!);
+              });
+            }
+          },
+        )
+      ],
+      child: BlocBuilder<ChapterReadingCubit, ChapterReadingState>(
+        bloc: _chapterReadingCubit,
+        builder: (BuildContext context, ChapterReadingState state) {
+          return Scaffold(
+            appBar: AppBarWidget(
+              title: widget.manga?.title ?? '',
+              subTitle: _chapter?.number ?? '',
+              actionsList: state is ChapterReadingLoaded
+                  ? <Widget>[
+                ReadIconWidget(
+                  isRead: _chapter?.isRead ?? false,
+                  onPress: () {
+                    _markChapterAsRead();
+                  },
+                ),
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 10),
@@ -115,11 +120,13 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
                     ),
                   ),
                 ),
-            ],
-          ),
-          body: _buildBody(state),
-        );
-      },
+              ]
+                  : <Widget>[],
+            ),
+            body: _buildBody(state),
+          );
+        },
+      ),
     );
   }
 
@@ -138,7 +145,9 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
         onPageChanged: (int index) {
           setState(() {
             _currentPage = index + 1;
-            _lastPageRead = index == _numberOfPage - 1;
+            if (index == _numberOfPage - 1) {
+              _markChapterAsRead();
+            }
           });
         },
         builder: (BuildContext context, int index) {

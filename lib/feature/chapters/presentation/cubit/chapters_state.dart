@@ -28,6 +28,15 @@ class ChaptersLoaded extends ChaptersState {
     return indexFound;
   }
 
+  LightChapterEntity findChapter(LightChapterEntity chapterToFind) {
+    for (final String key in chapterTabs.keys) {
+      for (final LightChapterEntity chapter in chapterTabs[key]!) {
+        if (chapter.key == chapterToFind.key) return chapter;
+      }
+    }
+    return chapterToFind;
+  }
+
   @override
   List<Object> get props => <Object>[chapterTabs];
 }
