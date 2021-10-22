@@ -10,12 +10,14 @@ class SunnyPainter extends CustomPainter {
     required this.sunnyImageInfo,
     required this.backgroundImageInfo,
     required this.waveImageInfo,
+    required this.sunImageInfo,
   });
 
   SunnyParticleEntity particle;
   ImageInfo sunnyImageInfo;
   ImageInfo backgroundImageInfo;
   ImageInfo waveImageInfo;
+  ImageInfo sunImageInfo;
 
   void rotate({
     required Canvas canvas,
@@ -121,6 +123,18 @@ class SunnyPainter extends CustomPainter {
         size.height + 2 - (wavePositionY + waveImageHeight),
       ),
       blueBrush,
+    );
+
+    // Draw Sun
+    paintImage(
+      canvas: canvas,
+      rect: Rect.fromLTWH(
+        20,
+        20,
+        backgroundWidth / 3,
+        backgroundWidth / 3,
+      ),
+      image: sunImageInfo.image,
     );
   }
 

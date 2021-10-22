@@ -82,13 +82,29 @@ class _SunnyWidgetState extends State<SunnyWidget> {
                           AsyncSnapshot<ImageInfo> snapshotWave,
                         ) {
                           if (snapshotWave.hasData) {
-                            return CustomPaint(
-                              painter: SunnyPainter(
-                                particle: _particle,
-                                sunnyImageInfo: snapshotSunny.data!,
-                                backgroundImageInfo: snapshotBackground.data!,
-                                waveImageInfo: snapshotWave.data!,
+                            return FutureBuilder<ImageInfo>(
+                              future: getImageInfo(
+                                context,
+                                'assets/images/one_piece_prometheus.png',
                               ),
+                              builder: (
+                                BuildContext context,
+                                AsyncSnapshot<ImageInfo> snapshotSun,
+                              ) {
+                                if (snapshotSun.hasData) {
+                                  return CustomPaint(
+                                    painter: SunnyPainter(
+                                      particle: _particle,
+                                      sunnyImageInfo: snapshotSunny.data!,
+                                      backgroundImageInfo:
+                                          snapshotBackground.data!,
+                                      waveImageInfo: snapshotWave.data!,
+                                      sunImageInfo: snapshotSun.data!,
+                                    ),
+                                  );
+                                }
+                                return const SizedBox();
+                              },
                             );
                           }
                           return const SizedBox();
