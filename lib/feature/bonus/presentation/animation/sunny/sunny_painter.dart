@@ -9,11 +9,13 @@ class SunnyPainter extends CustomPainter {
     required this.particle,
     required this.sunnyImageInfo,
     required this.backgroundImageInfo,
+    required this.waveImageInfo,
   });
 
   SunnyParticleEntity particle;
   ImageInfo sunnyImageInfo;
   ImageInfo backgroundImageInfo;
+  ImageInfo waveImageInfo;
 
   void rotate({
     required Canvas canvas,
@@ -62,7 +64,6 @@ class SunnyPainter extends CustomPainter {
       ),
       image: backgroundImageInfo.image,
     );
-
     canvas.drawRect(
       Rect.fromLTWH(
         10,
@@ -95,6 +96,32 @@ class SunnyPainter extends CustomPainter {
     );
     rotate(canvas: canvas, cx: position.dx, cy: position.dy, angle: angle);
     canvas.restore();
+
+    // Draw wave on sunny
+    final double waveImageRatio =
+        waveImageInfo.image.height / waveImageInfo.image.width;
+    final double waveImageHeight = backgroundWidth * waveImageRatio;
+    final double wavePositionY =
+        (animation.get(AnimationEnum.y) as double) * 1.06 * size.height;
+    paintImage(
+      canvas: canvas,
+      rect: Rect.fromLTWH(
+        10,
+        wavePositionY,
+        backgroundWidth,
+        waveImageHeight,
+      ),
+      image: waveImageInfo.image,
+    );
+    canvas.drawRect(
+      Rect.fromLTWH(
+        10,
+        wavePositionY + waveImageHeight - 2,
+        backgroundWidth,
+        size.height - 8 - (wavePositionY + waveImageHeight),
+      ),
+      blueBrush,
+    );
   }
 
   @override

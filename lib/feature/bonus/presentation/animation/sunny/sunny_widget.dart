@@ -55,19 +55,44 @@ class _SunnyWidgetState extends State<SunnyWidget> {
         builder: (BuildContext? context, Widget? child, int value) {
           _simulateParticles(DateTime.now().duration);
           return FutureBuilder<ImageInfo>(
-            future: getImageInfo(context!, 'assets/images/one_piece_sunny.png'),
-            builder: (BuildContext context, AsyncSnapshot<ImageInfo> snapshotSunny) {
+            future: getImageInfo(
+              context!,
+              'assets/images/one_piece_sunny.png',
+            ),
+            builder:
+                (BuildContext context, AsyncSnapshot<ImageInfo> snapshotSunny) {
               if (snapshotSunny.hasData) {
                 return FutureBuilder<ImageInfo>(
-                  future: getImageInfo(context, 'assets/images/wave_background_sunny.png'),
-                  builder: (BuildContext context, AsyncSnapshot<ImageInfo> snapshotBackground) {
+                  future: getImageInfo(
+                    context,
+                    'assets/images/wave_background_sunny.png',
+                  ),
+                  builder: (
+                    BuildContext context,
+                    AsyncSnapshot<ImageInfo> snapshotBackground,
+                  ) {
                     if (snapshotBackground.hasData) {
-                      return CustomPaint(
-                        painter: SunnyPainter(
-                          particle: _particle,
-                          sunnyImageInfo: snapshotSunny.data!,
-                          backgroundImageInfo: snapshotBackground.data!,
+                      return FutureBuilder<ImageInfo>(
+                        future: getImageInfo(
+                          context,
+                          'assets/images/wave_sample.png',
                         ),
+                        builder: (
+                          BuildContext context,
+                          AsyncSnapshot<ImageInfo> snapshotWave,
+                        ) {
+                          if (snapshotWave.hasData) {
+                            return CustomPaint(
+                              painter: SunnyPainter(
+                                particle: _particle,
+                                sunnyImageInfo: snapshotSunny.data!,
+                                backgroundImageInfo: snapshotBackground.data!,
+                                waveImageInfo: snapshotWave.data!,
+                              ),
+                            );
+                          }
+                          return const SizedBox();
+                        },
                       );
                     }
                     return const SizedBox();
