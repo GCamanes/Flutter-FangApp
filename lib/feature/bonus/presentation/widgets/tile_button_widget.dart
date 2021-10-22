@@ -22,7 +22,7 @@ class TileButtonWidget extends StatelessWidget {
         shadowColor: Colors.transparent,
         onSurface: AppColors.black,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0),
+          borderRadius: BorderRadius.circular(5),
           //side: const BorderSide(color: AppColors.blueLight),
         ),
       ),
