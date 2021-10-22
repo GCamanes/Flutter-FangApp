@@ -38,8 +38,8 @@ class SunnyPainter extends CustomPainter {
     final Paint greyBrush = Paint()..color = AppColors.greyLight;
     final Paint blueBrush = Paint()..color = AppColors.blueDark;
 
-    final double backgroundHeight = size.height - 20;
-    final double backgroundWidth = size.width - 20;
+    final double backgroundHeight = size.height;
+    final double backgroundWidth = size.width;
 
     final double backgroundImageRatio =
         backgroundImageInfo.image.height / backgroundImageInfo.image.width;
@@ -50,15 +50,15 @@ class SunnyPainter extends CustomPainter {
         backgroundHeight / 2 + backgroundImageHeight / 2;
 
     canvas.drawRect(
-      Rect.fromLTWH(10, 10, backgroundWidth, backgroundHeight),
+      Rect.fromLTWH(0, 0, backgroundWidth, backgroundHeight),
       greyBrush,
     );
 
     paintImage(
       canvas: canvas,
       rect: Rect.fromLTWH(
-        10,
-        backgroundImageTop + 10,
+        0,
+        backgroundImageTop,
         backgroundWidth,
         backgroundImageHeight,
       ),
@@ -66,10 +66,10 @@ class SunnyPainter extends CustomPainter {
     );
     canvas.drawRect(
       Rect.fromLTWH(
-        10,
-        backgroundImageBottom + 5,
+        0,
+        backgroundImageBottom - 2,
         backgroundWidth,
-        backgroundImageTop + 5,
+        backgroundImageTop + 2,
       ),
       blueBrush,
     );
@@ -106,7 +106,7 @@ class SunnyPainter extends CustomPainter {
     paintImage(
       canvas: canvas,
       rect: Rect.fromLTWH(
-        10,
+        0,
         wavePositionY,
         backgroundWidth,
         waveImageHeight,
@@ -115,10 +115,10 @@ class SunnyPainter extends CustomPainter {
     );
     canvas.drawRect(
       Rect.fromLTWH(
-        10,
+        0,
         wavePositionY + waveImageHeight - 2,
         backgroundWidth,
-        size.height - 8 - (wavePositionY + waveImageHeight),
+        size.height + 2 - (wavePositionY + waveImageHeight),
       ),
       blueBrush,
     );
