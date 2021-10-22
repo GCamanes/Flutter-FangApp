@@ -24,16 +24,18 @@ class SunnyParticleEntity extends ParticleEntity {
         AnimationEnum.y,
         tween: Tween<double>(begin: startPosition.dy, end: endPosition.dy),
         curve: Curves.linear,
-      )
-      ..addScene(begin: animDuration ~/ 2, duration: animDuration).animate(
+      )..addScene(begin: animDuration ~/ 2, duration: animDuration).animate(
         AnimationEnum.y,
         tween: Tween<double>(begin: endPosition.dy, end: startPosition.dy),
+        curve: Curves.easeOut,
+      )..addScene(begin: Duration.zero, duration: animDuration ~/ 2).animate(
+        AnimationEnum.angle,
+        tween: Tween<double>(begin: -25, end: 25),
         curve: Curves.linear,
-      )
-      ..addScene(begin: Duration.zero, duration: animDuration).animate(
-        AnimationEnum.x,
-        tween: Tween<double>(begin: startPosition.dx, end: endPosition.dx),
-        curve: Curves.easeIn,
+      )..addScene(begin: animDuration ~/ 2, duration: animDuration).animate(
+        AnimationEnum.angle,
+        tween: Tween<double>(begin: 25, end:  -25),
+        curve: Curves.easeOut,
       );
   }
 }

@@ -9,7 +9,7 @@ import 'package:simple_animations/simple_animations.dart';
 abstract class ParticleEntity {
   ParticleEntity({
     required this.random,
-    this.animDuration = const Duration(seconds: 5),
+    this.animDuration = const Duration(seconds: 3),
     bool randomInitProgress = true,
   }) {
     initProgress = randomInitProgress ? random.nextDouble() : 0.0;
