@@ -14,28 +14,51 @@ class SunnyParticleEntity extends ParticleEntity {
 
   @override
   void initTween() {
-    // Get random (x, y) offset for start and end of animation
-    const Offset startPosition = Offset(0.5, 0.3);
-    const Offset endPosition = Offset(0.5, 0.7);
+    const Offset downPosition = Offset(0.5, 0.55);
+    const Offset upPosition = Offset(0.5, 0.45);
+
+    const double neutralAngle = 0;
+    const double upAngle = -25;
+    const double downAngle = 25;
+
+    final Duration animationThird = animDuration ~/ 3;
+    final Duration animationSixth = animDuration ~/ 6;
+
+    final Duration animStep1 = animationSixth;
+    final Duration animStep2 = animStep1 + animationThird;
+    final Duration animStep3 = animStep2 + animationSixth;
+    final Duration animStep4 = animStep3 + animationSixth;
+    final Duration animStep5 = animStep4 + animationThird;
+    final Duration animStep6 = animStep5 + animationSixth;
 
     tween = TimelineTween<AnimationEnum>()
-      // here
+      // y offset part
       ..addScene(begin: Duration.zero, duration: animDuration ~/ 2).animate(
         AnimationEnum.y,
-        tween: Tween<double>(begin: startPosition.dy, end: endPosition.dy),
-        curve: Curves.linear,
+        tween: Tween<double>(begin: downPosition.dy, end: upPosition.dy),
+        curve: Curves.easeOut,
       )..addScene(begin: animDuration ~/ 2, duration: animDuration).animate(
         AnimationEnum.y,
-        tween: Tween<double>(begin: endPosition.dy, end: startPosition.dy),
+        tween: Tween<double>(begin: upPosition.dy, end: downPosition.dy),
         curve: Curves.easeOut,
-      )..addScene(begin: Duration.zero, duration: animDuration ~/ 2).animate(
+      )
+      // Angle rotation part
+      ..addScene(begin: Duration.zero, duration: animStep1).animate(
         AnimationEnum.angle,
-        tween: Tween<double>(begin: -25, end: 25),
+        tween: Tween<double>(begin: neutralAngle, end: upAngle),
         curve: Curves.linear,
-      )..addScene(begin: animDuration ~/ 2, duration: animDuration).animate(
+      )..addScene(begin: animStep1, duration: animStep2 - animStep1).animate(
         AnimationEnum.angle,
-        tween: Tween<double>(begin: 25, end:  -25),
-        curve: Curves.easeOut,
+        tween: Tween<double>(begin: upAngle, end: neutralAngle),
+        curve: Curves.linear,
+      )..addScene(begin: animStep2, duration: animStep3 - animStep2).animate(
+        AnimationEnum.angle,
+        tween: Tween<double>(begin: neutralAngle, end: downAngle),
+        curve: Curves.linear,
+      )..addScene(begin: animStep5, duration: animStep6 - animStep5).animate(
+        AnimationEnum.angle,
+        tween: Tween<double>(begin: downAngle, end: neutralAngle),
+        curve: Curves.linear,
       );
   }
 }
