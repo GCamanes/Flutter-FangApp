@@ -27,10 +27,8 @@ class _SunnyWidgetState extends State<SunnyWidget> {
     super.initState();
   }
 
-  Future<ImageInfo> getImageInfo(BuildContext context) async {
-    const AssetImage assetImage = AssetImage(
-      'assets/images/one_piece_sunny.png',
-    );
+  Future<ImageInfo> getImageInfo(BuildContext context, String assetName) async {
+    final AssetImage assetImage = AssetImage(assetName);
     final ImageStream stream = assetImage.resolve(
       createLocalImageConfiguration(context),
     );
@@ -57,11 +55,23 @@ class _SunnyWidgetState extends State<SunnyWidget> {
         builder: (BuildContext? context, Widget? child, int value) {
           _simulateParticles(DateTime.now().duration);
           return FutureBuilder<ImageInfo>(
-            future: getImageInfo(context!),
-            builder: (BuildContext context, AsyncSnapshot<ImageInfo> snapshot) {
-              if (snapshot.hasData) {
-                return CustomPaint(
-                  painter: SunnyPainter(_particle, snapshot.data!),
+            future: getImageInfo(context!, 'assets/images/one_piece_sunny.png'),
+            builder: (BuildContext context, AsyncSnapshot<ImageInfo> snapshotSunny) {
+              if (snapshotSunny.hasData) {
+                return FutureBuilder<ImageInfo>(
+                  future: getImageInfo(context, 'assets/images/wave_background_sunny.png'),
+                  builder: (BuildContext context, AsyncSnapshot<ImageInfo> snapshotBackground) {
+                    if (snapshotBackground.hasData) {
+                      return CustomPaint(
+                        painter: SunnyPainter(
+                          particle: _particle,
+                          sunnyImageInfo: snapshotSunny.data!,
+                          backgroundImageInfo: snapshotBackground.data!,
+                        ),
+                      );
+                    }
+                    return const SizedBox();
+                  },
                 );
               }
               return const SizedBox();

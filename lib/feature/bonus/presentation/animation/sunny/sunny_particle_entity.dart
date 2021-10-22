@@ -18,8 +18,8 @@ class SunnyParticleEntity extends ParticleEntity {
     const Offset upPosition = Offset(0.5, 0.45);
 
     const double neutralAngle = 0;
-    const double upAngle = -25;
-    const double downAngle = 25;
+    const double upAngle = -15;
+    const double downAngle = 15;
 
     final Duration animationThird = animDuration ~/ 3;
     final Duration animationSixth = animDuration ~/ 6;
