@@ -1,4 +1,5 @@
 import 'package:fangapp/core/widget/app_bar_widget.dart';
+import 'package:fangapp/feature/bonus/presentation/animation/sunny/sunny_widget.dart';
 import 'package:flutter/material.dart';
 
 class BonusSunnyPage extends StatefulWidget {
@@ -15,9 +16,7 @@ class _BonusSunnyPageState extends State<BonusSunnyPage> {
       appBar: AppBarWidget(
         title: 'Sunny',
       ),
-      body: Center(
-        child: Text('Sunny'),
-      ),
+      body: SunnyWidget(),
     );
   }
 }
