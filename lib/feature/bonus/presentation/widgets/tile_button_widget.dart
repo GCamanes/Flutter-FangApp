@@ -30,9 +30,9 @@ class TileButtonWidget extends StatelessWidget {
       child: Row(
         children: <Widget>[
           const Icon(
-            Icons.chevron_right_outlined,
+            Icons.arrow_forward_ios_outlined,
             color: AppColors.blueLight,
-            size: 30,
+            size: 20,
           ),
           const SizedBox(width: 5),
           Expanded(
