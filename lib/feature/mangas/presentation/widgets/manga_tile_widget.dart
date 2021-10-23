@@ -1,7 +1,9 @@
 import 'package:fangapp/core/data/app_constants.dart';
+import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/navigation/routes.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
+import 'package:fangapp/core/theme/app_styles.dart';
 import 'package:fangapp/core/widget/icon_button_widget.dart';
 import 'package:fangapp/feature/mangas/domain/entities/manga_entity.dart';
 import 'package:fangapp/feature/mangas/presentation/cubit/mangas_cubit.dart';
@@ -87,16 +89,41 @@ class MangaTileWidget extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     manga.title,
+                    style: AppStyles.highTitle(context, size: 12),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     manga.authors.join(', '),
+                    style: AppStyles.regularText(context, size: 12),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  if (manga.chapterKeys.isNotEmpty)
+                    Text(
+                      'mangas.lastRelease'.translateWithArgs(
+                        args: <String>[
+                          manga.chapterKeys.last
+                              .split(AppConstants.splitCharsInChapterKey)
+                              .last
+                        ],
+                      ),
+                      style: AppStyles.regularText(
+                        context,
+                        size: 12,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   Text(
-                    manga.status,
+                    'mangas.${manga.status}'.translate(),
+                    style: AppStyles.mediumTitle(
+                      context,
+                      size: 12,
+                      color: manga.status == 'Ongoing'
+                          ? AppColors.green
+                          : AppColors.orange,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
