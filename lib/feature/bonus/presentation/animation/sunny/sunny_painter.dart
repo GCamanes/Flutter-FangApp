@@ -91,7 +91,7 @@ class SunnyPainter extends CustomPainter {
       (animation.get(AnimationEnum.y) as double) * size.height,
     );
     rotate(canvas: canvas, cx: position.dx, cy: position.dy, angle: -angle);
-    final double imageSize = size.width * 0.4;
+    final double imageSize = size.width * 0.5;
     paintImage(
       canvas: canvas,
       rect: Rect.fromLTWH(
