@@ -36,7 +36,7 @@ class MangasRemoteDataSourceImpl implements MangasRemoteDataSource {
     final List<MangaModel> mangas = querySnapshot.docs
         .map(
           (QueryDocumentSnapshot<Map<String, dynamic>> doc) =>
-              MangaModel.fromJson(data: doc.data()),
+              MangaModel.fromJson(data: doc.data(), withChapters: true),
         )
         .toList();
 

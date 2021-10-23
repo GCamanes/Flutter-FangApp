@@ -61,7 +61,7 @@ class _ChaptersListWidgetState extends State<ChaptersListWidget> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     Timer(
-      1000.milliseconds,
+      500.milliseconds,
       () => _scrollController.position.moveTo(
         findLastReadChapterPosition(),
         duration: 1.seconds,
