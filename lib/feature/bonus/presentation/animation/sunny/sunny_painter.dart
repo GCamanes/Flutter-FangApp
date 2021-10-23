@@ -4,20 +4,26 @@ import 'package:fangapp/feature/bonus/presentation/animation/sunny/sunny_particl
 import 'package:flutter/material.dart';
 import 'package:simple_animations/timeline_tween/timeline_tween.dart';
 
+import 'fish_particle_entity.dart';
+
 class SunnyPainter extends CustomPainter {
   SunnyPainter({
-    required this.particle,
+    required this.sunnyParticle,
     required this.sunnyImageInfo,
     required this.backgroundImageInfo,
     required this.waveImageInfo,
     required this.sunImageInfo,
+    required this.fishParticles,
+    //required this.fishImageInfo,
   });
 
-  SunnyParticleEntity particle;
-  ImageInfo sunnyImageInfo;
-  ImageInfo backgroundImageInfo;
-  ImageInfo waveImageInfo;
-  ImageInfo sunImageInfo;
+  final SunnyParticleEntity sunnyParticle;
+  final ImageInfo sunnyImageInfo;
+  final ImageInfo backgroundImageInfo;
+  final ImageInfo waveImageInfo;
+  final ImageInfo sunImageInfo;
+  final List<FishParticleEntity> fishParticles;
+  // final ImageInfo fishImageInfo;
 
   void rotate({
     required Canvas canvas,
@@ -32,9 +38,9 @@ class SunnyPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final double progress = particle.progress();
+    final double progress = sunnyParticle.progress();
     final TimelineValue<AnimationEnum> animation =
-        particle.particleTween.transform(progress);
+        sunnyParticle.particleTween.transform(progress);
 
     // Draw grey background
     final Paint greyBrush = Paint()..color = AppColors.greyLight;
@@ -136,6 +142,29 @@ class SunnyPainter extends CustomPainter {
       ),
       image: sunImageInfo.image,
     );
+
+    // Draw fish
+    for (final FishParticleEntity particle in fishParticles) {
+      final double progressFish = particle.progress();
+      final TimelineValue<AnimationEnum> animation =
+      particle.particleTween.transform(progressFish);
+      final Offset position = Offset(
+        (animation.get(AnimationEnum.x) as double) * size.width,
+        (animation.get(AnimationEnum.y) as double) * size.height,
+      );
+      final double imageSize = size.width * 0.3 * particle.particleSize;
+
+      paintImage(
+        canvas: canvas,
+        rect: Rect.fromLTWH(
+          position.dx - imageSize/2,
+          position.dy - imageSize/2,
+          imageSize,
+          imageSize,
+        ),
+        image: sunnyImageInfo.image, // <- the loaded image
+      );
+    }
   }
 
   @override

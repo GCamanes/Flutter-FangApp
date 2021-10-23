@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:fangapp/core/extensions/date_extension.dart';
+import 'package:fangapp/feature/bonus/presentation/animation/sunny/fish_particle_entity.dart';
 import 'package:fangapp/feature/bonus/presentation/animation/sunny/sunny_painter.dart';
 import 'package:fangapp/feature/bonus/presentation/animation/sunny/sunny_particle_entity.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +18,17 @@ class SunnyWidget extends StatefulWidget {
 }
 
 class _SunnyWidgetState extends State<SunnyWidget> {
-  late SunnyParticleEntity _particle;
+  late SunnyParticleEntity _sunnyParticle;
+  late List<FishParticleEntity> _fishParticles;
   final Random _random = Random();
 
   @override
   void initState() {
     super.initState();
-    _particle = SunnyParticleEntity(random: _random);
+    _sunnyParticle = SunnyParticleEntity(random: _random);
+    _fishParticles = List<FishParticleEntity>.generate(4, (int index) {
+      return FishParticleEntity(random: _random);
+    });
     super.initState();
   }
 
@@ -42,7 +47,10 @@ class _SunnyWidgetState extends State<SunnyWidget> {
   }
 
   void _simulateParticles(Duration time) {
-    _particle.maintainRestart(time);
+    _sunnyParticle.maintainRestart(time);
+    for (final FishParticleEntity fishParticle in _fishParticles) {
+      fishParticle.maintainRestart(time);
+    }
   }
 
   @override
@@ -94,12 +102,13 @@ class _SunnyWidgetState extends State<SunnyWidget> {
                                 if (snapshotSun.hasData) {
                                   return CustomPaint(
                                     painter: SunnyPainter(
-                                      particle: _particle,
+                                      sunnyParticle: _sunnyParticle,
                                       sunnyImageInfo: snapshotSunny.data!,
                                       backgroundImageInfo:
                                           snapshotBackground.data!,
                                       waveImageInfo: snapshotWave.data!,
                                       sunImageInfo: snapshotSun.data!,
+                                      fishParticles: _fishParticles,
                                     ),
                                   );
                                 }
