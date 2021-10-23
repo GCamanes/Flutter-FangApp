@@ -15,10 +15,10 @@ class FishParticleEntity extends ParticleEntity {
   @override
   void initTween() {
     // Get random (x, y) offset for start and end of animation
-    final Offset startPosition = Offset(1.3, 0.95 - 0.2 * random.nextDouble());
-    final Offset endPosition = Offset(-0.3, 0.95 - 0.2 * random.nextDouble());
+    final Offset startPosition = Offset(1.15, 0.95 - 0.2 * random.nextDouble());
+    final Offset endPosition = Offset(-0.15, 0.95 - 0.2 * random.nextDouble());
 
-    animDuration = Duration(milliseconds: 3000 + random.nextInt(2000));
+    animDuration = Duration(milliseconds: 3000 + random.nextInt(3000));
 
     tween = TimelineTween<AnimationEnum>()
       ..addScene(begin: Duration.zero, duration: animDuration).animate(

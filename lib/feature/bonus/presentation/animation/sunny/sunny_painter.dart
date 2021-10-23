@@ -152,7 +152,7 @@ class SunnyPainter extends CustomPainter {
         (animation.get(AnimationEnum.x) as double) * size.width,
         (animation.get(AnimationEnum.y) as double) * size.height,
       );
-      final double imageSize = size.width * 0.3 * particle.particleSize;
+      final double imageSize = size.width * 0.4 * particle.particleSize;
 
       paintImage(
         canvas: canvas,

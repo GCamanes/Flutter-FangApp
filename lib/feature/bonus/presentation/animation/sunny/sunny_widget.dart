@@ -26,7 +26,7 @@ class _SunnyWidgetState extends State<SunnyWidget> {
   void initState() {
     super.initState();
     _sunnyParticle = SunnyParticleEntity(random: _random);
-    _fishParticles = List<FishParticleEntity>.generate(4, (int index) {
+    _fishParticles = List<FishParticleEntity>.generate(5, (int index) {
       return FishParticleEntity(random: _random);
     });
     super.initState();
