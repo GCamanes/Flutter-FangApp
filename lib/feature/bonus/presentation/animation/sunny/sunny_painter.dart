@@ -14,7 +14,7 @@ class SunnyPainter extends CustomPainter {
     required this.waveImageInfo,
     required this.sunImageInfo,
     required this.fishParticles,
-    //required this.fishImageInfo,
+    required this.fishImageInfo,
   });
 
   final SunnyParticleEntity sunnyParticle;
@@ -23,7 +23,7 @@ class SunnyPainter extends CustomPainter {
   final ImageInfo waveImageInfo;
   final ImageInfo sunImageInfo;
   final List<FishParticleEntity> fishParticles;
-  // final ImageInfo fishImageInfo;
+  final ImageInfo fishImageInfo;
 
   void rotate({
     required Canvas canvas,
@@ -162,7 +162,7 @@ class SunnyPainter extends CustomPainter {
           imageSize,
           imageSize,
         ),
-        image: sunnyImageInfo.image, // <- the loaded image
+        image: fishImageInfo.image, // <- the loaded image
       );
     }
   }

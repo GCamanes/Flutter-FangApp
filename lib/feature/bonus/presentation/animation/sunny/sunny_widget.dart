@@ -100,16 +100,31 @@ class _SunnyWidgetState extends State<SunnyWidget> {
                                 AsyncSnapshot<ImageInfo> snapshotSun,
                               ) {
                                 if (snapshotSun.hasData) {
-                                  return CustomPaint(
-                                    painter: SunnyPainter(
-                                      sunnyParticle: _sunnyParticle,
-                                      sunnyImageInfo: snapshotSunny.data!,
-                                      backgroundImageInfo:
-                                          snapshotBackground.data!,
-                                      waveImageInfo: snapshotWave.data!,
-                                      sunImageInfo: snapshotSun.data!,
-                                      fishParticles: _fishParticles,
+                                  return FutureBuilder<ImageInfo>(
+                                    future: getImageInfo(
+                                      context,
+                                      'assets/images/one_piece_fish.png',
                                     ),
+                                    builder: (
+                                      BuildContext context,
+                                      AsyncSnapshot<ImageInfo> snapshotFish,
+                                    ) {
+                                      if (snapshotFish.hasData) {
+                                        return CustomPaint(
+                                          painter: SunnyPainter(
+                                            sunnyParticle: _sunnyParticle,
+                                            sunnyImageInfo: snapshotSunny.data!,
+                                            backgroundImageInfo:
+                                                snapshotBackground.data!,
+                                            waveImageInfo: snapshotWave.data!,
+                                            sunImageInfo: snapshotSun.data!,
+                                            fishParticles: _fishParticles,
+                                            fishImageInfo: snapshotFish.data!,
+                                          ),
+                                        );
+                                      }
+                                      return const SizedBox();
+                                    },
                                   );
                                 }
                                 return const SizedBox();
