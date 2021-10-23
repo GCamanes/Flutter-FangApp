@@ -15,7 +15,7 @@ class AppStyles {
   static TextStyle mediumTitle(
       BuildContext context, {
         double size = 13,
-        Color color = AppColors.black,
+        Color color = AppColors.black90,
         TextDecoration textDecoration = TextDecoration.none,
         FontStyle fontStyle = FontStyle.normal,
       }) {
@@ -33,7 +33,7 @@ class AppStyles {
   static TextStyle highTitle(
       BuildContext context, {
         double size = 18,
-        Color color = AppColors.black,
+        Color color = AppColors.black90,
         TextDecoration textDecoration = TextDecoration.none,
         FontStyle fontStyle = FontStyle.normal,
       }) {
@@ -51,7 +51,7 @@ class AppStyles {
   static TextStyle regularText(
       BuildContext context, {
         double size = 10,
-        Color color = AppColors.black,
+        Color color = AppColors.black90,
         TextDecoration textDecoration = TextDecoration.none,
         FontStyle fontStyle = FontStyle.normal,
         FontWeight fontWeight = FontWeight.w400,

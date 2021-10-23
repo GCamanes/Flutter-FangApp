@@ -36,6 +36,9 @@
 
   "mangas.noMangas": "No manga available",
   "mangas.noFavorites": "You don't have any manga in your favorites",
+  "mangas.lastRelease": "Last release : %s",
+  "mangas.Ongoing": "Ongoing",
+  "mangas.Complete": "Complete",
 
   "reading.considerChapterAsRead": "Do you want to consider the chapter %s as read ?"
 }

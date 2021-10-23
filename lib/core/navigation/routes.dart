@@ -2,6 +2,7 @@ import 'package:fangapp/core/navigation/presentation/pages/not_found_page.dart';
 import 'package:fangapp/core/navigation/presentation/pages/tab_navigation_page.dart';
 import 'package:fangapp/core/navigation/presentation/widgets/right_to_left_page_builder.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
+import 'package:fangapp/feature/bonus/presentation/pages/bonus_sunny_page.dart';
 import 'package:fangapp/feature/chapters/domain/entities/light_chapter_entity.dart';
 import 'package:fangapp/feature/chapters/presentation/pages/chapters_page.dart';
 import 'package:fangapp/feature/login/presentation/pages/login_page.dart';
@@ -63,6 +64,8 @@ class Routes {
         routeWidget: ChapterReadingPage(chapter: chapter, manga: manga),
       );
     },
+    RouteConstants.routeBonusSunny: (_, __) =>
+        RightToLeftPageBuilder(routeWidget: const BonusSunnyPage()),
   };
 }
 
