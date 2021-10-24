@@ -31,10 +31,7 @@ class InteractionModalWidget extends StatelessWidget {
                   child: Align(
                     child: Text(
                       text,
-                      style: AppStyles.mediumTitle(
-                        context,
-                        color: AppColors.blueLight,
-                      ),
+                      style: AppStyles.mediumTitle(color: AppColors.blueLight),
                     ),
                   ),
                 ),

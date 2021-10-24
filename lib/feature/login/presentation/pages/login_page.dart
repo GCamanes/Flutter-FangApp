@@ -3,6 +3,7 @@ import 'package:fangapp/core/enum/status_enum.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
+import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/core/utils/navigation_helper.dart';
 import 'package:fangapp/core/utils/snack_bar_helper.dart';
 import 'package:fangapp/core/widget/app_button_widget.dart';
@@ -67,8 +68,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-
     return WillPopScope(
       // Used to prevent exit app when back is pressed
       onWillPop: () async {
@@ -94,15 +93,15 @@ class _LoginPageState extends State<LoginPage> {
             }
           },
           child: SizedBox(
-            height: size.height,
-            width: size.width,
+            height: AppHelper().deviceSize.height,
+            width: AppHelper().deviceSize.width,
             child: SingleChildScrollView(
               physics: const NeverScrollableScrollPhysics(),
               child: Stack(
                 children: <Widget>[
                   SizedBox(
-                    height: size.height,
-                    width: size.width,
+                    height: AppHelper().deviceSize.height,
+                    width: AppHelper().deviceSize.width,
                     child: AnimatedOpacity(
                       opacity: _showLoginForm ? 0.0 : 1.0,
                       duration: AppConstants.animLoginFadeDuration,
@@ -111,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: <Widget>[
                           Image.asset(
                             'assets/images/fangapp_logo.png',
-                            width: size.width * 0.75,
+                            width: AppHelper().deviceSize.width * 0.75,
                           ),
                           const SizedBox(height: 100),
                           AppButtonWidget(
@@ -153,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                       ).transform,
                       child: Image.asset(
                         'assets/images/wave_top.png',
-                        width: size.width * 0.75,
+                        width: AppHelper().deviceSize.width * 0.75,
                       ),
                     ),
                   ),
@@ -162,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                     right: 0,
                     child: Image.asset(
                       'assets/images/wave_bottom.png',
-                      width: size.width * 0.6,
+                      width: AppHelper().deviceSize.width * 0.6,
                     ),
                   ),
                 ],

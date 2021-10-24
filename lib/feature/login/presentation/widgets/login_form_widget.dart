@@ -1,6 +1,7 @@
 import 'package:fangapp/core/extensions/int_extension.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
+import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/core/widget/app_button_widget.dart';
 import 'package:fangapp/core/widget/custom_text_field_widget.dart';
@@ -41,15 +42,13 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Container(
         color: AppColors.white,
-        height: size.height,
+        height: AppHelper().deviceSize.height,
         child: Column(
           children: <Widget>[
             AppBarWidget(
@@ -63,11 +62,11 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                 Column(
                   children: <Widget>[
                     SizedBox(
-                      height: size.height / 5,
+                      height: AppHelper().deviceSize.height / 5,
                       child: Center(
                         child: Image.asset(
                           'assets/images/one_piece_skull_fangapp_themed.png',
-                          height: size.height / 7,
+                          height: AppHelper().deviceSize.height / 7,
                         ),
                       ),
                     ),

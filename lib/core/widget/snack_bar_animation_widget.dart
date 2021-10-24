@@ -130,7 +130,7 @@ class _TopSnackBarState extends State<TopSnackBar>
                   child: Text(
                     widget.text,
                     style:
-                        AppStyles.regularText(context, color: AppColors.white),
+                        AppStyles.regularText(color: AppColors.white),
                   ),
                 ),
               ],

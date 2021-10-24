@@ -21,28 +21,16 @@ class PageCounterWidget extends StatelessWidget {
         children: <Widget>[
           Text(
             currentPage.toString(),
-            style: AppStyles.mediumTitle(
-              context,
-              color: AppColors.white,
-              size: 12,
-            ),
+            style: AppStyles.mediumTitle(color: AppColors.white, size: 12),
             textAlign: TextAlign.end,
           ),
           Text(
             ' / ',
-            style: AppStyles.mediumTitle(
-              context,
-              color: AppColors.blueLight,
-              size: 11,
-            ),
+            style: AppStyles.mediumTitle(color: AppColors.blueLight, size: 11),
           ),
           Text(
             numberOfPage.toString(),
-            style: AppStyles.mediumTitle(
-              context,
-              color: AppColors.white,
-              size: 12,
-            ),
+            style: AppStyles.mediumTitle(color: AppColors.white, size: 12),
           ),
         ],
       ),

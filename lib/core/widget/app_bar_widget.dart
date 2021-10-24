@@ -74,20 +74,15 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                 title,
                 maxLines: subTitle.isNotEmpty ? 1 : 2,
                 overflow: TextOverflow.ellipsis,
-                style: AppStyles.mediumTitle(
-                  context,
-                  color: AppColors.white,
-                ),
+                style: AppStyles.mediumTitle(color: AppColors.white),
               ),
-              if (subTitle.isNotEmpty) Text(
-                subTitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppStyles.regularText(
-                  context,
-                  color: AppColors.white,
+              if (subTitle.isNotEmpty)
+                Text(
+                  subTitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppStyles.regularText(color: AppColors.white),
                 ),
-              ),
             ],
           ),
       backgroundColor: AppColors.black90,

@@ -89,13 +89,13 @@ class MangaTileWidget extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     manga.title,
-                    style: AppStyles.highTitle(context, size: 12),
+                    style: AppStyles.highTitle(size: 12),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     manga.authors.join(', '),
-                    style: AppStyles.regularText(context, size: 12),
+                    style: AppStyles.regularText(size: 12),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -109,7 +109,6 @@ class MangaTileWidget extends StatelessWidget {
                         ],
                       ),
                       style: AppStyles.regularText(
-                        context,
                         size: 12,
                       ),
                       maxLines: 1,
@@ -118,7 +117,6 @@ class MangaTileWidget extends StatelessWidget {
                   Text(
                     'mangas.${manga.status}'.translate(),
                     style: AppStyles.mediumTitle(
-                      context,
                       size: 12,
                       color: manga.status == 'Ongoing'
                           ? AppColors.green

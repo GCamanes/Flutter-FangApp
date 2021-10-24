@@ -77,11 +77,8 @@ class _TabBarWidgetState extends State<TabBarWidget> {
             labelColor: AppColors.blueLight,
             indicatorColor: AppColors.blueLight,
             unselectedLabelColor: AppColors.white,
-            unselectedLabelStyle: AppStyles.mediumTitle(
-              context,
-              size: widget.labelSize,
-            ),
-            labelStyle: AppStyles.mediumTitle(context, size: widget.labelSize),
+            unselectedLabelStyle: AppStyles.mediumTitle(size: widget.labelSize),
+            labelStyle: AppStyles.mediumTitle(size: widget.labelSize),
             tabs: widget.labels
                 .map(
                   (String label) => Tab(

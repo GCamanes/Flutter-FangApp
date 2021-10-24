@@ -17,7 +17,8 @@ class _BonusPageState extends State<BonusPage> {
   late List<Widget> _tiles;
 
   @override
-  void didChangeDependencies() {
+  void initState() {
+    super.initState();
     _tiles = <Widget>[
       TileButtonWidget(
         title: 'Sunny',
@@ -28,7 +29,6 @@ class _BonusPageState extends State<BonusPage> {
         ),
       ),
     ];
-    super.didChangeDependencies();
   }
 
   @override

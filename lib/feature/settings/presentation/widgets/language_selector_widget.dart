@@ -3,6 +3,7 @@ import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/localization/app_localizations.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/theme/app_styles.dart';
+import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/core/widget/app_button_widget.dart';
 import 'package:fangapp/get_it_injection.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,6 @@ class LanguageSelectorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -26,10 +26,7 @@ class LanguageSelectorWidget extends StatelessWidget {
           Align(
             child: Text(
               'language.selected'.translate(),
-              style: AppStyles.mediumTitle(
-                context,
-                color: AppColors.blackSmokeDark,
-              ),
+              style: AppStyles.mediumTitle(color: AppColors.blackSmokeDark),
             ),
           ),
           const SizedBox(height: 20),
@@ -40,7 +37,7 @@ class LanguageSelectorWidget extends StatelessWidget {
                   (String language) => LanguageButton(
                     language: language,
                     selectedLanguage: selectedLanguage,
-                    width: size.width * 0.35,
+                    width: AppHelper().deviceSize.width * 0.35,
                   ),
                 )
                 .toList(),
