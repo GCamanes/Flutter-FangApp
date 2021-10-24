@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
       bloc: _loginCubit,
       listener: (BuildContext context, LoginState state) {
         if (state is LoginSuccess) {
-          NavigationHelper.goToRoute(RouteConstants.routeBottomNav, delay: 2);
+          NavigationHelper.goToRoute(RouteConstants.routeMainContent, delay: 2);
         } else if (state is LoginError) {
           NavigationHelper.goToRoute(RouteConstants.routeLogin, delay: 2);
         }

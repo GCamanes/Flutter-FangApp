@@ -1,16 +1,15 @@
 abstract class RouteConstants {
   static const String routeInitial = '/';
   static const String routeLogin = '/login';
-  static const String routeBottomNav = '/bottom-nav';
-  static const String routeHome = '/home';
-  static const String routeFavorites= '/favorites';
-  static const String routeSettings = '/settings';
-  static const String routeBonus = '/bonus';
+  static const String routeMainContent = '/main';
+  static const String routeHome = '/main/home';
+  static const String routeSettings = '/main/settings';
+  static const String routeBonus = '/main/bonus';
 
-  static const String routeChapters = '/home/chapters';
-  static const String routeChapterReading = '/home/chapters/reading';
+  static const String routeChapters = '/main/home/chapters';
+  static const String routeChapterReading = '/main/home/chapters/reading';
 
-  static const String routeBonusSunny= '/bonus/sunny';
+  static const String routeBonusSunny= '/main/bonus/sunny';
 }
 
 abstract class RouteArguments {

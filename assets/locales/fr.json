@@ -5,6 +5,7 @@
   "common.welcomeBack": "Bon retour sur FangApp !",
   "common.all": "Tous",
   "common.favorites": "Favoris",
+  "common.exit": "Voulez-vous fermer FangApp ?",
 
   "login.title": "Connexion",
   "login.enterApp": "C'est parti !",

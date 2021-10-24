@@ -42,7 +42,7 @@ class Routes {
     },
     RouteConstants.routeLogin: (_, __) =>
         RightToLeftPageBuilder(routeWidget: const LoginPage()),
-    RouteConstants.routeBottomNav: (_, __) =>
+    RouteConstants.routeMainContent: (_, __) =>
         RightToLeftPageBuilder(routeWidget: const TabNavigationPage()),
     RouteConstants.routeChapters: (_, Map<dynamic, dynamic>? arguments) {
       final MangaEntity? manga =

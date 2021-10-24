@@ -1,8 +1,10 @@
+import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/localization/app_localizations.dart';
 import 'package:fangapp/core/navigation/presentation/cubit/tab_navigation_cubit.dart';
 import 'package:fangapp/core/navigation/presentation/widgets/bottom_navigation_bar_widget.dart';
 import 'package:fangapp/core/navigation/presentation/widgets/tab_navigation_widget.dart';
 import 'package:fangapp/core/navigation/tab_navigation_item.dart';
+import 'package:fangapp/core/utils/interaction_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -63,9 +65,18 @@ class _TabNavigationPageState extends State<TabNavigationPage> {
 
   Future<bool> _managePopEvent() async {
     // Don't quit app if no possible pop
-    final bool canPop =
+    final bool mayBePop =
         await _getNavigatorKey(_currentTab).currentState!.maybePop();
-    return canPop;
+    if (!mayBePop) {
+      final bool needToQuit = await InteractionHelper.showModal(
+        text: 'common.exit'.translate(),
+        isDismissible: true,
+      ) ?? false;
+      if (needToQuit) {
+        return true;
+      }
+    }
+    return false;
   }
 
   Widget _buildOffstageTabNavigationWidget(TabNavigationItem tabItem) {

@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
           bloc: _loginCubit,
           listener: (BuildContext context, LoginState state) {
             if (state is LoginSuccess) {
-              NavigationHelper.goToRoute(RouteConstants.routeBottomNav);
+              NavigationHelper.goToRoute(RouteConstants.routeMainContent);
             } else if (state is LoginError) {
               SnackBarHelper.showSnackBar(
                 text: 'error.${state.code}'.translate(),
