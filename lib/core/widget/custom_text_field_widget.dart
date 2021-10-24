@@ -72,7 +72,6 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
         obscureText: !_isVisible,
         onSubmitted: widget.onSubmitted,
         style: AppStyles.regularText(
-          context,
           size: 12,
           color: AppColors.blackSmokeDark,
         ),
@@ -83,8 +82,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           labelStyle: AppStyles.mediumTitle(
-            context,
-            color: AppColors.blueLight,
+            color: AppColors.orange,
           ),
           filled: true,
           fillColor: Colors.transparent,
@@ -126,7 +124,6 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                   child: Text(
                     '${widget.controller.text.length.toString()}/${widget.maxLength}',
                     style: AppStyles.regularText(
-                      context,
                       size: 12,
                       color: AppColors.blackSmokeDark,
                     ),

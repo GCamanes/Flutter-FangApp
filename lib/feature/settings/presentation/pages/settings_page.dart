@@ -2,6 +2,7 @@ import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/localization/app_localizations.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/theme/app_styles.dart';
+import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/core/utils/interaction_helper.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/core/widget/icon_button_widget.dart';
@@ -51,20 +52,19 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBarWidget(
         title: 'bottomBar.settings'.translate(),
         isInitialPage: true,
       ),
       body: SizedBox(
-        width: size.width,
+        width: AppHelper().deviceSize.width,
         child: Column(
           children: <Widget>[
             const SizedBox(height: 30),
             Image.asset(
               'assets/images/one_piece_skull_fangapp_themed.png',
-              height: size.height / 7,
+              height: AppHelper().deviceSize.height / 7,
             ),
             Expanded(
               child: Column(
@@ -81,7 +81,6 @@ class _SettingsPageState extends State<SettingsPage> {
                             Text(
                               state.user.email,
                               style: AppStyles.mediumTitle(
-                                context,
                                 color: AppColors.blackSmokeDark,
                               ),
                             ),

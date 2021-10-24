@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/extensions/int_extension.dart';
 import 'package:fangapp/core/navigation/routes.dart';
+import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/feature/chapters/domain/entities/light_chapter_entity.dart';
 import 'package:fangapp/feature/chapters/presentation/widgets/chapter_tile_widget.dart';
 import 'package:fangapp/feature/mangas/domain/entities/manga_entity.dart';
@@ -48,12 +49,10 @@ class _ChaptersListWidgetState extends State<ChaptersListWidget> {
   }
 
   double getTileHeight() {
-    final Size size =
-        MediaQuery.of(RoutesManager.globalNavKey.currentContext!).size;
     const double totalPacing = (AppConstants.numberOfTilePerLine - 1) *
         AppConstants.spacingBetweenTile;
-    final double tileWidth =
-        (size.width - 20 - totalPacing) / AppConstants.numberOfTilePerLine;
+    final double tileWidth = (AppHelper().deviceSize.width - 20 - totalPacing) /
+        AppConstants.numberOfTilePerLine;
     return tileWidth / AppConstants.tileAspectRatio;
   }
 

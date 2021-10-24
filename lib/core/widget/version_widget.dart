@@ -19,7 +19,7 @@ class VersionWidget extends StatelessWidget {
         if (snapshot.hasData) {
           return Text(
             snapshot.data ?? '',
-            style: AppStyles.mediumTitle(context, color: textColor, size: 12),
+            style: AppStyles.mediumTitle(color: textColor, size: 12),
             textAlign: TextAlign.center,
           );
         }

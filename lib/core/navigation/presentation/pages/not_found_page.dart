@@ -13,7 +13,7 @@ class NotFoundPage extends StatelessWidget {
       body: Center(
         child: Text(
           'page.notFound'.translate(),
-          style: AppStyles.highTitle(context),
+          style: AppStyles.highTitle(),
         ),
       ),
     );

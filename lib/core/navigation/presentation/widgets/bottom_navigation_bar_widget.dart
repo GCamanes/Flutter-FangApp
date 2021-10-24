@@ -20,14 +20,8 @@ class BottomNavigationBarWidget extends StatelessWidget {
       selectedItemColor: AppColors.blueLight,
       unselectedItemColor: AppColors.white,
       showUnselectedLabels: false,
-      selectedLabelStyle: AppStyles.mediumTitle(
-        context,
-        size: 10,
-      ),
-      unselectedLabelStyle: AppStyles.mediumTitle(
-        context,
-        size: 10,
-      ),
+      selectedLabelStyle: AppStyles.mediumTitle(size: 10),
+      unselectedLabelStyle: AppStyles.mediumTitle(size: 10),
       type: BottomNavigationBarType.fixed,
       backgroundColor: AppColors.black90,
       currentIndex: _currentIndex(),

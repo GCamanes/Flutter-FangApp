@@ -40,9 +40,7 @@ class TileButtonWidget extends StatelessWidget {
               title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: AppStyles.mediumTitle(
-                context,
-              ),
+              style: AppStyles.mediumTitle(),
             ),
           )
         ],

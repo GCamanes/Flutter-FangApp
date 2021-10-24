@@ -1,6 +1,7 @@
 import 'package:fangapp/core/extensions/version_extension.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
+import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/core/utils/navigation_helper.dart';
 import 'package:fangapp/core/widget/loading_widget.dart';
 import 'package:fangapp/core/widget/version_widget.dart';
@@ -25,6 +26,13 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _loginCubit = BlocProvider.of<LoginCubit>(context);
     _loginCubit.getCurrentUser();
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    AppHelper().deviceSize = MediaQuery.of(context).size;
   }
 
   Future<String> getAppVersion() async {

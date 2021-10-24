@@ -54,7 +54,6 @@ class AppButtonWidget extends StatelessWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: AppStyles.mediumTitle(
-          context,
           size: textSize,
           color: textColor,
         ),

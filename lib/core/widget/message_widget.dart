@@ -24,7 +24,7 @@ class MessageWidget extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: Text(
             message,
-            style: AppStyles.mediumTitle(context, color: AppColors.blackSmoke),
+            style: AppStyles.mediumTitle(color: AppColors.blackSmoke),
             textAlign: TextAlign.center,
           ),
         ),

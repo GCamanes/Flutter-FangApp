@@ -1,6 +1,7 @@
 import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/localization/app_localizations.dart';
+import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/core/widget/reload_icon_widget.dart';
 import 'package:fangapp/core/widget/tab_bar_widget.dart';
@@ -40,7 +41,6 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return BlocConsumer<MangasCubit, MangasState>(
       listener: (BuildContext context, MangasState state) async {
         if (state is MangasLoaded || state is MangasError) {
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage>
           appBar: AppBarWidget(
             titleWidget: Image.asset(
               'assets/images/fangapp_logo.png',
-              width: size.width * 0.4,
+              width: AppHelper().deviceSize.width * 0.4,
             ),
             isInitialPage: true,
             actionsList: <Widget>[
