@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/extensions/int_extension.dart';
-import 'package:fangapp/core/navigation/routes.dart';
 import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/feature/chapters/domain/entities/light_chapter_entity.dart';
 import 'package:fangapp/feature/chapters/presentation/widgets/chapter_tile_widget.dart';
