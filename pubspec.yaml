@@ -34,6 +34,9 @@ dependencies:
   # https://pub.dev/packages/dartz
   dartz: ^0.10.0
 
+  # https://pub.dev/packages/device_info_plus
+  device_info_plus: ^3.1.0
+
   # https://pub.dev/packages/equatable
   equatable: ^2.0.3
 

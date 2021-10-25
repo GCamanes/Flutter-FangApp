@@ -1,3 +1,4 @@
+import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/extensions/version_extension.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
@@ -47,6 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
       bloc: _loginCubit,
       listener: (BuildContext context, LoginState state) {
         if (state is LoginSuccess) {
+          AnalyticsHelper().sendLoginEvent(userMail: state.user.email);
           NavigationHelper.goToRoute(RouteConstants.routeMainContent, delay: 2);
         } else if (state is LoginError) {
           NavigationHelper.goToRoute(RouteConstants.routeLogin, delay: 2);

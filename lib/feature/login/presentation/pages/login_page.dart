@@ -1,3 +1,4 @@
+import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/enum/status_enum.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
@@ -84,8 +85,10 @@ class _LoginPageState extends State<LoginPage> {
           bloc: _loginCubit,
           listener: (BuildContext context, LoginState state) {
             if (state is LoginSuccess) {
+              AnalyticsHelper().sendLoginEvent(userMail: state.user.email);
               NavigationHelper.goToRoute(RouteConstants.routeMainContent);
             } else if (state is LoginError) {
+              AnalyticsHelper().sendLoginErrorEvent(error: state.code);
               SnackBarHelper.showSnackBar(
                 text: 'error.${state.code}'.translate(),
                 status: StatusEnum.error,
