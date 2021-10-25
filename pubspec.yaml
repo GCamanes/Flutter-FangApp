@@ -37,6 +37,9 @@ dependencies:
   # https://pub.dev/packages/equatable
   equatable: ^2.0.3
 
+  # https://pub.dev/packages/firebase_analytics
+  firebase_analytics: ^8.3.4
+
   # https://pub.dev/packages/firebase_auth
   firebase_auth: ^3.1.2
 
