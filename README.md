@@ -19,6 +19,7 @@ Back managed with Python3 and Firebase.
 
 ### Firebase
 
+#### Install
 1) Get the google-services.json from Firebase console and put it into
    'android/app/'
 
@@ -26,6 +27,25 @@ Back managed with Python3 and Firebase.
    'ios/Runner/'
    
 3) Open python file python/back_manager.py and follow SETUP instruction
+
+#### Debug view android
+
+1) Install homebrew if not already installed
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+```
+
+2) Install android tools
+```
+brew install android-platform-tools
+```
+
+3) Connect real android device to mac and flutter run on it
+
+4) Link with adb
+````
+adb -d shell setprop debug.firebase.analytics.app com.groupany.fangapp
+``
 
 # Android signing
 
