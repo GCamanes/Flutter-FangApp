@@ -19,4 +19,9 @@ abstract class AnalyticsRepository {
   Future<void> sendClickBottomTabBar({
     required TabNavigationItem item,
   });
+
+  Future<void> sendAddFavoriteManga({
+    required bool addFavorite,
+    required String mangaKey,
+  });
 }

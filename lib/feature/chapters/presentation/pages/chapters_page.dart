@@ -1,3 +1,4 @@
+import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/localization/app_localizations.dart';
@@ -128,6 +129,10 @@ class _ChaptersPageState extends State<ChaptersPage>
                       : AppColors.white,
                   size: 25,
                   onPress: () {
+                    AnalyticsHelper().sendAddFavoriteManga(
+                      addFavorite: !(_manga?.isFavorite ?? true),
+                      mangaKey: _manga?.key ?? '',
+                    );
                     BlocProvider.of<MangasCubit>(context)
                         .updateMangaFavorite(manga: _manga);
                   },

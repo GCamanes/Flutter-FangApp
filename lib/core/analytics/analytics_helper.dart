@@ -8,7 +8,7 @@ abstract class AnalyticsHelperBase {
   late AnalyticsRepository repository;
 }
 
-class AnalyticsHelper extends AnalyticsHelperBase{
+class AnalyticsHelper extends AnalyticsHelperBase {
   factory AnalyticsHelper() {
     return _instance;
   }
@@ -39,5 +39,15 @@ class AnalyticsHelper extends AnalyticsHelperBase{
     required TabNavigationItem item,
   }) {
     return repository.sendClickBottomTabBar(item: item);
+  }
+
+  Future<void> sendAddFavoriteManga({
+    required bool addFavorite,
+    required String mangaKey,
+  }) {
+    return repository.sendAddFavoriteManga(
+      addFavorite: addFavorite,
+      mangaKey: mangaKey,
+    );
   }
 }

@@ -120,4 +120,20 @@ class AnalyticsRepositoryImpl extends AnalyticsRepository {
       parameters: parameters,
     );
   }
+
+  @override
+  Future<void> sendAddFavoriteManga({
+    required bool addFavorite,
+    required String mangaKey,
+  }) async {
+    final Map<String, dynamic> parameters = await _getCommonParameters();
+    parameters.addAll(<String, dynamic>{
+      AnalyticsParamName.addFavorite: addFavorite,
+      AnalyticsParamName.manga: mangaKey,
+    });
+    return _sendEvent(
+      name: AnalyticsEventName.addFavoriteManga,
+      parameters: parameters,
+    );
+  }
 }
