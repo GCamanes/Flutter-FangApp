@@ -20,14 +20,16 @@ class MangaTileWidget extends StatelessWidget {
   final MangaEntity manga;
 
   Future<void> goToChapters(BuildContext context) async {
-    await RoutesManager.pushNamed(
+    final dynamic backPressed = await RoutesManager.pushNamed(
       context: context,
       pageRouteName: RouteConstants.routeChapters,
       arguments: <String, dynamic>{
         RouteArguments.argumentManga: manga,
       },
     );
-    AnalyticsHelper().sendViewPageEvent(path: RouteConstants.routeHome);
+    if (backPressed != null) {
+      AnalyticsHelper().sendViewPageEvent(path: RouteConstants.routeHome);
+    }
   }
 
   @override

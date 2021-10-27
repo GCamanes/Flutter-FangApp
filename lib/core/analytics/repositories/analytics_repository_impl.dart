@@ -110,10 +110,14 @@ class AnalyticsRepositoryImpl extends AnalyticsRepository {
   }
 
   @override
-  Future<void> sendClickBottomTabBarEvent({required TabNavigationItem item}) async {
+  Future<void> sendClickBottomTabBarEvent({
+    required TabNavigationItem item,
+    required String path,
+  }) async {
     final Map<String, dynamic> parameters = await _getCommonParameters();
     parameters.addAll(<String, dynamic>{
       AnalyticsParamName.tabBarItem: tabName[item],
+      AnalyticsParamName.path: path,
     });
     return _sendEvent(
       name: AnalyticsEventName.clickTabBarItem,

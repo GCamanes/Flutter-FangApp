@@ -1,4 +1,3 @@
-import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/navigation/tab_navigation_item.dart';
@@ -32,8 +31,6 @@ class BottomNavigationBarWidget extends StatelessWidget {
         _buildItem(context, TabNavigationItem.bonus),
       ],
       onTap: (int index) {
-        AnalyticsHelper()
-            .sendClickBottomTabBarEvent(item: TabNavigationItem.values[index]);
         onSelectTab(
           TabNavigationItem.values[index],
         );

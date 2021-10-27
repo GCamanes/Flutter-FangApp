@@ -1,4 +1,5 @@
 import 'package:fangapp/core/analytics/repositories/analytics_repository.dart';
+import 'package:fangapp/core/navigation/routes.dart';
 import 'package:fangapp/core/navigation/tab_navigation_item.dart';
 import 'package:fangapp/get_it_injection.dart';
 import 'package:flutter/material.dart';
@@ -37,8 +38,9 @@ class AnalyticsHelper extends AnalyticsHelperBase {
 
   Future<void> sendClickBottomTabBarEvent({
     required TabNavigationItem item,
+    required String path,
   }) {
-    return repository.sendClickBottomTabBarEvent(item: item);
+    return repository.sendClickBottomTabBarEvent(item: item, path: path);
   }
 
   Future<void> sendAddFavoriteMangaEvent({
@@ -62,6 +64,7 @@ class AnalyticsHelper extends AnalyticsHelperBase {
   Future<void> sendViewPageEvent({
     required String path,
   }) {
+    RoutesManager.updateTabItemCurrentPaths(path);
     return repository.sendViewPageEvent(
       path: path,
     );

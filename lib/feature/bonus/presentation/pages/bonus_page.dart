@@ -24,12 +24,15 @@ class _BonusPageState extends State<BonusPage> {
       TileButtonWidget(
         title: 'Sunny',
         onPressed: () async {
-          await RoutesManager.pushNamed(
+          final dynamic backPressed = await RoutesManager.pushNamed(
             context: context,
             pageRouteName: RouteConstants.routeBonusSunny,
             fullScreen: true,
           );
-          AnalyticsHelper().sendViewPageEvent(path: RouteConstants.routeBonus);
+          if (backPressed != null) {
+            AnalyticsHelper()
+                .sendViewPageEvent(path: RouteConstants.routeBonus);
+          }
         },
       ),
     ];

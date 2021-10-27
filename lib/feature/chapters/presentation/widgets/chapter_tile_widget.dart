@@ -23,7 +23,7 @@ class ChapterTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppButtonWidget(
       onPressed: () async {
-        await RoutesManager.pushNamed(
+        final dynamic backPressed = await RoutesManager.pushNamed(
           context: context,
           pageRouteName: RouteConstants.routeChapterReading,
           arguments: <String, dynamic>{
@@ -32,9 +32,11 @@ class ChapterTileWidget extends StatelessWidget {
           },
           fullScreen: true,
         );
-        AnalyticsHelper().sendViewPageEvent(
-          path: '${RouteConstants.routeChapters}/${manga.key}',
-        );
+        if (backPressed != null) {
+          AnalyticsHelper().sendViewPageEvent(
+            path: '${RouteConstants.routeChapters}/${manga.key}',
+          );
+        }
       },
       onLongPressed: () =>
           BlocProvider.of<ChaptersCubit>(context).updateLastReadChapter(

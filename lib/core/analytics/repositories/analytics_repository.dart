@@ -18,6 +18,7 @@ abstract class AnalyticsRepository {
 
   Future<void> sendClickBottomTabBarEvent({
     required TabNavigationItem item,
+    required String path,
   });
 
   Future<void> sendAddFavoriteMangaEvent({
