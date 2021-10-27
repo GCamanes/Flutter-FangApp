@@ -148,4 +148,16 @@ class AnalyticsRepositoryImpl extends AnalyticsRepository {
       parameters: parameters,
     );
   }
+
+  @override
+  Future<void> sendViewPageEvent({required String path}) async {
+    final Map<String, dynamic> parameters = await _getCommonParameters();
+    parameters.addAll(<String, dynamic>{
+      AnalyticsParamName.path: path,
+    });
+    return _sendEvent(
+      name: AnalyticsEventName.viewPage,
+      parameters: parameters,
+    );
+  }
 }

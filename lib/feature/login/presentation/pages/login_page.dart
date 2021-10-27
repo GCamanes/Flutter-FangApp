@@ -32,8 +32,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    _loginCubit = BlocProvider.of<LoginCubit>(context);
     super.initState();
+    _loginCubit = BlocProvider.of<LoginCubit>(context);
+
+    AnalyticsHelper().sendViewPageEvent(path: RouteConstants.routeLogin);
   }
 
   Future<void> showLoginForm() async {

@@ -1,3 +1,5 @@
+import 'package:fangapp/core/analytics/analytics_helper.dart';
+import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/feature/bonus/presentation/animation/sunny/sunny_widget.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,12 @@ class BonusSunnyPage extends StatefulWidget {
 }
 
 class _BonusSunnyPageState extends State<BonusSunnyPage> {
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsHelper().sendViewPageEvent(path: RouteConstants.routeBonusSunny);
+  }
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

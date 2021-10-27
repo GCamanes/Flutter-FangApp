@@ -7,6 +7,7 @@ class AnalyticsEventName {
 
   // NAVIGATION EVENT
   static const String clickTabBarItem = 'click_tab_bar_item';
+  static const String viewPage = 'view_page';
 
   // FAVORITE EVENT
   static const String addFavoriteManga = 'add_favorite_manga';

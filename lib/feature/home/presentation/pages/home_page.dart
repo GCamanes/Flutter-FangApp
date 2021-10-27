@@ -35,6 +35,8 @@ class _HomePageState extends State<HomePage>
       vsync: this,
       length: 2,
     );
+
+    AnalyticsHelper().sendViewPageEvent(path: RouteConstants.routeHome);
   }
 
   Future<void> _onLocaleChanged(String language) async {

@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/extensions/int_extension.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
+import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/interaction_helper.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
@@ -51,6 +53,10 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
     _chapterReadingCubit.getPageUrls(
       chapterKey: _chapter?.key ?? '',
       mangaKey: widget.manga?.key ?? '',
+    );
+
+    AnalyticsHelper().sendViewPageEvent(
+      path: '${RouteConstants.routeChapterReading}/${_chapter?.key}',
     );
   }
 

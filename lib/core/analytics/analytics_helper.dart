@@ -58,4 +58,12 @@ class AnalyticsHelper extends AnalyticsHelperBase {
       path: path,
     );
   }
+
+  Future<void> sendViewPageEvent({
+    required String path,
+  }) {
+    return repository.sendViewPageEvent(
+      path: path,
+    );
+  }
 }

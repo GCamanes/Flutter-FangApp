@@ -20,14 +20,14 @@ class MangaTileWidget extends StatelessWidget {
   final MangaEntity manga;
 
   Future<void> goToChapters(BuildContext context) async {
-    final dynamic result = await RoutesManager.pushNamed(
+    await RoutesManager.pushNamed(
       context: context,
       pageRouteName: RouteConstants.routeChapters,
       arguments: <String, dynamic>{
         RouteArguments.argumentManga: manga,
       },
     );
-    print('POPED from ${RouteConstants.routeChapters} with $result');
+    AnalyticsHelper().sendViewPageEvent(path: RouteConstants.routeHome);
   }
 
   @override

@@ -50,6 +50,10 @@ class _ChaptersPageState extends State<ChaptersPage>
     );
     BlocProvider.of<ChaptersCubit>(context)
         .getChapters(mangaKey: _manga?.key ?? '');
+
+    AnalyticsHelper().sendViewPageEvent(
+      path: '${RouteConstants.routeChapters}/${_manga?.key}',
+    );
   }
 
   Future<void> _onLocaleChanged(String language) async {

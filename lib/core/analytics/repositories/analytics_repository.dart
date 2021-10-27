@@ -28,4 +28,8 @@ abstract class AnalyticsRepository {
   Future<void> sendReloadEvent({
     required String path,
   });
+
+  Future<void> sendViewPageEvent({
+    required String path,
+  });
 }
