@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 enum TabNavigationItem { home, settings, bonus }
 
 Map<TabNavigationItem, String> tabName = <TabNavigationItem, String>{
-  TabNavigationItem.home: 'bottomBar.home',
-  TabNavigationItem.settings: 'bottomBar.settings',
-  TabNavigationItem.bonus: 'bottomBar.bonus',
+  TabNavigationItem.home: 'home',
+  TabNavigationItem.settings: 'settings',
+  TabNavigationItem.bonus: 'bonus',
 };
 
 Map<TabNavigationItem, String> tabRoute = <TabNavigationItem, String>{

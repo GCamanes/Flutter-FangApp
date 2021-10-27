@@ -4,4 +4,7 @@ class AnalyticsEventName {
   static const String loginSuccess = 'login_success';
   static const String loginError = 'login_error';
   static const String logoutSuccess = 'logout_success';
+
+  // NAVIGATION EVENT
+  static const String clickTabBarItem = 'click_tab_bar_item';
 }

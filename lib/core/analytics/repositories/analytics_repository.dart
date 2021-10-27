@@ -1,3 +1,4 @@
+import 'package:fangapp/core/navigation/tab_navigation_item.dart';
 import 'package:firebase_analytics/observer.dart';
 
 abstract class AnalyticsRepository {
@@ -14,4 +15,8 @@ abstract class AnalyticsRepository {
   });
 
   Future<void> sendLogoutEvent();
+
+  Future<void> sendClickBottomTabBar({
+    required TabNavigationItem item,
+  });
 }

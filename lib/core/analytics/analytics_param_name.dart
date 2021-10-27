@@ -9,4 +9,7 @@ class AnalyticsParamName {
 
   // Login
   static const String userMail = 'user_mail';
+
+  // Navigation
+  static const String tabBarItem = 'tab_bar_item';
 }

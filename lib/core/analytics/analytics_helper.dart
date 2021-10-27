@@ -1,4 +1,5 @@
 import 'package:fangapp/core/analytics/repositories/analytics_repository.dart';
+import 'package:fangapp/core/navigation/tab_navigation_item.dart';
 import 'package:fangapp/get_it_injection.dart';
 import 'package:flutter/material.dart';
 
@@ -32,5 +33,11 @@ class AnalyticsHelper extends AnalyticsHelperBase{
 
   Future<void> sendLogoutEvent() async {
     return repository.sendLogoutEvent();
+  }
+
+  Future<void> sendClickBottomTabBar({
+    required TabNavigationItem item,
+  }) {
+    return repository.sendClickBottomTabBar(item: item);
   }
 }

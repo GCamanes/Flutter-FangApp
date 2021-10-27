@@ -8,6 +8,7 @@ import 'package:fangapp/core/analytics/datasources/analytics_data_source.dart';
 import 'package:fangapp/core/analytics/entities/device_info_entity.dart';
 import 'package:fangapp/core/analytics/repositories/analytics_repository.dart';
 import 'package:fangapp/core/extensions/version_extension.dart';
+import 'package:fangapp/core/navigation/tab_navigation_item.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:package_info/package_info.dart';
 import 'package:version/version.dart';
@@ -104,6 +105,18 @@ class AnalyticsRepositoryImpl extends AnalyticsRepository {
 
     return _sendEvent(
       name: AnalyticsEventName.logoutSuccess,
+      parameters: parameters,
+    );
+  }
+
+  @override
+  Future<void> sendClickBottomTabBar({required TabNavigationItem item}) async {
+    final Map<String, dynamic> parameters = await _getCommonParameters();
+    parameters.addAll(<String, dynamic>{
+      AnalyticsParamName.tabBarItem: tabName[item],
+    });
+    return _sendEvent(
+      name: AnalyticsEventName.clickTabBarItem,
       parameters: parameters,
     );
   }
