@@ -110,7 +110,7 @@ class AnalyticsRepositoryImpl extends AnalyticsRepository {
   }
 
   @override
-  Future<void> sendClickBottomTabBar({required TabNavigationItem item}) async {
+  Future<void> sendClickBottomTabBarEvent({required TabNavigationItem item}) async {
     final Map<String, dynamic> parameters = await _getCommonParameters();
     parameters.addAll(<String, dynamic>{
       AnalyticsParamName.tabBarItem: tabName[item],
@@ -122,7 +122,7 @@ class AnalyticsRepositoryImpl extends AnalyticsRepository {
   }
 
   @override
-  Future<void> sendAddFavoriteManga({
+  Future<void> sendAddFavoriteMangaEvent({
     required bool addFavorite,
     required String mangaKey,
   }) async {
@@ -133,6 +133,18 @@ class AnalyticsRepositoryImpl extends AnalyticsRepository {
     });
     return _sendEvent(
       name: AnalyticsEventName.addFavoriteManga,
+      parameters: parameters,
+    );
+  }
+
+  @override
+  Future<void> sendReloadEvent({required String path}) async {
+    final Map<String, dynamic> parameters = await _getCommonParameters();
+    parameters.addAll(<String, dynamic>{
+      AnalyticsParamName.path: path,
+    });
+    return _sendEvent(
+      name: AnalyticsEventName.reload,
       parameters: parameters,
     );
   }

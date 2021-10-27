@@ -35,19 +35,27 @@ class AnalyticsHelper extends AnalyticsHelperBase {
     return repository.sendLogoutEvent();
   }
 
-  Future<void> sendClickBottomTabBar({
+  Future<void> sendClickBottomTabBarEvent({
     required TabNavigationItem item,
   }) {
-    return repository.sendClickBottomTabBar(item: item);
+    return repository.sendClickBottomTabBarEvent(item: item);
   }
 
-  Future<void> sendAddFavoriteManga({
+  Future<void> sendAddFavoriteMangaEvent({
     required bool addFavorite,
     required String mangaKey,
   }) {
-    return repository.sendAddFavoriteManga(
+    return repository.sendAddFavoriteMangaEvent(
       addFavorite: addFavorite,
       mangaKey: mangaKey,
+    );
+  }
+
+  Future<void> sendReloadEvent({
+    required String path,
+  }) {
+    return repository.sendReloadEvent(
+      path: path,
     );
   }
 }

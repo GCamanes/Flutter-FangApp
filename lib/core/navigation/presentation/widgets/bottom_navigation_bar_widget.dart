@@ -33,7 +33,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
       ],
       onTap: (int index) {
         AnalyticsHelper()
-            .sendClickBottomTabBar(item: TabNavigationItem.values[index]);
+            .sendClickBottomTabBarEvent(item: TabNavigationItem.values[index]);
         onSelectTab(
           TabNavigationItem.values[index],
         );

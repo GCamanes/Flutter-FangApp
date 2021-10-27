@@ -7,6 +7,7 @@ class AnalyticsParamName {
   static const String deviceModel = 'device_model';
   static const String error = 'error';
   static const String manga = 'manga';
+  static const String path = 'path';
 
   // Login
   static const String userMail = 'user_mail';

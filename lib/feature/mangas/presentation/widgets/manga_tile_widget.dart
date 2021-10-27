@@ -137,7 +137,7 @@ class MangaTileWidget extends StatelessWidget {
                   : AppColors.blackSmokeLight,
               size: 25,
               onPress: () {
-                AnalyticsHelper().sendAddFavoriteManga(
+                AnalyticsHelper().sendAddFavoriteMangaEvent(
                   addFavorite: !manga.isFavorite,
                   mangaKey: manga.key,
                 );

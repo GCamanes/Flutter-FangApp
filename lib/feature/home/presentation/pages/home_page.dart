@@ -1,6 +1,8 @@
+import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/localization/app_localizations.dart';
+import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/core/widget/reload_icon_widget.dart';
@@ -63,7 +65,12 @@ class _HomePageState extends State<HomePage>
                 duration: AppConstants.animDefaultDuration,
                 child: ReloadIconWidget(
                   onPress: state is! MangasLoading
-                      ? () => BlocProvider.of<MangasCubit>(context).getMangas()
+                      ? () {
+                          AnalyticsHelper().sendReloadEvent(
+                            path: RouteConstants.routeHome,
+                          );
+                          BlocProvider.of<MangasCubit>(context).getMangas();
+                        }
                       : null,
                 ),
               )

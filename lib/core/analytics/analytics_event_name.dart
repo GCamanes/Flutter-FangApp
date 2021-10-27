@@ -10,4 +10,7 @@ class AnalyticsEventName {
 
   // FAVORITE EVENT
   static const String addFavoriteManga = 'add_favorite_manga';
+
+  // LOADING EVENT
+  static const String reload = 'reload';
 }

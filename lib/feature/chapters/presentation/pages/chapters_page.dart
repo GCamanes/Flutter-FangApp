@@ -2,6 +2,7 @@ import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/localization/app_localizations.dart';
+import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/core/widget/icon_button_widget.dart';
@@ -115,8 +116,14 @@ class _ChaptersPageState extends State<ChaptersPage>
                   duration: AppConstants.animDefaultDuration,
                   child: ReloadIconWidget(
                     onPress: state is! ChaptersLoading
-                        ? () => BlocProvider.of<ChaptersCubit>(context)
-                            .getChapters(mangaKey: _manga?.key ?? '')
+                        ? () {
+                            AnalyticsHelper().sendReloadEvent(
+                              path:
+                                  '${RouteConstants.routeHome}/${_manga?.key}',
+                            );
+                            BlocProvider.of<ChaptersCubit>(context)
+                                .getChapters(mangaKey: _manga?.key ?? '');
+                          }
                         : null,
                   ),
                 ),
@@ -129,7 +136,7 @@ class _ChaptersPageState extends State<ChaptersPage>
                       : AppColors.white,
                   size: 25,
                   onPress: () {
-                    AnalyticsHelper().sendAddFavoriteManga(
+                    AnalyticsHelper().sendAddFavoriteMangaEvent(
                       addFavorite: !(_manga?.isFavorite ?? true),
                       mangaKey: _manga?.key ?? '',
                     );

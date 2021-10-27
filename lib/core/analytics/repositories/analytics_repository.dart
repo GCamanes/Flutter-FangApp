@@ -16,12 +16,16 @@ abstract class AnalyticsRepository {
 
   Future<void> sendLogoutEvent();
 
-  Future<void> sendClickBottomTabBar({
+  Future<void> sendClickBottomTabBarEvent({
     required TabNavigationItem item,
   });
 
-  Future<void> sendAddFavoriteManga({
+  Future<void> sendAddFavoriteMangaEvent({
     required bool addFavorite,
     required String mangaKey,
+  });
+
+  Future<void> sendReloadEvent({
+    required String path,
   });
 }
