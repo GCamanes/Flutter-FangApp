@@ -36,12 +36,6 @@ class _SplashScreenState extends State<SplashScreen> {
     AppHelper().deviceSize = MediaQuery.of(context).size;
   }
 
-  Future<String> getAppVersion() async {
-    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    final Version appVersion = Version.parse(packageInfo.version);
-    return appVersion.formattedVersion;
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginCubit, LoginState>(
