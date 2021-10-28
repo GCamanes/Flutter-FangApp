@@ -50,6 +50,12 @@ class _TabNavigationPageState extends State<TabNavigationPage> {
   }
 
   void _selectTab(TabNavigationItem tabItem, {bool forcePopUntil = false}) {
+    // Send click tab item event with path from current tab
+    AnalyticsHelper().sendClickBottomTabBarEvent(
+      item: tabItem,
+      path: RoutesManager.tabItemCurrentPaths[_currentTab]!,
+    );
+
     final GlobalKey<NavigatorState> navKey = _getNavigatorKey(tabItem);
     bool needToPopUntil = false;
     if (tabItem == _currentTab) {
@@ -65,8 +71,8 @@ class _TabNavigationPageState extends State<TabNavigationPage> {
         return route.isFirst;
       });
     }
-    AnalyticsHelper().sendClickBottomTabBarEvent(
-      item: tabItem,
+    // Send view page event with path from new current tab
+    AnalyticsHelper().sendViewPageEvent(
       path: RoutesManager.tabItemCurrentPaths[tabItem]!,
     );
   }
