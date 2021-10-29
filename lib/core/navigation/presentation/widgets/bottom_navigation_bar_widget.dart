@@ -48,7 +48,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
         size: MediaQuery.of(context).size.width *
             (30 / AppConstants.uiModelWidth),
       ),
-      label: tabName[tabItem]!.translate(),
+      label: 'bottomBar.${tabName[tabItem]!}'.translate(),
     );
   }
 

@@ -1,25 +1,26 @@
+import 'package:fangapp/core/analytics/analytics_helper.dart';
+import 'package:fangapp/core/analytics/datasources/analytics_data_source.dart';
 import 'package:fangapp/core/app_life_cycle/presentation/cubit/app_life_cycle_cubit.dart';
 import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/extensions/int_extension.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
+import 'package:fangapp/core/localization/app_localizations.dart';
 import 'package:fangapp/core/navigation/presentation/cubit/tab_navigation_cubit.dart';
+import 'package:fangapp/core/navigation/route_constants.dart';
+import 'package:fangapp/core/navigation/routes.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
+import 'package:fangapp/core/utils/snack_bar_helper.dart';
 import 'package:fangapp/feature/chapters/presentation/cubit/chapters_cubit.dart';
+import 'package:fangapp/feature/login/presentation/cubit/login_cubit.dart';
 import 'package:fangapp/feature/mangas/presentation/cubit/mangas_cubit.dart';
 import 'package:fangapp/get_it_injection.dart';
+import 'package:fangapp/get_it_injection.dart' as injection;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-import 'core/localization/app_localizations.dart';
-import 'core/navigation/route_constants.dart';
-import 'core/navigation/routes.dart';
-import 'core/utils/snack_bar_helper.dart';
-import 'feature/login/presentation/cubit/login_cubit.dart';
-import 'get_it_injection.dart' as injection;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -86,6 +87,7 @@ Future<void> main() async {
         BlocListener<LoginCubit, LoginState>(
           listener: (BuildContext context, LoginState state) async {
             if (state is LoginRequired) {
+              AnalyticsHelper().sendLogoutEvent();
               await RoutesManager.globalNavKey.currentState!
                   .pushNamedAndRemoveUntil(
                 RouteConstants.routeLogin,
@@ -130,6 +132,7 @@ class _FangAppState extends State<FangApp> with WidgetsBindingObserver {
     // Initializes a callback should something need
     // to be done when the language is changed
     injection.getIt<AppLocalizations>().localChanged.listen(_onLocaleChanged);
+
     super.initState();
   }
 
@@ -140,6 +143,7 @@ class _FangAppState extends State<FangApp> with WidgetsBindingObserver {
     BlocProvider.of<TabNavigationCubit>(context).close();
     BlocProvider.of<AppLifeCycleBloc>(context).close();
     BlocProvider.of<MangasCubit>(context).close();
+    BlocProvider.of<ChaptersCubit>(context).close();
     super.dispose();
   }
 
@@ -207,6 +211,9 @@ class _FangAppState extends State<FangApp> with WidgetsBindingObserver {
           generateRoutes(context: context, routeSettings: routeSettings),
       onUnknownRoute: (RouteSettings routeSettings) =>
           resolveRoutes(context: context, routeSettings: routeSettings),
+      navigatorObservers: <NavigatorObserver>[
+        injection.getIt<AnalyticsDataSource>().observer,
+      ],
     );
   }
 }

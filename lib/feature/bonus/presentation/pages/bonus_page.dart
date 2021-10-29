@@ -1,3 +1,4 @@
+import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/navigation/routes.dart';
@@ -22,11 +23,17 @@ class _BonusPageState extends State<BonusPage> {
     _tiles = <Widget>[
       TileButtonWidget(
         title: 'Sunny',
-        onPressed: () => RoutesManager.pushNamed(
-          context: context,
-          pageRouteName: RouteConstants.routeBonusSunny,
-          fullScreen: true,
-        ),
+        onPressed: () async {
+          final dynamic backPressed = await RoutesManager.pushNamed(
+            context: context,
+            pageRouteName: RouteConstants.routeBonusSunny,
+            fullScreen: true,
+          );
+          if (backPressed != null) {
+            AnalyticsHelper()
+                .sendViewPageEvent(path: RouteConstants.routeBonus);
+          }
+        },
       ),
     ];
   }

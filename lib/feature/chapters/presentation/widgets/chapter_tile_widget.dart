@@ -1,3 +1,4 @@
+import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/navigation/routes.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
@@ -21,8 +22,8 @@ class ChapterTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppButtonWidget(
-      onPressed: () {
-        RoutesManager.pushNamed(
+      onPressed: () async {
+        final dynamic backPressed = await RoutesManager.pushNamed(
           context: context,
           pageRouteName: RouteConstants.routeChapterReading,
           arguments: <String, dynamic>{
@@ -31,11 +32,23 @@ class ChapterTileWidget extends StatelessWidget {
           },
           fullScreen: true,
         );
+        if (backPressed != null) {
+          AnalyticsHelper().sendViewPageEvent(
+            path: '${RouteConstants.routeChapters}/${manga.key}',
+          );
+        }
       },
-      onLongPressed: () =>
-          BlocProvider.of<ChaptersCubit>(context).updateLastReadChapter(
-        number: chapter.number,
-      ),
+      onLongPressed: () {
+        if (!chapter.isRead) {
+          AnalyticsHelper().sendChapterRead(
+            mangaKey: manga.key,
+            chapterKey: chapter.key,
+          );
+        }
+        BlocProvider.of<ChaptersCubit>(context).updateLastReadChapter(
+          number: chapter.number,
+        );
+      },
       borderRadius: 0,
       color: chapter.isRead ? AppColors.blackSmoke : AppColors.greyLight,
       padding: const EdgeInsets.symmetric(horizontal: 3),

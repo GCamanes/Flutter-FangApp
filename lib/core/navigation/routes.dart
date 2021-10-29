@@ -2,6 +2,7 @@ import 'package:fangapp/core/navigation/presentation/pages/not_found_page.dart';
 import 'package:fangapp/core/navigation/presentation/pages/tab_navigation_page.dart';
 import 'package:fangapp/core/navigation/presentation/widgets/right_to_left_page_builder.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
+import 'package:fangapp/core/navigation/tab_navigation_item.dart';
 import 'package:fangapp/feature/bonus/presentation/pages/bonus_sunny_page.dart';
 import 'package:fangapp/feature/chapters/domain/entities/light_chapter_entity.dart';
 import 'package:fangapp/feature/chapters/presentation/pages/chapters_page.dart';
@@ -72,6 +73,19 @@ class Routes {
 class RoutesManager {
   static final GlobalKey<NavigatorState> globalNavKey =
       GlobalKey<NavigatorState>();
+
+  static TabNavigationItem currentTab = TabNavigationItem.home;
+
+  static Map<TabNavigationItem, String> tabItemCurrentPaths =
+  <TabNavigationItem, String>{
+    TabNavigationItem.home: RouteConstants.routeHome,
+    TabNavigationItem.settings: RouteConstants.routeSettings,
+    TabNavigationItem.bonus: RouteConstants.routeBonus,
+  };
+
+  static void updateTabItemCurrentPaths(String path) {
+    tabItemCurrentPaths[currentTab] = path;
+  }
 
   static Future<T?> pushNamed<T>({
     required BuildContext context,
