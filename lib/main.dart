@@ -9,6 +9,7 @@ import 'package:fangapp/core/navigation/presentation/cubit/tab_navigation_cubit.
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/navigation/routes.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
+import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/core/utils/snack_bar_helper.dart';
 import 'package:fangapp/feature/chapters/presentation/cubit/chapters_cubit.dart';
 import 'package:fangapp/feature/login/presentation/cubit/login_cubit.dart';
@@ -21,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,6 +52,11 @@ Future<void> main() async {
 
   // Initialize GetIt Injection
   await injection.init();
+
+  // Get analytics tracking acceptance
+  AppHelper().trackingOn = getIt<SharedPreferences>()
+          .getBool(AppConstants.sharedKeyAcceptAnalyticsTracking) ??
+      false;
 
   final MultiBlocProvider _multiBlocProviders = MultiBlocProvider(
     providers: <BlocProvider<dynamic>>[
