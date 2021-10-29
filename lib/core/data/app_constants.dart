@@ -62,6 +62,8 @@ abstract class AppConstants {
       'SharedKeyDateEnterBackground';
   static const String sharedKeyLastChapterRead =
       'lastChapterRead';
+  static const String sharedKeyAcceptAnalyticsTracking =
+      'acceptAnalyticsTracking';
 
   // Times
   static const Duration backgroundTimeToShowWelcomeBack = Duration(minutes: 5);

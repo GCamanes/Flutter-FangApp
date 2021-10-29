@@ -64,7 +64,10 @@ class LanguageButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppButtonWidget(
       onPressed: () {
-        getIt<AppLocalizations>().setNewLanguage(newLanguage: language);
+        getIt<AppLocalizations>().setNewLanguage(
+          newLanguage: language,
+          sendEvent: true,
+        );
       },
       text: 'language.$language'.translate(),
       color: selectedLanguage == language

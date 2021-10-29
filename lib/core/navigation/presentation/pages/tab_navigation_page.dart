@@ -1,8 +1,10 @@
+import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/localization/app_localizations.dart';
 import 'package:fangapp/core/navigation/presentation/cubit/tab_navigation_cubit.dart';
 import 'package:fangapp/core/navigation/presentation/widgets/bottom_navigation_bar_widget.dart';
 import 'package:fangapp/core/navigation/presentation/widgets/tab_navigation_widget.dart';
+import 'package:fangapp/core/navigation/routes.dart';
 import 'package:fangapp/core/navigation/tab_navigation_item.dart';
 import 'package:fangapp/core/utils/interaction_helper.dart';
 import 'package:flutter/material.dart';
@@ -48,19 +50,31 @@ class _TabNavigationPageState extends State<TabNavigationPage> {
   }
 
   void _selectTab(TabNavigationItem tabItem, {bool forcePopUntil = false}) {
+    // Send click tab item event with path from current tab
+    AnalyticsHelper().sendClickBottomTabBarEvent(
+      item: tabItem,
+      path: RoutesManager.tabItemCurrentPaths[_currentTab]!,
+    );
+
     final GlobalKey<NavigatorState> navKey = _getNavigatorKey(tabItem);
     bool needToPopUntil = false;
     if (tabItem == _currentTab) {
       needToPopUntil = true;
     } else {
+      RoutesManager.currentTab = tabItem;
       setState(() => _currentTab = tabItem);
       needToPopUntil = forcePopUntil;
     }
     if (needToPopUntil) {
+      RoutesManager.updateTabItemCurrentPaths(tabRoute[tabItem]!);
       navKey.currentState!.popUntil((Route<dynamic> route) {
         return route.isFirst;
       });
     }
+    // Send view page event with path from new current tab
+    AnalyticsHelper().sendViewPageEvent(
+      path: RoutesManager.tabItemCurrentPaths[tabItem]!,
+    );
   }
 
   Future<bool> _managePopEvent() async {
@@ -69,9 +83,10 @@ class _TabNavigationPageState extends State<TabNavigationPage> {
         await _getNavigatorKey(_currentTab).currentState!.maybePop();
     if (!mayBePop) {
       final bool needToQuit = await InteractionHelper.showModal(
-        text: 'common.exit'.translate(),
-        isDismissible: true,
-      ) ?? false;
+            text: 'common.exit'.translate(),
+            isDismissible: true,
+          ) ??
+          false;
       if (needToQuit) {
         return true;
       }

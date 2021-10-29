@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/get_it_injection.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +68,7 @@ class AppLocalizations {
   Future<void> setNewLanguage({
     String? newLanguage,
     bool saveInPrefs = true,
+    bool sendEvent = false,
   }) async {
     String? language = newLanguage;
     if (language == null) {
@@ -85,6 +87,10 @@ class AppLocalizations {
     // If we are asked to save the new language in the application preferences
     if (saveInPrefs) {
       await languagePreferenceDataSource.cachePreferredLanguage(language);
+    }
+
+    if (sendEvent) {
+      AnalyticsHelper().sendChangeLanguageEvent(language: language);
     }
 
     // If there is a callback to invoke to notify that a language has changed

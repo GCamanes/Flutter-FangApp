@@ -41,5 +41,8 @@
   "mangas.Ongoing": "En cours",
   "mangas.Complete": "Terminé",
 
-  "reading.considerChapterAsRead": "voulez-vous considérer le chapitre %s comme lu ?"
+  "reading.considerChapterAsRead": "voulez-vous considérer le chapitre %s comme lu ?",
+
+  "tracking.askConsent": "Nous autorisez-vous à collecter des données pendant que vous utilisez FangApp ? Vous pourrez modifier ce choix plus tard dans la page des paramètres",
+  "tracking.title": "Collecte de données"
 }

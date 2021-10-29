@@ -1,3 +1,7 @@
+import 'package:fangapp/core/analytics/datasources/analytics_data_source.dart';
+import 'package:fangapp/core/analytics/datasources/analytics_data_source_impl.dart';
+import 'package:fangapp/core/analytics/repositories/analytics_repository.dart';
+import 'package:fangapp/core/analytics/repositories/analytics_repository_impl.dart';
 import 'package:fangapp/core/localization/app_localizations.dart';
 import 'package:fangapp/core/localization/language_preference_data_source.dart';
 import 'package:fangapp/core/navigation/routes.dart';
@@ -23,6 +27,7 @@ import 'package:fangapp/feature/reading/data/datasources/reading_remote_data_sou
 import 'package:fangapp/feature/reading/data/repositories/reading_repository_impl.dart';
 import 'package:fangapp/feature/reading/domain/repositories/reading_repository.dart';
 import 'package:fangapp/feature/reading/domain/usecases/get_page_urls_use_case.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,6 +45,15 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => AppLocalizations(getIt()));
   getIt.registerLazySingleton<LanguagePreferenceDataSource>(
     () => LanguagePreferenceDataSourceImpl(getIt()),
+  );
+
+  // Firebase analytics
+  getIt.registerLazySingleton(() => FirebaseAnalytics());
+  getIt.registerLazySingleton<AnalyticsDataSource>(
+    () => AnalyticsDataSourceImpl(getIt()),
+  );
+  getIt.registerLazySingleton<AnalyticsRepository>(
+    () => AnalyticsRepositoryImpl(analyticsDataSource: getIt()),
   );
 
   // Features

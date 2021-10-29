@@ -44,7 +44,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     } else if (onBackPressed != null) {
       return onBackPressed;
     }
-    return () => Navigator.of(context).pop();
+    return () => Navigator.of(context).pop(true);
   }
 
   @override

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 abstract class InteractionHelper {
   static Future<bool?> showModal({
     required String text,
+    BuildContext? context,
     bool needChoice = true,
     bool isDismissible = false,
   }) {
@@ -13,7 +14,7 @@ abstract class InteractionHelper {
       isDismissible: isDismissible,
       enableDrag: false,
       backgroundColor: AppColors.blackSmoke,
-      context: RoutesManager.globalNavKey.currentContext!,
+      context: context ?? RoutesManager.globalNavKey.currentContext!,
       isScrollControlled: true,
       builder: (BuildContext context) {
         return InteractionModalWidget(

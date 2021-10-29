@@ -1,3 +1,4 @@
+import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
@@ -18,14 +19,17 @@ class MangaTileWidget extends StatelessWidget {
 
   final MangaEntity manga;
 
-  void goToChapters(BuildContext context) {
-    RoutesManager.pushNamed(
+  Future<void> goToChapters(BuildContext context) async {
+    final dynamic backPressed = await RoutesManager.pushNamed(
       context: context,
       pageRouteName: RouteConstants.routeChapters,
       arguments: <String, dynamic>{
         RouteArguments.argumentManga: manga,
       },
     );
+    if (backPressed != null) {
+      AnalyticsHelper().sendViewPageEvent(path: RouteConstants.routeHome);
+    }
   }
 
   @override
@@ -135,6 +139,10 @@ class MangaTileWidget extends StatelessWidget {
                   : AppColors.blackSmokeLight,
               size: 25,
               onPress: () {
+                AnalyticsHelper().sendAddFavoriteMangaEvent(
+                  addFavorite: !manga.isFavorite,
+                  mangaKey: manga.key,
+                );
                 BlocProvider.of<MangasCubit>(context)
                     .updateMangaFavorite(manga: manga);
               },

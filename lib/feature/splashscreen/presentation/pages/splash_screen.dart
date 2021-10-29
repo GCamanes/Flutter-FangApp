@@ -1,15 +1,18 @@
-import 'package:fangapp/core/extensions/version_extension.dart';
+import 'dart:async';
+
+import 'package:fangapp/core/analytics/analytics_helper.dart';
+import 'package:fangapp/core/extensions/int_extension.dart';
+import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/app_helper.dart';
+import 'package:fangapp/core/utils/interaction_helper.dart';
 import 'package:fangapp/core/utils/navigation_helper.dart';
 import 'package:fangapp/core/widget/loading_widget.dart';
 import 'package:fangapp/core/widget/version_widget.dart';
 import 'package:fangapp/feature/login/presentation/cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:package_info/package_info.dart';
-import 'package:version/version.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -25,20 +28,39 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _loginCubit = BlocProvider.of<LoginCubit>(context);
-    _loginCubit.getCurrentUser();
   }
-
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     AppHelper().deviceSize = MediaQuery.of(context).size;
+    _askTrackingConsent();
   }
 
-  Future<String> getAppVersion() async {
-    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    final Version appVersion = Version.parse(packageInfo.version);
-    return appVersion.formattedVersion;
+  void _getCurrentUser() {
+    // Send app open event
+    AnalyticsHelper().sendAppOpenEvent();
+    _loginCubit.getCurrentUser();
+  }
+
+  Future<void> _askTrackingConsent() async {
+    if (AppHelper().trackingOn == null) {
+      Timer(
+        1.seconds,
+        () async {
+          final bool tracking = await InteractionHelper.showModal(
+                text: 'tracking.askConsent'.translate(),
+              ) ??
+              false;
+          await AppHelper().updateTracking(
+            tracking: tracking,
+          );
+          _getCurrentUser();
+        },
+      );
+    } else {
+      _getCurrentUser();
+    }
   }
 
   @override
@@ -47,6 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
       bloc: _loginCubit,
       listener: (BuildContext context, LoginState state) {
         if (state is LoginSuccess) {
+          AnalyticsHelper().sendLoginEvent(userMail: state.user.email);
           NavigationHelper.goToRoute(RouteConstants.routeMainContent, delay: 2);
         } else if (state is LoginError) {
           NavigationHelper.goToRoute(RouteConstants.routeLogin, delay: 2);
