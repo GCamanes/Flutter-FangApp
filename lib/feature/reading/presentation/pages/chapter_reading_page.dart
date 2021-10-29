@@ -66,8 +66,13 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
     super.dispose();
   }
 
-  Future<void> _markChapterAsRead() async {
+  Future<void> _markChapterAsRead({bool fromLastPage = false}) async {
     if (!(_chapter?.isRead ?? false)) {
+      AnalyticsHelper().sendChapterRead(
+        readLastPage: fromLastPage,
+        mangaKey: widget.manga?.key ?? '',
+        chapterKey: _chapter?.key ?? '',
+      );
       BlocProvider.of<ChaptersCubit>(context).updateLastReadChapter(
         number: _chapter?.number ?? '',
       );
@@ -159,7 +164,12 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
           setState(() {
             _currentPage = index + 1;
             if (index == _numberOfPage - 1) {
-              Timer(300.milliseconds, () => _markChapterAsRead());
+              Timer(
+                300.milliseconds,
+                () => _markChapterAsRead(
+                  fromLastPage: true,
+                ),
+              );
             }
           });
         },

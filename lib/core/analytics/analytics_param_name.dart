@@ -2,6 +2,7 @@
 class AnalyticsParamName {
   // Common
   static const String appVersion = 'app_version';
+  static const String chapter = 'chapter';
   static const String deviceOs = 'device_os';
   static const String deviceOsVersion = 'device_os_version';
   static const String deviceModel = 'device_model';
@@ -18,4 +19,7 @@ class AnalyticsParamName {
 
   // Favorite
   static const String addFavorite = 'add_favorite';
+
+  // Reading
+  static const String readLastPage = 'read_last_lage';
 }

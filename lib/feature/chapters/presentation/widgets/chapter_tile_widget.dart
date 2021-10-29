@@ -38,10 +38,17 @@ class ChapterTileWidget extends StatelessWidget {
           );
         }
       },
-      onLongPressed: () =>
-          BlocProvider.of<ChaptersCubit>(context).updateLastReadChapter(
-        number: chapter.number,
-      ),
+      onLongPressed: () {
+        if (!chapter.isRead) {
+          AnalyticsHelper().sendChapterRead(
+            mangaKey: manga.key,
+            chapterKey: chapter.key,
+          );
+        }
+        BlocProvider.of<ChaptersCubit>(context).updateLastReadChapter(
+          number: chapter.number,
+        );
+      },
       borderRadius: 0,
       color: chapter.isRead ? AppColors.blackSmoke : AppColors.greyLight,
       padding: const EdgeInsets.symmetric(horizontal: 3),

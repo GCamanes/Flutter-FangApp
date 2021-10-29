@@ -17,4 +17,7 @@ class AnalyticsEventName {
 
   // LOADING EVENT
   static const String reload = 'reload';
+
+  // READING EVENT
+  static const String chapterRead = 'chapter_read';
 }

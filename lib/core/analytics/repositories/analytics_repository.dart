@@ -37,4 +37,10 @@ abstract class AnalyticsRepository {
   Future<void> sendChangeLanguageEvent({
     required String language,
   });
+
+  Future<void> sendChapterRead({
+    required bool readLastPage,
+    required String mangaKey,
+    required String chapterKey,
+  });
 }

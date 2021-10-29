@@ -176,4 +176,22 @@ class AnalyticsRepositoryImpl extends AnalyticsRepository {
       parameters: parameters,
     );
   }
+
+  @override
+  Future<void> sendChapterRead({
+    required bool readLastPage,
+    required String mangaKey,
+    required String chapterKey,
+  }) async {
+    final Map<String, dynamic> parameters = await _getCommonParameters();
+    parameters.addAll(<String, dynamic>{
+      AnalyticsParamName.readLastPage: readLastPage,
+      AnalyticsParamName.manga: mangaKey,
+      AnalyticsParamName.chapter: chapterKey,
+    });
+    return _sendEvent(
+      name: AnalyticsEventName.chapterRead,
+      parameters: parameters,
+    );
+  }
 }

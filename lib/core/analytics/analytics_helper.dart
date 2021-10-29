@@ -77,4 +77,16 @@ class AnalyticsHelper extends AnalyticsHelperBase {
       language: language,
     );
   }
+
+  Future<void> sendChapterRead({
+    bool readLastPage = false,
+    required String mangaKey,
+    required String chapterKey,
+  }) {
+    return repository.sendChapterRead(
+      readLastPage: readLastPage,
+      mangaKey: mangaKey,
+      chapterKey: chapterKey,
+    );
+  }
 }
