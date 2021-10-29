@@ -41,5 +41,7 @@
   "mangas.Ongoing": "Ongoing",
   "mangas.Complete": "Complete",
 
-  "reading.considerChapterAsRead": "Do you want to consider the chapter %s as read ?"
+  "reading.considerChapterAsRead": "Do you want to consider the chapter %s as read ?",
+
+  "tracking.askConsent": "Do you allow us to track your data while using FangApp ?"
 }

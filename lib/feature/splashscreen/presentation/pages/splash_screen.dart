@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:fangapp/core/analytics/analytics_helper.dart';
+import 'package:fangapp/core/extensions/int_extension.dart';
+import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/app_helper.dart';
+import 'package:fangapp/core/utils/interaction_helper.dart';
 import 'package:fangapp/core/utils/navigation_helper.dart';
 import 'package:fangapp/core/widget/loading_widget.dart';
 import 'package:fangapp/core/widget/version_widget.dart';
@@ -23,16 +28,39 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _loginCubit = BlocProvider.of<LoginCubit>(context);
-    _loginCubit.getCurrentUser();
-
-    // Send app open event
-    AnalyticsHelper().sendAppOpenEvent();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     AppHelper().deviceSize = MediaQuery.of(context).size;
+    _askTrackingConsent();
+  }
+
+  void _getCurrentUser() {
+    // Send app open event
+    AnalyticsHelper().sendAppOpenEvent();
+    _loginCubit.getCurrentUser();
+  }
+
+  Future<void> _askTrackingConsent() async {
+    if (AppHelper().trackingOn == null) {
+      Timer(
+        1.seconds,
+        () async {
+          final bool tracking = await InteractionHelper.showModal(
+                text: 'tracking.askConsent'.translate(),
+              ) ??
+              false;
+          await AppHelper().updateTracking(
+            tracking: tracking,
+          );
+          _getCurrentUser();
+        },
+      );
+    } else {
+      _getCurrentUser();
+    }
   }
 
   @override

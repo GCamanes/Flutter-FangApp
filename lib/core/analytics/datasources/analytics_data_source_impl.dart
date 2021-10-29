@@ -16,7 +16,7 @@ class AnalyticsDataSourceImpl extends AnalyticsDataSource {
 
   @override
   Future<void> sendAppOpen() async {
-    if (AppHelper().analyticsTrackingOn) {
+    if (AppHelper().trackingOn ?? false) {
       debugPrint('ANALYTICS event: App Open');
       analytics.logAppOpen();
     }
@@ -27,7 +27,7 @@ class AnalyticsDataSourceImpl extends AnalyticsDataSource {
     required String name,
     Map<String, dynamic> parameters = const <String, dynamic>{},
   }) async {
-    if (AppHelper().analyticsTrackingOn) {
+    if (AppHelper().trackingOn ?? false) {
       debugPrint('ANALYTICS event: $name $parameters');
       analytics.logEvent(name: name, parameters: parameters);
     }

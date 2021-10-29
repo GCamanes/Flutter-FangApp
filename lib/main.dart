@@ -145,6 +145,7 @@ class _FangAppState extends State<FangApp> with WidgetsBindingObserver {
     BlocProvider.of<TabNavigationCubit>(context).close();
     BlocProvider.of<AppLifeCycleBloc>(context).close();
     BlocProvider.of<MangasCubit>(context).close();
+    BlocProvider.of<ChaptersCubit>(context).close();
     super.dispose();
   }
 

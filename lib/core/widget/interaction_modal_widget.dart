@@ -68,7 +68,7 @@ class _InteractionChoiceWidget extends StatelessWidget {
             minimumWidth: size.width / 4,
             color: AppColors.greyLight,
             borderColor: AppColors.orange,
-            textColor: AppColors.blackSmoke,
+            textColor: AppColors.black90,
             onPressed: () {
               //close current page and Return False
               Navigator.pop(context, false);
@@ -79,7 +79,7 @@ class _InteractionChoiceWidget extends StatelessWidget {
             minimumWidth: size.width / 4,
             color: AppColors.greyLight,
             borderColor: AppColors.blueLight,
-            textColor: AppColors.blackSmoke,
+            textColor: AppColors.black90,
             onPressed: () {
               //close current page and return True
               Navigator.pop(context, true);
@@ -94,7 +94,7 @@ class _InteractionChoiceWidget extends StatelessWidget {
         minimumWidth: size.width / 4,
         color: AppColors.greyLight,
         borderColor: AppColors.orange,
-        textColor: AppColors.blackSmoke,
+        textColor: AppColors.black90,
         onPressed: () {
           //close current page and return True
           Navigator.pop(context, true);

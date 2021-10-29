@@ -9,15 +9,11 @@ import '../../get_it_injection.dart';
 abstract class AppHelperBase {
   @protected
   late Size size;
-  late bool trackingOn;
+  bool? trackingOn;
 
   Size get deviceSize => size;
 
   set deviceSize(Size newSize) => size = newSize;
-
-  bool get analyticsTrackingOn => trackingOn;
-
-  set analyticsTrackingOn(bool tracking) => trackingOn = tracking;
 }
 
 class AppHelper extends AppHelperBase {
@@ -28,13 +24,13 @@ class AppHelper extends AppHelperBase {
   AppHelper._internal() {
     size = Size.zero;
     trackingOn = getIt<SharedPreferences>()
-            .getBool(AppConstants.sharedKeyAcceptAnalyticsTracking) ??
-        false;
+        .getBool(AppConstants.sharedKeyAcceptAnalyticsTracking);
   }
 
   Future<void> updateTracking({bool tracking = false}) async {
     await getIt<SharedPreferences>()
         .setBool(AppConstants.sharedKeyAcceptAnalyticsTracking, tracking);
+    trackingOn = tracking;
   }
 
   static final AppHelper _instance = AppHelper._internal();
