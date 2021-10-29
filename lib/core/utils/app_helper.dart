@@ -27,10 +27,10 @@ class AppHelper extends AppHelperBase {
         .getBool(AppConstants.sharedKeyAcceptAnalyticsTracking);
   }
 
-  Future<void> updateTracking({bool tracking = false}) async {
+  Future<bool> updateTracking({bool tracking = false}) async {
     await getIt<SharedPreferences>()
         .setBool(AppConstants.sharedKeyAcceptAnalyticsTracking, tracking);
-    trackingOn = tracking;
+    return trackingOn = tracking;
   }
 
   static final AppHelper _instance = AppHelper._internal();

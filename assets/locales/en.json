@@ -43,5 +43,6 @@
 
   "reading.considerChapterAsRead": "Do you want to consider the chapter %s as read ?",
 
-  "tracking.askConsent": "Do you allow us to track your data while using FangApp ?"
+  "tracking.askConsent": "Do you allow us to track your data while using FangApp ? You can change it later in the settings page",
+  "tracking.title": "Data tracking"
 }
