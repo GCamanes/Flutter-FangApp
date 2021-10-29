@@ -49,6 +49,21 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions "fangapp"
+    productFlavors {
+        dev {
+            dimension "fangapp"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+            resValue "string", "app_name", "FangApp Dev"
+        }
+
+        prod {
+            dimension "fangapp"
+            resValue "string", "app_name", "FangApp"
+        }
+    }
 }
 
 flutter {

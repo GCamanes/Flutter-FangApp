@@ -5,7 +5,8 @@ import 'package:version/version.dart';
 abstract class VersionHelper {
   static Future<String> getAppVersion() async {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    final Version appVersion = Version.parse(packageInfo.version);
-    return appVersion.formattedVersion;
+    return packageInfo.version;
+    // final Version appVersion = Version.parse(packageInfo.version);
+    // return appVersion.formattedVersion;
   }
 }

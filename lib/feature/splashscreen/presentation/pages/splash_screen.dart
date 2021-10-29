@@ -29,17 +29,10 @@ class _SplashScreenState extends State<SplashScreen> {
     _loginCubit.getCurrentUser();
   }
 
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     AppHelper().deviceSize = MediaQuery.of(context).size;
-  }
-
-  Future<String> getAppVersion() async {
-    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    final Version appVersion = Version.parse(packageInfo.version);
-    return appVersion.formattedVersion;
   }
 
   @override
