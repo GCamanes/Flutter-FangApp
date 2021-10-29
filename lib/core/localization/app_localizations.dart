@@ -68,6 +68,7 @@ class AppLocalizations {
   Future<void> setNewLanguage({
     String? newLanguage,
     bool saveInPrefs = true,
+    bool sendEvent = false,
   }) async {
     String? language = newLanguage;
     if (language == null) {
@@ -88,8 +89,11 @@ class AppLocalizations {
       await languagePreferenceDataSource.cachePreferredLanguage(language);
     }
 
+    if (sendEvent) {
+      AnalyticsHelper().sendChangeLanguageEvent(language: language);
+    }
+
     // If there is a callback to invoke to notify that a language has changed
-    AnalyticsHelper().sendChangeLanguageEvent(language: language);
     _localChangedController.add(language);
   }
 }
