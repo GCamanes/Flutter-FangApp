@@ -6,6 +6,7 @@ class AnalyticsParamName {
   static const String deviceOsVersion = 'device_os_version';
   static const String deviceModel = 'device_model';
   static const String error = 'error';
+  static const String language = 'language';
   static const String manga = 'manga';
   static const String path = 'path';
 

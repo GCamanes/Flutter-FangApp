@@ -69,4 +69,12 @@ class AnalyticsHelper extends AnalyticsHelperBase {
       path: path,
     );
   }
+
+  Future<void> sendChangeLanguageEvent({
+    required String language,
+  }) {
+    return repository.sendChangeLanguageEvent(
+      language: language,
+    );
+  }
 }

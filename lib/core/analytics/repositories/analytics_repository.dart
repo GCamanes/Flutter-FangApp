@@ -33,4 +33,8 @@ abstract class AnalyticsRepository {
   Future<void> sendViewPageEvent({
     required String path,
   });
+
+  Future<void> sendChangeLanguageEvent({
+    required String language,
+  });
 }

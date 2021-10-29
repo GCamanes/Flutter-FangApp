@@ -12,6 +12,9 @@ class AnalyticsEventName {
   // FAVORITE EVENT
   static const String addFavoriteManga = 'add_favorite_manga';
 
+  // LANGUAGE EVENT
+  static const String changeLanguage = 'change_language';
+
   // LOADING EVENT
   static const String reload = 'reload';
 }

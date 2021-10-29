@@ -164,4 +164,16 @@ class AnalyticsRepositoryImpl extends AnalyticsRepository {
       parameters: parameters,
     );
   }
+
+  @override
+  Future<void> sendChangeLanguageEvent({required String language}) async {
+    final Map<String, dynamic> parameters = await _getCommonParameters();
+    parameters.addAll(<String, dynamic>{
+      AnalyticsParamName.language: language,
+    });
+    return _sendEvent(
+      name: AnalyticsEventName.changeLanguage,
+      parameters: parameters,
+    );
+  }
 }

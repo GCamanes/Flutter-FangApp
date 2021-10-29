@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/get_it_injection.dart';
 import 'package:flutter/material.dart';
@@ -88,6 +89,7 @@ class AppLocalizations {
     }
 
     // If there is a callback to invoke to notify that a language has changed
+    AnalyticsHelper().sendChangeLanguageEvent(language: language);
     _localChangedController.add(language);
   }
 }
