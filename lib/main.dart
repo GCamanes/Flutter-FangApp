@@ -53,11 +53,6 @@ Future<void> main() async {
   // Initialize GetIt Injection
   await injection.init();
 
-  // Get analytics tracking acceptance
-  AppHelper().trackingOn = getIt<SharedPreferences>()
-          .getBool(AppConstants.sharedKeyAcceptAnalyticsTracking) ??
-      false;
-
   final MultiBlocProvider _multiBlocProviders = MultiBlocProvider(
     providers: <BlocProvider<dynamic>>[
       BlocProvider<LoginCubit>(
@@ -139,9 +134,6 @@ class _FangAppState extends State<FangApp> with WidgetsBindingObserver {
     // Initializes a callback should something need
     // to be done when the language is changed
     injection.getIt<AppLocalizations>().localChanged.listen(_onLocaleChanged);
-
-    // Send app open event
-    AnalyticsHelper().sendAppOpenEvent();
 
     super.initState();
   }

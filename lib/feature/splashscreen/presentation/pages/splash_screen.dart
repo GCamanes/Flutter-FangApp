@@ -1,5 +1,4 @@
 import 'package:fangapp/core/analytics/analytics_helper.dart';
-import 'package:fangapp/core/extensions/version_extension.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/app_helper.dart';
@@ -9,8 +8,6 @@ import 'package:fangapp/core/widget/version_widget.dart';
 import 'package:fangapp/feature/login/presentation/cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:package_info/package_info.dart';
-import 'package:version/version.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -27,6 +24,9 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _loginCubit = BlocProvider.of<LoginCubit>(context);
     _loginCubit.getCurrentUser();
+
+    // Send app open event
+    AnalyticsHelper().sendAppOpenEvent();
   }
 
   @override

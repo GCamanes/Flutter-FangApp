@@ -1,4 +1,5 @@
 import 'package:fangapp/core/analytics/datasources/analytics_data_source.dart';
+import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +16,10 @@ class AnalyticsDataSourceImpl extends AnalyticsDataSource {
 
   @override
   Future<void> sendAppOpen() async {
-    debugPrint('ANALYTICS event: App Open');
-    analytics.logAppOpen();
+    if (AppHelper().analyticsTrackingOn) {
+      debugPrint('ANALYTICS event: App Open');
+      analytics.logAppOpen();
+    }
   }
 
   @override
@@ -24,8 +27,10 @@ class AnalyticsDataSourceImpl extends AnalyticsDataSource {
     required String name,
     Map<String, dynamic> parameters = const <String, dynamic>{},
   }) async {
-    debugPrint('ANALYTICS event: $name $parameters');
-    analytics.logEvent(name: name, parameters: parameters);
+    if (AppHelper().analyticsTrackingOn) {
+      debugPrint('ANALYTICS event: $name $parameters');
+      analytics.logEvent(name: name, parameters: parameters);
+    }
   }
 
   @override
