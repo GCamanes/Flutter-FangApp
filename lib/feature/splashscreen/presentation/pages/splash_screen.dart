@@ -29,7 +29,6 @@ class _SplashScreenState extends State<SplashScreen> {
     _loginCubit.getCurrentUser();
   }
 
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
