@@ -1,6 +1,7 @@
 import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
+import 'package:fangapp/feature/snake/snake_game_widget.dart';
 import 'package:flutter/material.dart';
 
 class BonusSnakePage extends StatefulWidget {
@@ -23,7 +24,7 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
       appBar: AppBarWidget(
         title: 'Snake',
       ),
-      body: SizedBox(),
+      body: SnakeGameWidget(),
     );
   }
 }
