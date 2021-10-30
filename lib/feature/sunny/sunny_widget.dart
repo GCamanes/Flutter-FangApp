@@ -2,11 +2,12 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:fangapp/core/extensions/date_extension.dart';
-import 'package:fangapp/feature/bonus/presentation/animation/sunny/fish_particle_entity.dart';
-import 'package:fangapp/feature/bonus/presentation/animation/sunny/sunny_painter.dart';
-import 'package:fangapp/feature/bonus/presentation/animation/sunny/sunny_particle_entity.dart';
+import 'package:fangapp/feature/sunny/sunny_painter.dart';
+import 'package:fangapp/feature/sunny/sunny_particle_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_animations/stateless_animation/loop_animation.dart';
+
+import 'fish_particle_entity.dart';
 
 class SunnyWidget extends StatefulWidget {
   const SunnyWidget({

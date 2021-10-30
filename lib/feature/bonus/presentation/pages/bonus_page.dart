@@ -22,6 +22,20 @@ class _BonusPageState extends State<BonusPage> {
     super.initState();
     _tiles = <Widget>[
       TileButtonWidget(
+        title: 'Snake',
+        onPressed: () async {
+          final dynamic backPressed = await RoutesManager.pushNamed(
+            context: context,
+            pageRouteName: RouteConstants.routeBonusSnake,
+            fullScreen: true,
+          );
+          if (backPressed != null) {
+            AnalyticsHelper()
+                .sendViewPageEvent(path: RouteConstants.routeBonus);
+          }
+        },
+      ),
+      TileButtonWidget(
         title: 'Sunny',
         onPressed: () async {
           final dynamic backPressed = await RoutesManager.pushNamed(
@@ -49,7 +63,7 @@ class _BonusPageState extends State<BonusPage> {
         padding: const EdgeInsets.all(10),
         key: PageStorageKey<String>('bottomBar.bonus'.translate()),
         separatorBuilder: (_, __) =>
-            const Divider(color: AppColors.blueLight, height: 1),
+            const Divider(height: 10, color: Colors.transparent),
         itemBuilder: (BuildContext context, int index) => _tiles[index],
         itemCount: _tiles.length,
       ),

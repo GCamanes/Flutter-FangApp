@@ -1,30 +1,29 @@
 import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
-import 'package:fangapp/feature/sunny/sunny_widget.dart';
 import 'package:flutter/material.dart';
 
-class BonusSunnyPage extends StatefulWidget {
-  const BonusSunnyPage({Key? key}) : super(key: key);
+class BonusSnakePage extends StatefulWidget {
+  const BonusSnakePage({Key? key}) : super(key: key);
 
   @override
-  _BonusSunnyPageState createState() => _BonusSunnyPageState();
+  _BonusSnakePageState createState() => _BonusSnakePageState();
 }
 
-class _BonusSunnyPageState extends State<BonusSunnyPage> {
+class _BonusSnakePageState extends State<BonusSnakePage> {
   @override
   void initState() {
     super.initState();
-    AnalyticsHelper().sendViewPageEvent(path: RouteConstants.routeBonusSunny);
+    AnalyticsHelper().sendViewPageEvent(path: RouteConstants.routeBonusSnake);
   }
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: AppBarWidget(
-        title: 'Sunny',
+        title: 'Snake',
       ),
-      body: SunnyWidget(),
+      body: SizedBox(),
     );
   }
 }
