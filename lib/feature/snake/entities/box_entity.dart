@@ -11,5 +11,8 @@ abstract class BoxEntity {
   late final int rowIndex;
   late final double boxSize;
 
+  Offset get getOffset => Offset(columnIndex * boxSize, rowIndex * boxSize);
+  Size get getSize => Size(boxSize, boxSize);
+
   void draw(Canvas canvas);
 }

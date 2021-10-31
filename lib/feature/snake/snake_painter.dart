@@ -25,10 +25,10 @@ class SnakePainter extends CustomPainter {
     canvas.drawRect(
       Rect.fromLTWH(
         0,
-        gameBoardEntity.numberOfBoxesPerColumn * gameBoardEntity.boxSize,
+        gameBoardEntity.numberOfRows * gameBoardEntity.boxSize,
         size.width,
         size.height -
-            gameBoardEntity.numberOfBoxesPerColumn * gameBoardEntity.boxSize,
+            gameBoardEntity.numberOfRows * gameBoardEntity.boxSize,
       ),
       paint2,
     );
@@ -39,11 +39,7 @@ class SnakePainter extends CustomPainter {
     // Draw background
     _drawBackground(canvas, size);
     // Draw all box entities
-    for (final List<BoxEntity?> row in gameBoardEntity.boxesMatrix) {
-      for (final BoxEntity? boxEntity in row) {
-        boxEntity?.draw(canvas);
-      }
-    }
+    gameBoardEntity.applyToMatrix((BoxEntity? box) => box?.draw(canvas));
   }
 
   @override
