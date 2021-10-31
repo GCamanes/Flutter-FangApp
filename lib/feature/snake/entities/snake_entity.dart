@@ -1,3 +1,5 @@
+import 'package:fangapp/core/enum/direction_enum.dart';
+import 'package:fangapp/feature/snake/entities/position_entity.dart';
 import 'package:fangapp/feature/snake/entities/snake_box_entity.dart';
 
 class SnakeEntity {
@@ -21,4 +23,49 @@ class SnakeEntity {
   late int length;
 
   late List<SnakeBoxEntity> body;
+
+  PositionEntity getNextHeadPosition(DirectionEnum direction) {
+    return PositionEntity(
+      columnIndex: direction == DirectionEnum.left
+          ? body.first.columnIndex - 1
+          : direction == DirectionEnum.right
+              ? body.first.columnIndex + 1
+              : body.first.columnIndex,
+      rowIndex: direction == DirectionEnum.up
+          ? body.first.rowIndex - 1
+          : direction == DirectionEnum.down
+              ? body.first.rowIndex + 1
+              : body.first.rowIndex,
+    );
+  }
+
+  void move({
+    required PositionEntity nextPosition,
+    bool isAppleNext = false,
+    bool isWallNext = false,
+  }) {
+    // Wall case : no movement // TODO: stop game
+    if (isWallNext) return;
+    // Body case : no movement // TODO: stop game
+    for (final SnakeBoxEntity box in body) {
+      if (box.isSamePosition(nextPosition) && box != body.last) return;
+    }
+    // Update head to new position
+    body.first.isHead = false;
+    body.insert(
+      0,
+      SnakeBoxEntity(
+        isHead: true,
+        columnIndex: nextPosition.columnIndex,
+        rowIndex: nextPosition.rowIndex,
+        boxSize: body.first.boxSize,
+      ),
+    );
+    // TODO: increase score in case of apple
+    if (!isAppleNext) {
+      // Update new snake tail
+      body.remove(body.last);
+      body.last.isTail = true;
+    }
+  }
 }

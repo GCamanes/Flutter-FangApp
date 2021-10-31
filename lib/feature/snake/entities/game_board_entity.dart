@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:fangapp/core/enum/direction_enum.dart';
 import 'package:fangapp/feature/snake/entities/apple_box_entity.dart';
+import 'package:fangapp/feature/snake/entities/position_entity.dart';
 import 'package:fangapp/feature/snake/entities/snake_box_entity.dart';
 import 'package:fangapp/feature/snake/entities/snake_entity.dart';
 import 'package:fangapp/feature/snake/entities/wall_box_entity.dart';
@@ -19,13 +21,14 @@ class GameBoardEntity {
     numberOfRows = gameBoardSize.height ~/ boxSize;
 
     boxesMatrix = initWithWall ? _initWithWAll() : _initEmpty();
+
     snakeEntity = SnakeEntity(
       startColumnIndex: numberOfColumns ~/ 2 + 1,
       startRowIndex: numberOfRows ~/ 2 + 1,
       boxSize: boxSize,
     );
     _addSnakeToMatrix();
-    _addRandomAppleToMatrix();
+    _addAppleToMatrix(_getRandomEmptyPosition());
   }
 
   late final Random _random;
@@ -33,10 +36,12 @@ class GameBoardEntity {
   final int numberOfColumns = 25;
   late final int numberOfRows;
   late final double boxSize;
+
   late SnakeEntity snakeEntity;
 
   late List<List<BoxEntity?>> boxesMatrix;
 
+  // Function to apply a function on every matrix boxes
   void applyToMatrix(Function(BoxEntity? box) function) {
     for (final List<BoxEntity?> row in boxesMatrix) {
       for (final BoxEntity? boxEntity in row) {
@@ -45,6 +50,7 @@ class GameBoardEntity {
     }
   }
 
+  // Init empty matrix
   List<List<BoxEntity?>> _initEmpty() =>
       List<List<BoxEntity?>>.generate(numberOfColumns, (int columnIndex) {
         return List<BoxEntity?>.generate(numberOfRows, (int rowIndex) {
@@ -52,6 +58,7 @@ class GameBoardEntity {
         });
       });
 
+  // Init matrix with border walls
   List<List<BoxEntity?>> _initWithWAll() =>
       List<List<BoxEntity?>>.generate(numberOfColumns, (int columnIndex) {
         return List<BoxEntity?>.generate(numberOfRows, (int rowIndex) {
@@ -70,13 +77,22 @@ class GameBoardEntity {
       });
 
   void _addSnakeToMatrix() {
+    // Add snake to matrix
     for (final SnakeBoxEntity box in snakeEntity.body) {
       boxesMatrix[box.columnIndex][box.rowIndex] = box;
     }
   }
 
-  void _addRandomAppleToMatrix() {
-    final List<Offset> boxCandidates = <Offset>[];
+  void _removeSnakeFromMatrix() {
+    // Remove snake from matrix
+    for (final SnakeBoxEntity box in snakeEntity.body) {
+      boxesMatrix[box.columnIndex][box.rowIndex] = null;
+    }
+  }
+
+  PositionEntity _getRandomEmptyPosition() {
+    final List<PositionEntity> boxCandidates = <PositionEntity>[];
+    // Loop on matrix rows and columns to save empty position
     for (final int columnIndex in List<int>.generate(
       numberOfColumns,
       (int columnIndex) => columnIndex,
@@ -86,19 +102,50 @@ class GameBoardEntity {
         (int rowIndex) => rowIndex,
       )) {
         if (boxesMatrix[columnIndex][rowIndex] == null) {
-          boxCandidates
-              .add(Offset(columnIndex.toDouble(), rowIndex.toDouble()));
+          boxCandidates.add(
+            PositionEntity(
+              columnIndex: columnIndex,
+              rowIndex: rowIndex,
+            ),
+          );
         }
       }
     }
+    // Return random PositionEntity
+    return boxCandidates[_random.nextInt(boxCandidates.length - 1)];
+  }
 
-    final Offset position =
-        boxCandidates[_random.nextInt(boxCandidates.length-1)];
-
-    boxesMatrix[position.dx.toInt()][position.dy.toInt()] = AppleBoxEntity(
-      columnIndex: position.dx.toInt(),
-      rowIndex: position.dy.toInt(),
+  void _addAppleToMatrix(PositionEntity position) {
+    // Set apple box entity to selected position
+    boxesMatrix[position.columnIndex][position.rowIndex] = AppleBoxEntity(
+      columnIndex: position.columnIndex,
+      rowIndex: position.rowIndex,
       boxSize: boxSize,
     );
+  }
+
+  void computeNextMatrix(DirectionEnum direction) {
+    // Remove snake from matrix
+    _removeSnakeFromMatrix();
+
+    // Get next position of snake head
+    final PositionEntity nextPosition =
+        snakeEntity.getNextHeadPosition(direction);
+
+    // Save if next position is apple or wall box
+    final bool isAppleNext = boxesMatrix[nextPosition.columnIndex]
+        [nextPosition.rowIndex] is AppleBoxEntity;
+    final bool isWallNext = boxesMatrix[nextPosition.columnIndex]
+        [nextPosition.rowIndex] is WallBoxEntity;
+
+    // Update snake entity
+    snakeEntity.move(
+      nextPosition: nextPosition,
+      isAppleNext: isAppleNext,
+      isWallNext: isWallNext,
+    );
+
+    // Update snake in matrix
+    _addSnakeToMatrix();
   }
 }
