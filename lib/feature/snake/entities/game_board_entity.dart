@@ -1,5 +1,7 @@
+import 'dart:math';
 import 'dart:ui';
 
+import 'package:fangapp/feature/snake/entities/apple_box_entity.dart';
 import 'package:fangapp/feature/snake/entities/snake_box_entity.dart';
 import 'package:fangapp/feature/snake/entities/snake_entity.dart';
 import 'package:fangapp/feature/snake/entities/wall_box_entity.dart';
@@ -11,6 +13,8 @@ class GameBoardEntity {
     required Size gameBoardSize,
     bool initWithWall = false,
   }) {
+    _random = Random();
+
     boxSize = gameBoardSize.width / numberOfColumns;
     numberOfRows = gameBoardSize.height ~/ boxSize;
 
@@ -21,7 +25,10 @@ class GameBoardEntity {
       boxSize: boxSize,
     );
     _addSnakeToMatrix();
+    _addRandomAppleToMatrix();
   }
+
+  late final Random _random;
 
   final int numberOfColumns = 25;
   late final int numberOfRows;
@@ -39,17 +46,15 @@ class GameBoardEntity {
   }
 
   List<List<BoxEntity?>> _initEmpty() =>
-      List<List<BoxEntity?>>.generate(numberOfRows, (int rowIndex) {
-        return List<BoxEntity?>.generate(numberOfColumns,
-            (int columnIndex) {
+      List<List<BoxEntity?>>.generate(numberOfColumns, (int columnIndex) {
+        return List<BoxEntity?>.generate(numberOfRows, (int rowIndex) {
           return null;
         });
       });
 
   List<List<BoxEntity?>> _initWithWAll() =>
-      List<List<BoxEntity?>>.generate(numberOfRows, (int rowIndex) {
-        return List<BoxEntity?>.generate(numberOfColumns,
-            (int columnIndex) {
+      List<List<BoxEntity?>>.generate(numberOfColumns, (int columnIndex) {
+        return List<BoxEntity?>.generate(numberOfRows, (int rowIndex) {
           if (rowIndex == 0 ||
               rowIndex == numberOfRows - 1 ||
               columnIndex == 0 ||
@@ -66,7 +71,34 @@ class GameBoardEntity {
 
   void _addSnakeToMatrix() {
     for (final SnakeBoxEntity box in snakeEntity.body) {
-      boxesMatrix[box.rowIndex][box.columnIndex] = box;
+      boxesMatrix[box.columnIndex][box.rowIndex] = box;
     }
+  }
+
+  void _addRandomAppleToMatrix() {
+    final List<Offset> boxCandidates = <Offset>[];
+    for (final int columnIndex in List<int>.generate(
+      numberOfColumns,
+      (int columnIndex) => columnIndex,
+    )) {
+      for (final int rowIndex in List<int>.generate(
+        numberOfRows,
+        (int rowIndex) => rowIndex,
+      )) {
+        if (boxesMatrix[columnIndex][rowIndex] == null) {
+          boxCandidates
+              .add(Offset(columnIndex.toDouble(), rowIndex.toDouble()));
+        }
+      }
+    }
+
+    final Offset position =
+        boxCandidates[_random.nextInt(boxCandidates.length-1)];
+
+    boxesMatrix[position.dx.toInt()][position.dy.toInt()] = AppleBoxEntity(
+      columnIndex: position.dx.toInt(),
+      rowIndex: position.dy.toInt(),
+      boxSize: boxSize,
+    );
   }
 }
