@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:fangapp/core/enum/direction_enum.dart';
+import 'package:fangapp/core/enum/snake_status_enum.dart';
 import 'package:fangapp/feature/snake/entities/apple_box_entity.dart';
 import 'package:fangapp/feature/snake/entities/position_entity.dart';
 import 'package:fangapp/feature/snake/entities/snake_box_entity.dart';
@@ -13,7 +14,9 @@ import 'box_entity.dart';
 class GameBoardEntity {
   GameBoardEntity({
     required Size gameBoardSize,
-    bool initWithWall = false,
+    this.initWithWall = true,
+    required this.handleSnakeDead,
+    required this.handleSnakeEatFruit,
   }) {
     _random = Random();
 
@@ -31,17 +34,21 @@ class GameBoardEntity {
     _addAppleToMatrix(_getRandomEmptyPosition());
   }
 
+  // Game board values
   late final Random _random;
-
   final int numberOfColumns = 25;
   late final int numberOfRows;
   late final double boxSize;
-
+  late bool initWithWall;
   late SnakeEntity snakeEntity;
-
   late List<List<BoxEntity?>> boxesMatrix;
 
+  // Getters
   double get boardSize => numberOfRows * boxSize;
+
+  // Functions to handle snake status
+  late Function() handleSnakeDead;
+  late Function() handleSnakeEatFruit;
 
   // Function to apply a function on every matrix boxes
   void applyToMatrix(Function(BoxEntity? box) function) {
@@ -126,6 +133,19 @@ class GameBoardEntity {
     );
   }
 
+  void handleSnakeStatus(SnakeStatusEnum snakeStatus) {
+    switch(snakeStatus) {
+      case SnakeStatusEnum.dead:
+        handleSnakeDead();
+        break;
+      case SnakeStatusEnum.eatFruit:
+        _addAppleToMatrix(_getRandomEmptyPosition());
+        handleSnakeEatFruit();
+        break;
+      default:
+    }
+  }
+
   void computeNextMatrix(DirectionEnum direction) {
     // Remove snake from matrix
     _removeSnakeFromMatrix();
@@ -141,7 +161,7 @@ class GameBoardEntity {
         [nextPosition.rowIndex] is WallBoxEntity;
 
     // Update snake entity
-    snakeEntity.move(
+    final SnakeStatusEnum snakeStatus = snakeEntity.move(
       nextPosition: nextPosition,
       isAppleNext: isAppleNext,
       isWallNext: isWallNext,
@@ -149,5 +169,8 @@ class GameBoardEntity {
 
     // Update snake in matrix
     _addSnakeToMatrix();
+
+    // Update game according to snake status
+    handleSnakeStatus(snakeStatus);
   }
 }

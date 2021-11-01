@@ -1,4 +1,5 @@
 import 'package:fangapp/core/enum/direction_enum.dart';
+import 'package:fangapp/core/enum/snake_status_enum.dart';
 import 'package:fangapp/feature/snake/entities/position_entity.dart';
 import 'package:fangapp/feature/snake/entities/snake_box_entity.dart';
 
@@ -39,16 +40,18 @@ class SnakeEntity {
     );
   }
 
-  void move({
+  SnakeStatusEnum move({
     required PositionEntity nextPosition,
     bool isAppleNext = false,
     bool isWallNext = false,
   }) {
     // Wall case : no movement // TODO: stop game
-    if (isWallNext) return;
+    if (isWallNext) return SnakeStatusEnum.dead;
     // Body case : no movement // TODO: stop game
     for (final SnakeBoxEntity box in body) {
-      if (box.isSamePosition(nextPosition) && box != body.last) return;
+      if (box.isSamePosition(nextPosition) && box != body.last) {
+        return SnakeStatusEnum.dead;
+      }
     }
     // Update head to new position
     body.first.isHead = false;
@@ -62,10 +65,13 @@ class SnakeEntity {
       ),
     );
     // TODO: increase score in case of apple
-    if (!isAppleNext) {
+    if (isAppleNext) {
+      return SnakeStatusEnum.eatFruit;
+    } else {
       // Update new snake tail
       body.remove(body.last);
       body.last.isTail = true;
+      return SnakeStatusEnum.ok;
     }
   }
 }

@@ -22,16 +22,28 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
   GameBoardEntity? _gameBoardEntity;
 
   bool gameStarted = false;
+  bool gamePaused = false;
 
   Timer? _snakeTimer;
 
   DirectionEnum _direction = DirectionEnum.up;
-  bool _enableTap = true;
+  bool _enableTap = false;
 
   @override
   void dispose() {
     _snakeTimer?.cancel();
     super.dispose();
+  }
+
+  void _handleGameOver() {
+    _snakeTimer?.cancel();
+    _enableTap = false;
+    _direction = DirectionEnum.up;
+    print('Game Over');
+  }
+
+  void _handleScoreUpdate() {
+    print('Score up !');
   }
 
   void _initSnakeBoardSize({
@@ -43,7 +55,8 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
       _boardSize = boardSize;
       _gameBoardEntity = GameBoardEntity(
         gameBoardSize: boardSize,
-        initWithWall: true,
+        handleSnakeDead: () => _handleGameOver(),
+        handleSnakeEatFruit: () => _handleScoreUpdate(),
       );
     });
   }
@@ -60,6 +73,13 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
         setState(() {});
       },
     );
+  }
+
+  void _stopGameTimer() {
+    setState(() {
+      gamePaused = true;
+    });
+    _snakeTimer?.cancel();
   }
 
   void _handleTapEvent(double dx) {
@@ -115,8 +135,8 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
                       child: CustomPaint(
                         painter: (_gameBoardEntity != null)
                             ? SnakePainter(
-                          gameBoardEntity: _gameBoardEntity!,
-                        )
+                                gameBoardEntity: _gameBoardEntity!,
+                              )
                             : null,
                       ),
                     ),
@@ -125,11 +145,12 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
               );
             },
           ),
-          if (!gameStarted) OpacityStartWidget(
-            topPadding: _scoreSize.height,
-            gameBoardEntity: _gameBoardEntity,
-            onStart: _starGameTimer,
-          ),
+          if (!gameStarted)
+            OpacityStartWidget(
+              topPadding: _scoreSize.height,
+              gameBoardEntity: _gameBoardEntity,
+              onStart: _starGameTimer,
+            ),
         ],
       ),
     );
