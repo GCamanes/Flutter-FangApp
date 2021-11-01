@@ -41,6 +41,8 @@ class GameBoardEntity {
 
   late List<List<BoxEntity?>> boxesMatrix;
 
+  double get boardSize => numberOfRows * boxSize;
+
   // Function to apply a function on every matrix boxes
   void applyToMatrix(Function(BoxEntity? box) function) {
     for (final List<BoxEntity?> row in boxesMatrix) {

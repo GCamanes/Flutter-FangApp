@@ -6,6 +6,10 @@
   "common.all": "All",
   "common.favorites": "Favorites",
   "common.exit": "Do you want to close FangApp ?",
+  "common.start": "Start",
+  "common.pause": "Pause",
+  "common.gameOver": "Game Over",
+  "common.restart": "Restart",
 
   "login.title": "Login",
   "login.enterApp": "Let's go",
@@ -44,5 +48,8 @@
   "reading.considerChapterAsRead": "Do you want to consider the chapter %s as read ?",
 
   "tracking.askConsent": "Do you allow us to track your data while using FangApp ? You can change it later in the settings page",
-  "tracking.title": "Data tracking"
+  "tracking.title": "Data tracking",
+
+  "snake.tutorialLeft": "Tap here\nto turn left",
+  "snake.tutorialRight": "Tap here\nto turn right"
 }
