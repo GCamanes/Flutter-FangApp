@@ -10,6 +10,7 @@
   "common.pause": "Pause",
   "common.gameOver": "Game Over",
   "common.restart": "Restart",
+  "common.paused": "Paused",
 
   "login.title": "Login",
   "login.enterApp": "Let's go",
