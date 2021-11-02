@@ -2,6 +2,7 @@ import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/core/widget/app_button_widget.dart';
+import 'package:fangapp/feature/snake/entities/game_board_entity.dart';
 import 'package:fangapp/feature/snake/widgets/tap_tutorial_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -12,12 +13,14 @@ class OpacityStartWidget extends StatelessWidget {
     required this.onStart,
     this.topPadding = 0,
     this.boardHeight = double.infinity,
+    this.gameBoardEntity,
   }) : super(key: key);
 
   final double opacity;
   final Function() onStart;
   final double topPadding;
   final double boardHeight;
+  final GameBoardEntity? gameBoardEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +55,10 @@ class OpacityStartWidget extends StatelessWidget {
           Center(
             child: AppButtonWidget(
               text: 'common.start'.translate(),
-              onPressed: onStart,
+              onPressed: () {
+                gameBoardEntity?.initSnakeGame();
+                onStart();
+              },
             ),
           ),
         ],

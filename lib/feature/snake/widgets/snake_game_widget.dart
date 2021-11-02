@@ -89,10 +89,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
     });
   }
 
-  void _starGameTimer({bool initGame = false}) {
-    if (initGame) {
-      _gameBoardEntity?.initSnakeGame();
-    }
+  void _starGameTimer() {
     setState(() {
       _gameStatus = GameStatusEnum.started;
     });
@@ -183,7 +180,8 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
             OpacityStartWidget(
               topPadding: _scoreSize.height,
               boardHeight: _boardSize.height,
-              onStart: () => _starGameTimer(initGame: true),
+              onStart: () => _starGameTimer(),
+              gameBoardEntity: _gameBoardEntity,
             ),
           if (_gameStatus == GameStatusEnum.paused)
             OpacityPausedWidget(
