@@ -79,4 +79,7 @@ abstract class AppConstants {
   static const int numberOfTilePerLine = 4;
   static const double spacingBetweenTile = 1;
   static const double tileAspectRatio = 2;
+
+  // Snake game
+  static const int snakeNumberOfColumns = 25;
 }

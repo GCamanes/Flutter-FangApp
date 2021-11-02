@@ -8,13 +8,11 @@ class SnakeEntity {
     this.length = 5,
     required int startColumnIndex,
     required int startRowIndex,
-    required double boxSize,
   }) {
     body = List<SnakeBoxEntity>.generate(length, (int index) {
       return SnakeBoxEntity(
         columnIndex: startColumnIndex,
         rowIndex: startRowIndex + index,
-        boxSize: boxSize,
         isHead: index == 0,
         isTail: index == length - 1,
       );
@@ -61,7 +59,6 @@ class SnakeEntity {
         isHead: true,
         columnIndex: nextPosition.columnIndex,
         rowIndex: nextPosition.rowIndex,
-        boxSize: body.first.boxSize,
       ),
     );
     // TODO: increase score in case of apple

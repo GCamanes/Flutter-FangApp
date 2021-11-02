@@ -1,19 +1,18 @@
 import 'dart:ui';
 
 import 'package:fangapp/core/theme/app_colors.dart';
+import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/feature/snake/entities/box_entity.dart';
 
 class SnakeBoxEntity extends BoxEntity {
   SnakeBoxEntity({
     required int columnIndex,
     required int rowIndex,
-    required double boxSize,
     this.isHead = false,
     this.isTail = false,
   }) : super(
           columnIndex: columnIndex,
           rowIndex: rowIndex,
-          boxSize: boxSize,
         );
 
   late bool isHead;
@@ -29,8 +28,12 @@ class SnakeBoxEntity extends BoxEntity {
               : AppColors.blackSmoke
       ..style = PaintingStyle.fill;
     canvas.drawCircle(
-      getOffset + Offset(boxSize / 2, boxSize / 2),
-      boxSize / 2,
+      getOffset +
+          Offset(
+            AppHelper().snakeBoxSize / 2,
+            AppHelper().snakeBoxSize / 2,
+          ),
+      AppHelper().snakeBoxSize / 2,
       paint,
     );
   }

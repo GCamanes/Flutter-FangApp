@@ -1,17 +1,16 @@
 import 'dart:ui';
 
 import 'package:fangapp/core/theme/app_colors.dart';
+import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/feature/snake/entities/box_entity.dart';
 
 class AppleBoxEntity extends BoxEntity {
   AppleBoxEntity({
     required int columnIndex,
     required int rowIndex,
-    required double boxSize,
   }) : super(
           columnIndex: columnIndex,
           rowIndex: rowIndex,
-          boxSize: boxSize,
         );
 
   @override
@@ -20,8 +19,12 @@ class AppleBoxEntity extends BoxEntity {
       ..color = AppColors.yellow
       ..style = PaintingStyle.fill;
     canvas.drawCircle(
-      getOffset + Offset(boxSize / 2, boxSize / 2),
-      boxSize / 2,
+      getOffset +
+          Offset(
+            AppHelper().snakeBoxSize / 2,
+            AppHelper().snakeBoxSize / 2,
+          ),
+      AppHelper().snakeBoxSize / 2,
       paint,
     );
   }

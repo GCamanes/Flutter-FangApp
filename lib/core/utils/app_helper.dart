@@ -9,11 +9,17 @@ import '../../get_it_injection.dart';
 abstract class AppHelperBase {
   @protected
   late Size size;
+  // Snake game
+  late double snakeBoxSize;
+  // Analytics tracking
   bool? trackingOn;
 
   Size get deviceSize => size;
 
-  set deviceSize(Size newSize) => size = newSize;
+  set deviceSize(Size newSize) {
+    size = newSize;
+    snakeBoxSize = newSize.width / AppConstants.snakeNumberOfColumns;
+  }
 }
 
 class AppHelper extends AppHelperBase {

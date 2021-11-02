@@ -7,11 +7,9 @@ class WallBoxEntity extends BoxEntity {
   WallBoxEntity({
     required int columnIndex,
     required int rowIndex,
-    required double boxSize,
   }) : super(
           columnIndex: columnIndex,
           rowIndex: rowIndex,
-          boxSize: boxSize,
         );
 
   @override

@@ -1,4 +1,5 @@
 import 'package:fangapp/core/theme/app_colors.dart';
+import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/feature/snake/entities/box_entity.dart';
 import 'package:flutter/material.dart';
 
@@ -25,10 +26,10 @@ class SnakePainter extends CustomPainter {
     canvas.drawRect(
       Rect.fromLTWH(
         0,
-        gameBoardEntity.numberOfRows * gameBoardEntity.boxSize,
+        gameBoardEntity.numberOfRows * AppHelper().snakeBoxSize,
         size.width,
         size.height -
-            gameBoardEntity.numberOfRows * gameBoardEntity.boxSize,
+            gameBoardEntity.numberOfRows * AppHelper().snakeBoxSize,
       ),
       paint2,
     );
