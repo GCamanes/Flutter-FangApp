@@ -26,12 +26,11 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
     _gameNotifier = GameNotifier();
     _gameBoardNotifier = GameBoardNotifier();
     _gameNotifier.addListener(() {
-      if (_gameNotifier.currentStatus == GameStatusEnum.started) {
+      if (_gameNotifier.status == GameStatusEnum.started) {
         setState(() {
           _nextGameStatus = GameStatusEnum.paused;
         });
-      } else if (_gameNotifier.currentStatus == GameStatusEnum.paused &&
-          _gameNotifier.previousStatus == GameStatusEnum.started) {
+      } else if (_gameNotifier.status == GameStatusEnum.paused) {
         setState(() {
           _nextGameStatus = GameStatusEnum.started;
         });
@@ -91,12 +90,10 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
 }
 
 class GameNotifier extends ChangeNotifier {
-  GameStatusEnum previousStatus = GameStatusEnum.notStarted;
-  GameStatusEnum currentStatus = GameStatusEnum.notStarted;
+  GameStatusEnum status = GameStatusEnum.notStarted;
 
-  void updateGameStatus(GameStatusEnum current) {
-    previousStatus = currentStatus;
-    currentStatus = current;
+  void updateGameStatus(GameStatusEnum newStatus) {
+    status = newStatus;
     notifyListeners();
   }
 }
