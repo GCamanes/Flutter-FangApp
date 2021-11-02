@@ -2,7 +2,6 @@ import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/core/widget/app_button_widget.dart';
-import 'package:fangapp/feature/snake/entities/game_board_entity.dart';
 import 'package:fangapp/feature/snake/widgets/tap_tutorial_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -12,13 +11,13 @@ class OpacityStartWidget extends StatelessWidget {
     this.opacity = 0.5,
     required this.onStart,
     this.topPadding = 0,
-    this.gameBoardEntity,
+    this.boardHeight = double.infinity,
   }) : super(key: key);
 
   final double opacity;
   final Function() onStart;
   final double topPadding;
-  final GameBoardEntity? gameBoardEntity;
+  final double boardHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,7 @@ class OpacityStartWidget extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: gameBoardEntity?.boardSize ?? double.infinity,
+            height: boardHeight,
             child: Row(
               children: <Widget>[
                 TapTutorialWidget(

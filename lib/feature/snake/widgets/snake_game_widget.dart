@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fangapp/core/enum/direction_enum.dart';
 import 'package:fangapp/core/enum/game_status_enum.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
+import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/core/widget/size_aware_widget.dart';
 import 'package:fangapp/feature/bonus/presentation/pages/bonus_snake_page.dart';
 import 'package:fangapp/feature/snake/entities/game_board_entity.dart';
@@ -70,22 +71,28 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
     print('Score up !');
   }
 
-  void _initSnakeBoardSize({
+  void _initBoardSize({
     required Size scoreSize,
     required Size boardSize,
   }) {
     setState(() {
       _scoreSize = scoreSize;
-      _boardSize = boardSize;
       _gameBoardEntity = GameBoardEntity(
         gameBoardSize: boardSize,
         handleSnakeDead: () => _handleGameOver(),
         handleSnakeEatFruit: () => _handleScoreUpdate(),
       );
+      _boardSize = Size(
+        AppHelper().deviceSize.width,
+        _gameBoardEntity!.boardSize,
+      );
     });
   }
 
-  void _starGameTimer() {
+  void _starGameTimer({bool initGame = false}) {
+    if (initGame) {
+      _gameBoardEntity?.initSnakeGame();
+    }
     setState(() {
       _gameStatus = GameStatusEnum.started;
     });
@@ -140,7 +147,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
               return Column(
                 children: <Widget>[
                   SizeAwareWidget(
-                    onChange: (Size size) => _initSnakeBoardSize(
+                    onChange: (Size size) => _initBoardSize(
                       scoreSize: size,
                       boardSize: Size(
                         constraints.maxWidth,
@@ -175,8 +182,8 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
           if (_gameStatus == GameStatusEnum.notStarted)
             OpacityStartWidget(
               topPadding: _scoreSize.height,
-              gameBoardEntity: _gameBoardEntity,
-              onStart: _starGameTimer,
+              boardHeight: _boardSize.height,
+              onStart: () => _starGameTimer(initGame: true),
             ),
           if (_gameStatus == GameStatusEnum.paused)
             OpacityPausedWidget(

@@ -25,13 +25,6 @@ class GameBoardEntity {
     numberOfRows = gameBoardSize.height ~/ AppHelper().snakeBoxSize;
 
     boxesMatrix = initWithWall ? _initWithWAll() : _initEmpty();
-
-    snakeEntity = SnakeEntity(
-      startColumnIndex: AppConstants.snakeNumberOfColumns ~/ 2 + 1,
-      startRowIndex: numberOfRows ~/ 2 + 1,
-    );
-    _addSnakeToMatrix();
-    _addAppleToMatrix(_getRandomEmptyPosition());
   }
 
   // Game board values
@@ -131,6 +124,15 @@ class GameBoardEntity {
       columnIndex: position.columnIndex,
       rowIndex: position.rowIndex,
     );
+  }
+
+  void initSnakeGame() {
+    snakeEntity = SnakeEntity(
+      startColumnIndex: AppConstants.snakeNumberOfColumns ~/ 2 + 1,
+      startRowIndex: numberOfRows ~/ 2 + 1,
+    );
+    _addSnakeToMatrix();
+    _addAppleToMatrix(_getRandomEmptyPosition());
   }
 
   void handleSnakeStatus(SnakeStatusEnum snakeStatus) {
