@@ -11,14 +11,14 @@ class OpacityGameOverWidget extends StatelessWidget {
     required this.onRestart,
     this.topPadding = 0,
     this.boardHeight = double.infinity,
-    this.score = 0,
+    this.playerScore = 0,
   }) : super(key: key);
 
   final double opacity;
   final Function() onRestart;
   final double topPadding;
   final double boardHeight;
-  final int score;
+  final int playerScore;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class OpacityGameOverWidget extends StatelessWidget {
                   const SizedBox(height: 10),
                   Text(
                     'common.playerScore'.translateWithArgs(
-                      args: <String>[score.toString()],
+                      args: <String>[playerScore.toString()],
                     ),
                     style: AppStyles.highTitle(size: 15),
                   ),

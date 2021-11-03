@@ -5,8 +5,8 @@ import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/enum/direction_enum.dart';
 import 'package:fangapp/core/enum/snake_status_enum.dart';
 import 'package:fangapp/core/utils/app_helper.dart';
-import 'package:fangapp/feature/snake/entities/apple_box_entity.dart';
 import 'package:fangapp/feature/snake/entities/position_entity.dart';
+import 'package:fangapp/feature/snake/entities/snack_box_entity.dart';
 import 'package:fangapp/feature/snake/entities/snake_box_entity.dart';
 import 'package:fangapp/feature/snake/entities/snake_entity.dart';
 import 'package:fangapp/feature/snake/entities/wall_box_entity.dart';
@@ -118,9 +118,9 @@ class GameBoardEntity {
     return boxCandidates[_random.nextInt(boxCandidates.length - 1)];
   }
 
-  void _addAppleToMatrix(PositionEntity position) {
+  void _addSnackToMatrix(PositionEntity position) {
     // Set apple box entity to selected position
-    boxesMatrix[position.columnIndex][position.rowIndex] = AppleBoxEntity(
+    boxesMatrix[position.columnIndex][position.rowIndex] = SnackBoxEntity(
       columnIndex: position.columnIndex,
       rowIndex: position.rowIndex,
     );
@@ -137,7 +137,7 @@ class GameBoardEntity {
       startRowIndex: numberOfRows ~/ 2 + 1,
     );
     _addSnakeToMatrix();
-    _addAppleToMatrix(_getRandomEmptyPosition());
+    _addSnackToMatrix(_getRandomEmptyPosition());
   }
 
   void handleSnakeStatus(SnakeStatusEnum snakeStatus) {
@@ -145,8 +145,8 @@ class GameBoardEntity {
       case SnakeStatusEnum.dead:
         handleSnakeDead();
         break;
-      case SnakeStatusEnum.eatFruit:
-        _addAppleToMatrix(_getRandomEmptyPosition());
+      case SnakeStatusEnum.eatSnack:
+        _addSnackToMatrix(_getRandomEmptyPosition());
         handleSnakeEatFruit();
         break;
       case SnakeStatusEnum.dying:
@@ -165,15 +165,15 @@ class GameBoardEntity {
         snakeEntity.getNextHeadPosition(direction);
 
     // Save if next position is apple or wall box
-    final bool isAppleNext = boxesMatrix[nextPosition.columnIndex]
-        [nextPosition.rowIndex] is AppleBoxEntity;
+    final bool isSnackNext = boxesMatrix[nextPosition.columnIndex]
+        [nextPosition.rowIndex] is SnackBoxEntity;
     final bool isWallNext = boxesMatrix[nextPosition.columnIndex]
         [nextPosition.rowIndex] is WallBoxEntity;
 
     // Update snake entity
     final SnakeStatusEnum snakeStatus = snakeEntity.move(
       nextPosition: nextPosition,
-      isAppleNext: isAppleNext,
+      isSnackNext: isSnackNext,
       isWallNext: isWallNext,
     );
 

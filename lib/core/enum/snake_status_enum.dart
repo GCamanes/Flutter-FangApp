@@ -1,6 +1,6 @@
 enum SnakeStatusEnum {
   ok,
-  eatFruit,
+  eatSnack,
   dying,
   dead,
 }

@@ -4,8 +4,8 @@ import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/feature/snake/entities/box_entity.dart';
 
-class AppleBoxEntity extends BoxEntity {
-  AppleBoxEntity({
+class SnackBoxEntity extends BoxEntity {
+  SnackBoxEntity({
     required int columnIndex,
     required int rowIndex,
   }) : super(

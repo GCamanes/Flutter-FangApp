@@ -52,7 +52,7 @@ class SnakeEntity {
 
   SnakeStatusEnum move({
     required PositionEntity nextPosition,
-    bool isAppleNext = false,
+    bool isSnackNext = false,
     bool isWallNext = false,
   }) {
     // Wall case : no movement and snake dying
@@ -73,9 +73,9 @@ class SnakeEntity {
         rowIndex: nextPosition.rowIndex,
       ),
     );
-    // Fruit Case : no need to update snake tail
-    if (isAppleNext) {
-      return SnakeStatusEnum.eatFruit;
+    // Snack Case : no need to update snake tail
+    if (isSnackNext) {
+      return SnakeStatusEnum.eatSnack;
     } else {
       // Update new snake tail
       body.remove(body.last);

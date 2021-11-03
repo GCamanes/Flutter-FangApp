@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/enum/direction_enum.dart';
 import 'package:fangapp/core/enum/game_status_enum.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
@@ -41,6 +42,8 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
   DirectionEnum _direction = DirectionEnum.up;
   bool _enableTap = false;
 
+  int _playerScore = 0;
+
   @override
   void initState() {
     super.initState();
@@ -76,7 +79,9 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
   }
 
   void _handleScoreUpdate() {
-    print('Score up !');
+    setState(() {
+      _playerScore += AppConstants.snakePointPerSnack;
+    });
   }
 
   void _initBoardSize({
@@ -102,6 +107,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
     setState(() {
       _direction = DirectionEnum.up;
       _gameStatus = GameStatusEnum.starting;
+      _playerScore = 0;
     });
     _gameBoardEntity?.initSnakeGame(restart: restart);
     widget.gameNotifier.updateGameStatus(_gameStatus);
@@ -178,7 +184,9 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
                         constraints.maxHeight - size.height,
                       ),
                     ),
-                    child: const SnakeScoreWidget(),
+                    child: SnakeScoreWidget(
+                      playerScore: _playerScore,
+                    ),
                   ),
                   GestureDetector(
                     onTapUp: (TapUpDetails? onTapUp) {
@@ -223,6 +231,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
               topPadding: _scoreSize.height,
               boardHeight: _boardSize.height,
               onRestart: () => _initGame(restart: true),
+              playerScore: _playerScore,
             ),
         ],
       ),
