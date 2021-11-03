@@ -12,6 +12,7 @@
   "common.restart": "Restart",
   "common.paused": "Paused",
   "common.playerScore": "Score: %s",
+  "common.exitGame": "Close game",
 
   "login.title": "Login",
   "login.enterApp": "Let's go",
