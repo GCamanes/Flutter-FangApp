@@ -10,9 +10,11 @@ class SnakeScoreWidget extends StatefulWidget {
   const SnakeScoreWidget({
     Key? key,
     required this.playerScore,
+    required this.updateSpeed,
   }) : super(key: key);
 
   final int playerScore;
+  final Function(int) updateSpeed;
 
   @override
   _SnakeScoreWidgetState createState() => _SnakeScoreWidgetState();
@@ -32,6 +34,14 @@ class _SnakeScoreWidgetState extends State<SnakeScoreWidget> {
           _progressBarColor = _progressBarColor == AppColors.blueLight
               ? AppColors.orange
               : AppColors.blueLight;
+        });
+        widget.updateSpeed(
+          widget.playerScore ~/ AppConstants.snakePointPerLevel,
+        );
+      } else if (widget.playerScore == 0){
+        setState(() {
+          _backgroundColor = AppColors.greyLight;
+          _progressBarColor = AppColors.blueLight;
         });
       }
     }

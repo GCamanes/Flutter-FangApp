@@ -81,7 +81,10 @@ abstract class AppConstants {
   static const double tileAspectRatio = 2;
 
   // Snake game
+  static const int snakeBaseSpeed = 200;
+  static const int snakeMinSpeed = 50;
+  static const double snakeSpeedIncreasePerLevel = 0.05;
   static const int snakeNumberOfColumns = 25;
   static const int snakePointPerSnack = 100;
-  static const int snakePointPerLevel = 1000;
+  static const int snakePointPerLevel = 500;
 }

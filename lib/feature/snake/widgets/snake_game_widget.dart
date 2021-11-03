@@ -38,6 +38,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
   GameStatusEnum _gameStatus = GameStatusEnum.notStarted;
 
   Timer? _snakeTimer;
+  int _snakeSpeed = AppConstants.snakeBaseSpeed;
 
   DirectionEnum _direction = DirectionEnum.up;
   bool _enableTap = false;
@@ -84,6 +85,30 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
     });
   }
 
+  void _updateSpeedWithScoreLevel(int level) {
+    // Update speed according to level
+    _snakeSpeed = AppConstants.snakeBaseSpeed -
+        (level *
+                AppConstants.snakeSpeedIncreasePerLevel *
+                AppConstants.snakeBaseSpeed)
+            .toInt();
+    // Limit maximum speed
+    if (_snakeSpeed < AppConstants.snakeMinSpeed) {
+      _snakeSpeed = AppConstants.snakeMinSpeed;
+    }
+    // Update timer
+    _snakeTimer?.cancel();
+    _snakeTimer = Timer.periodic(
+      Duration(milliseconds: _snakeSpeed),
+      (Timer timer) {
+        _gameBoardEntity!.computeNextMatrix(_direction);
+        setState(() {
+          _enableTap = _gameStatus == GameStatusEnum.started;
+        });
+      },
+    );
+  }
+
   void _initBoardSize({
     required Size scoreSize,
     required Size boardSize,
@@ -108,6 +133,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
       _direction = DirectionEnum.up;
       _gameStatus = GameStatusEnum.starting;
       _playerScore = 0;
+      _snakeSpeed = AppConstants.snakeBaseSpeed;
     });
     _gameBoardEntity?.initSnakeGame(restart: restart);
     widget.gameNotifier.updateGameStatus(_gameStatus);
@@ -126,7 +152,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
       _enableTap = true;
     });
     _snakeTimer = Timer.periodic(
-      const Duration(milliseconds: 200),
+      Duration(milliseconds: _snakeSpeed),
       (Timer timer) {
         _gameBoardEntity!.computeNextMatrix(_direction);
         setState(() {
@@ -186,6 +212,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
                     ),
                     child: SnakeScoreWidget(
                       playerScore: _playerScore,
+                      updateSpeed: _updateSpeedWithScoreLevel,
                     ),
                   ),
                   GestureDetector(
