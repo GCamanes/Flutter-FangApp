@@ -27,6 +27,7 @@ class ReadIconWidget extends StatefulWidget {
 class _ReadIconWidgetState extends State<ReadIconWidget>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
+  Animation<double>? _sizeAnimation;
 
   @override
   void initState() {
@@ -45,9 +46,27 @@ class _ReadIconWidgetState extends State<ReadIconWidget>
   }
 
   void startAnimation() {
+    final Tween<double> sizeTween = Tween<double>(
+      begin: 0,
+      end: deltaIconSize,
+    );
+
+    _sizeAnimation = sizeTween.animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
+        reverseCurve: Curves.easeIn,
+      ),
+    )..addStatusListener((AnimationStatus status) async {
+      if (status == AnimationStatus.completed) {
+        if (mounted) {
+          _controller.reverse();
+        }
+      }
+    });
+
     if (mounted) {
       _controller.forward();
-      Timer(forwardDuration, () => _controller.reverse());
     }
   }
 
@@ -73,7 +92,7 @@ class _ReadIconWidgetState extends State<ReadIconWidget>
                   ? Icons.bookmark_added_outlined
                   : Icons.bookmark_add_outlined,
               color: widget.isRead ? AppColors.orange : AppColors.white,
-              size: minIconSize + _controller.value * deltaIconSize,
+              size: minIconSize + (_sizeAnimation?.value ?? 0),
             ),
           ),
         );
