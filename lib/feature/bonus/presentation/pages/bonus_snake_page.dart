@@ -1,4 +1,5 @@
 import 'package:fangapp/core/analytics/analytics_helper.dart';
+import 'package:fangapp/core/app_life_cycle/presentation/cubit/app_life_cycle_cubit.dart';
 import 'package:fangapp/core/enum/game_status_enum.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
@@ -6,6 +7,7 @@ import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/core/widget/icon_button_widget.dart';
 import 'package:fangapp/feature/snake/widgets/snake_game_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BonusSnakePage extends StatefulWidget {
   const BonusSnakePage({Key? key}) : super(key: key);
@@ -81,9 +83,19 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
             )
         ],
       ),
-      body: SnakeGameWidget(
-        gameNotifier: _gameNotifier,
-        gameBoardNotifier: _gameBoardNotifier,
+      body: BlocListener<AppLifeCycleCubit, AppLifeCycleState>(
+        listener: (BuildContext context, AppLifeCycleState state) async {
+          if (state is AppBackground) {
+            if (_gameNotifier.status == GameStatusEnum.starting ||
+                _gameNotifier.status == GameStatusEnum.started) {
+              _gameBoardNotifier.setNextStatus(GameStatusEnum.paused);
+            }
+          }
+        },
+        child: SnakeGameWidget(
+          gameNotifier: _gameNotifier,
+          gameBoardNotifier: _gameBoardNotifier,
+        ),
       ),
     );
   }

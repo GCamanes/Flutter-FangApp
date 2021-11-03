@@ -64,8 +64,8 @@ Future<void> main() async {
       BlocProvider<TabNavigationCubit>(
         create: (BuildContext context) => TabNavigationCubit(),
       ),
-      BlocProvider<AppLifeCycleBloc>(
-        create: (BuildContext context) => AppLifeCycleBloc(
+      BlocProvider<AppLifeCycleCubit>(
+        create: (BuildContext context) => AppLifeCycleCubit(
           sharedPreferences: getIt(),
         ),
       ),
@@ -96,7 +96,7 @@ Future<void> main() async {
             }
           },
         ),
-        BlocListener<AppLifeCycleBloc, AppLifeCycleState>(
+        BlocListener<AppLifeCycleCubit, AppLifeCycleState>(
           listener: (BuildContext context, AppLifeCycleState state) async {
             if (state is AppForeground &&
                 state.showWelcomeBack &&
@@ -141,7 +141,7 @@ class _FangAppState extends State<FangApp> with WidgetsBindingObserver {
     WidgetsBinding.instance!.removeObserver(this);
     BlocProvider.of<LoginCubit>(context).close();
     BlocProvider.of<TabNavigationCubit>(context).close();
-    BlocProvider.of<AppLifeCycleBloc>(context).close();
+    BlocProvider.of<AppLifeCycleCubit>(context).close();
     BlocProvider.of<MangasCubit>(context).close();
     BlocProvider.of<ChaptersCubit>(context).close();
     super.dispose();
@@ -151,12 +151,12 @@ class _FangAppState extends State<FangApp> with WidgetsBindingObserver {
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
-      BlocProvider.of<AppLifeCycleBloc>(context).appEntersBackground();
+      BlocProvider.of<AppLifeCycleCubit>(context).appEntersBackground();
     }
 
     //app goes foreground
     else if (state == AppLifecycleState.resumed) {
-      BlocProvider.of<AppLifeCycleBloc>(context).appEntersForeground();
+      BlocProvider.of<AppLifeCycleCubit>(context).appEntersForeground();
     }
   }
 
