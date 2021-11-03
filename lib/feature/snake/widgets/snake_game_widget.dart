@@ -47,7 +47,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
       if (widget.gameBoardNotifier.nextStatus == GameStatusEnum.starting) {
         _resumeGame();
       } else if (widget.gameBoardNotifier.nextStatus == GameStatusEnum.paused) {
-        _pauseGameTimer();
+        _pauseGame();
       }
     });
   }
@@ -98,22 +98,15 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
     });
   }
 
-  void _initGame() {
+  void _resumeGame({bool initSnake = false}) {
     setState(() {
       _gameStatus = GameStatusEnum.starting;
     });
-    _gameBoardEntity?.initSnakeGame();
+    if (initSnake) _gameBoardEntity?.initSnakeGame();
     widget.gameNotifier.updateGameStatus(_gameStatus);
   }
 
-  void _resumeGame() {
-    setState(() {
-      _gameStatus = GameStatusEnum.starting;
-    });
-    widget.gameNotifier.updateGameStatus(_gameStatus);
-  }
-
-  void _starGameTimer() {
+  void _startGame() {
     setState(() {
       _gameStatus = GameStatusEnum.started;
     });
@@ -128,7 +121,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
     widget.gameNotifier.updateGameStatus(_gameStatus);
   }
 
-  void _pauseGameTimer() {
+  void _pauseGame() {
     setState(() {
       _enableTap = false;
       _gameStatus = GameStatusEnum.paused;
@@ -204,12 +197,12 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
             OpacityStartWidget(
               topPadding: _scoreSize.height,
               boardHeight: _boardSize.height,
-              onStart: _initGame,
+              onStart: () => _resumeGame(initSnake: true),
             ),
           if (_gameStatus == GameStatusEnum.starting)
             OpacityStartingWidget(
               topPadding: _scoreSize.height,
-              onCountDownEnd: _starGameTimer,
+              onCountDownEnd: _startGame,
             ),
           if (_gameStatus == GameStatusEnum.paused)
             OpacityPausedWidget(
