@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:fangapp/core/extensions/date_extension.dart';
+import 'package:fangapp/core/utils/image_info_helper.dart';
 import 'package:fangapp/feature/sunny/sunny_painter.dart';
 import 'package:fangapp/feature/sunny/sunny_particle_entity.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,13 @@ class _SunnyWidgetState extends State<SunnyWidget> {
   late List<FishParticleEntity> _fishParticles;
   final Random _random = Random();
 
+  late ImageInfo? _sunnyImageInfo;
+  late ImageInfo? _backgroundImageInfo;
+  late ImageInfo? _waveImageInfo;
+  late ImageInfo? _prometheusImageInfo;
+  late ImageInfo? _fishImageInfo;
+  bool _allImageLoaded = false;
+
   @override
   void initState() {
     super.initState();
@@ -30,21 +38,38 @@ class _SunnyWidgetState extends State<SunnyWidget> {
     _fishParticles = List<FishParticleEntity>.generate(5, (int index) {
       return FishParticleEntity(random: _random);
     });
-    super.initState();
   }
 
-  Future<ImageInfo> getImageInfo(BuildContext context, String assetName) async {
-    final AssetImage assetImage = AssetImage(assetName);
-    final ImageStream stream = assetImage.resolve(
-      createLocalImageConfiguration(context),
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadImageInfo();
+  }
+
+  Future<void> _loadImageInfo() async {
+    _sunnyImageInfo = await ImageInfoHelper.getImageInfo(
+      context,
+      'assets/images/one_piece_sunny.png',
     );
-    final Completer<ImageInfo> completer = Completer<ImageInfo>();
-    stream.addListener(
-      ImageStreamListener((ImageInfo imageInfo, _) {
-        return completer.complete(imageInfo);
-      }),
+    _backgroundImageInfo = await ImageInfoHelper.getImageInfo(
+      context,
+      'assets/images/wave_background_sunny.png',
     );
-    return completer.future;
+    _waveImageInfo = await ImageInfoHelper.getImageInfo(
+      context,
+      'assets/images/wave_sample.png',
+    );
+    _prometheusImageInfo = await ImageInfoHelper.getImageInfo(
+      context,
+      'assets/images/one_piece_prometheus.png',
+    );
+    _fishImageInfo = await ImageInfoHelper.getImageInfo(
+      context,
+      'assets/images/one_piece_fish.png',
+    );
+    setState(() {
+      _allImageLoaded = true;
+    });
   }
 
   void _simulateParticles(Duration time) {
@@ -63,86 +88,20 @@ class _SunnyWidgetState extends State<SunnyWidget> {
         tween: ConstantTween<int>(1), // Pass in tween
         builder: (BuildContext? context, Widget? child, int value) {
           _simulateParticles(DateTime.now().duration);
-          return FutureBuilder<ImageInfo>(
-            future: getImageInfo(
-              context!,
-              'assets/images/one_piece_sunny.png',
-            ),
-            builder:
-                (BuildContext context, AsyncSnapshot<ImageInfo> snapshotSunny) {
-              if (snapshotSunny.hasData) {
-                return FutureBuilder<ImageInfo>(
-                  future: getImageInfo(
-                    context,
-                    'assets/images/wave_background_sunny.png',
-                  ),
-                  builder: (
-                    BuildContext context,
-                    AsyncSnapshot<ImageInfo> snapshotBackground,
-                  ) {
-                    if (snapshotBackground.hasData) {
-                      return FutureBuilder<ImageInfo>(
-                        future: getImageInfo(
-                          context,
-                          'assets/images/wave_sample.png',
-                        ),
-                        builder: (
-                          BuildContext context,
-                          AsyncSnapshot<ImageInfo> snapshotWave,
-                        ) {
-                          if (snapshotWave.hasData) {
-                            return FutureBuilder<ImageInfo>(
-                              future: getImageInfo(
-                                context,
-                                'assets/images/one_piece_prometheus.png',
-                              ),
-                              builder: (
-                                BuildContext context,
-                                AsyncSnapshot<ImageInfo> snapshotSun,
-                              ) {
-                                if (snapshotSun.hasData) {
-                                  return FutureBuilder<ImageInfo>(
-                                    future: getImageInfo(
-                                      context,
-                                      'assets/images/one_piece_fish.png',
-                                    ),
-                                    builder: (
-                                      BuildContext context,
-                                      AsyncSnapshot<ImageInfo> snapshotFish,
-                                    ) {
-                                      if (snapshotFish.hasData) {
-                                        return CustomPaint(
-                                          painter: SunnyPainter(
-                                            sunnyParticle: _sunnyParticle,
-                                            sunnyImageInfo: snapshotSunny.data!,
-                                            backgroundImageInfo:
-                                                snapshotBackground.data!,
-                                            waveImageInfo: snapshotWave.data!,
-                                            sunImageInfo: snapshotSun.data!,
-                                            fishParticles: _fishParticles,
-                                            fishImageInfo: snapshotFish.data!,
-                                          ),
-                                        );
-                                      }
-                                      return const SizedBox();
-                                    },
-                                  );
-                                }
-                                return const SizedBox();
-                              },
-                            );
-                          }
-                          return const SizedBox();
-                        },
-                      );
-                    }
-                    return const SizedBox();
-                  },
-                );
-              }
-              return const SizedBox();
-            },
-          );
+          if (_allImageLoaded) {
+            return CustomPaint(
+              painter: SunnyPainter(
+                sunnyParticle: _sunnyParticle,
+                sunnyImageInfo: _sunnyImageInfo!,
+                backgroundImageInfo: _backgroundImageInfo!,
+                waveImageInfo: _waveImageInfo!,
+                sunImageInfo: _prometheusImageInfo!,
+                fishParticles: _fishParticles,
+                fishImageInfo: _fishImageInfo!,
+              ),
+            );
+          }
+          return const SizedBox();
         },
       ),
     );
