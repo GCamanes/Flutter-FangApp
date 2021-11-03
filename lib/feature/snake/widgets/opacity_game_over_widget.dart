@@ -12,6 +12,7 @@ class OpacityGameOverWidget extends StatelessWidget {
     this.topPadding = 0,
     this.boardHeight = double.infinity,
     this.playerScore = 0,
+    this.playerBestScore = 0,
   }) : super(key: key);
 
   final double opacity;
@@ -19,6 +20,9 @@ class OpacityGameOverWidget extends StatelessWidget {
   final double topPadding;
   final double boardHeight;
   final int playerScore;
+  final int playerBestScore;
+
+  bool get isNewBestScore => playerScore > 0 && playerScore > playerBestScore;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +60,17 @@ class OpacityGameOverWidget extends StatelessWidget {
                       args: <String>[playerScore.toString()],
                     ),
                     style: AppStyles.highTitle(size: 15),
+                  ),
+                  Text(
+                    isNewBestScore
+                        ? 'common.newBestScore'.translate()
+                        : 'common.bestScore'.translateWithArgs(
+                            args: <String>[playerBestScore.toString()],
+                          ),
+                    style: AppStyles.highTitle(
+                      size: 15,
+                      color: isNewBestScore ? AppColors.red : AppColors.black90,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   AppButtonWidget(

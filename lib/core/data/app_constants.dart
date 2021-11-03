@@ -60,10 +60,10 @@ abstract class AppConstants {
   // Shared preferences keys
   static const String sharedKeyDateEnterBackground =
       'SharedKeyDateEnterBackground';
-  static const String sharedKeyLastChapterRead =
-      'lastChapterRead';
+  static const String sharedKeyLastChapterRead = 'lastChapterRead';
   static const String sharedKeyAcceptAnalyticsTracking =
       'acceptAnalyticsTracking';
+  static const String sharedKeySnakeBestScore = 'snakeBestScore';
 
   // Times
   static const Duration backgroundTimeToShowWelcomeBack = Duration(minutes: 5);

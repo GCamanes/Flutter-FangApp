@@ -14,7 +14,9 @@ import 'package:fangapp/feature/snake/widgets/opacity_paused_widget.dart';
 import 'package:fangapp/feature/snake/widgets/opacity_start_widget.dart';
 import 'package:fangapp/feature/snake/widgets/opacity_starting_widget.dart';
 import 'package:fangapp/feature/snake/widgets/snake_score_widget.dart';
+import 'package:fangapp/get_it_injection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SnakeGameWidget extends StatefulWidget {
   const SnakeGameWidget({
@@ -44,10 +46,13 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
   bool _enableTap = false;
 
   int _playerScore = 0;
+  int _playerBestScore = 0;
 
   @override
   void initState() {
     super.initState();
+    _playerBestScore = getIt<SharedPreferences>()
+        .getInt(AppConstants.sharedKeySnakeBestScore) ?? 0;
     widget.gameBoardNotifier.addListener(() {
       if (widget.gameBoardNotifier.nextStatus == GameStatusEnum.starting) {
         _resumeGame();
@@ -71,7 +76,9 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
     widget.gameNotifier.updateGameStatus(_gameStatus);
   }
 
-  void _handleGameOver() {
+  Future<void> _handleGameOver() async {
+    await getIt<SharedPreferences>()
+        .setInt(AppConstants.sharedKeySnakeBestScore, _playerScore);
     _snakeTimer?.cancel();
     setState(() {
       _gameStatus = GameStatusEnum.gameOver;
@@ -133,6 +140,8 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
       _direction = DirectionEnum.up;
       _gameStatus = GameStatusEnum.starting;
       _playerScore = 0;
+      _playerBestScore = getIt<SharedPreferences>()
+          .getInt(AppConstants.sharedKeySnakeBestScore) ?? 0;
       _snakeSpeed = AppConstants.snakeBaseSpeed;
     });
     _gameBoardEntity?.initSnakeGame(restart: restart);
@@ -243,6 +252,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
               topPadding: _scoreSize.height,
               boardHeight: _boardSize.height,
               onStart: () => _initGame(),
+              playerBestScore: _playerBestScore,
             ),
           if (_gameStatus == GameStatusEnum.starting)
             OpacityStartingWidget(
@@ -259,6 +269,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
               boardHeight: _boardSize.height,
               onRestart: () => _initGame(restart: true),
               playerScore: _playerScore,
+              playerBestScore: _playerBestScore,
             ),
         ],
       ),
