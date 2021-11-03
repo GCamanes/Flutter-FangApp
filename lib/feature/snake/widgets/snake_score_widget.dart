@@ -35,10 +35,8 @@ class _SnakeScoreWidgetState extends State<SnakeScoreWidget> {
               ? AppColors.orange
               : AppColors.blueLight;
         });
-        widget.updateSpeed(
-          widget.playerScore ~/ AppConstants.snakePointPerLevel,
-        );
-      } else if (widget.playerScore == 0){
+        widget.updateSpeed(_getLevel);
+      } else if (widget.playerScore == 0) {
         setState(() {
           _backgroundColor = AppColors.greyLight;
           _progressBarColor = AppColors.blueLight;
@@ -48,9 +46,10 @@ class _SnakeScoreWidgetState extends State<SnakeScoreWidget> {
     super.didUpdateWidget(oldWidget);
   }
 
+  int get _getLevel => widget.playerScore ~/ AppConstants.snakePointPerLevel;
+
   double _getScoreInPercentage() {
-    final int level = widget.playerScore ~/ AppConstants.snakePointPerLevel;
-    return (widget.playerScore - level * AppConstants.snakePointPerLevel) /
+    return (widget.playerScore - _getLevel * AppConstants.snakePointPerLevel) /
         AppConstants.snakePointPerLevel;
   }
 
@@ -61,12 +60,34 @@ class _SnakeScoreWidgetState extends State<SnakeScoreWidget> {
       color: AppColors.black90,
       child: Column(
         children: <Widget>[
-          Align(
-            child: Text(
-              'common.playerScore'.translateWithArgs(
-                args: <String>[widget.playerScore.toString()],
-              ),
-              style: AppStyles.highTitle(size: 15, color: AppColors.white),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppHelper().snakeBoxSize),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    'common.level'.translateWithArgs(
+                      args: <String>[(_getLevel + 1).toString()],
+                    ),
+                    style: AppStyles.mediumTitle(
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    'common.playerScore'.translateWithArgs(
+                      args: <String>[widget.playerScore.toString()],
+                    ),
+                    textAlign: TextAlign.center,
+                    style: AppStyles.mediumTitle(
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+                const Expanded(child: SizedBox()),
+              ],
             ),
           ),
           const SizedBox(height: 10),

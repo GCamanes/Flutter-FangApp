@@ -13,6 +13,7 @@
   "common.paused": "En pause",
   "common.playerScore": "Score: %s",
   "common.exitGame": "Quitter le jeu",
+  "common.level": "Niveau %s",
 
   "login.title": "Connexion",
   "login.enterApp": "C'est parti !",
