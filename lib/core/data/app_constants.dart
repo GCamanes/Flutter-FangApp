@@ -83,4 +83,5 @@ abstract class AppConstants {
   // Snake game
   static const int snakeNumberOfColumns = 25;
   static const int snakePointPerSnack = 100;
+  static const int snakePointPerLevel = 1000;
 }

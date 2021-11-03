@@ -33,8 +33,8 @@ class _OpacityPausedWidgetState extends State<OpacityPausedWidget>
     );
 
     final Tween<Offset> offsetTween = Tween<Offset>(
-      begin: Offset.zero,
-      end: Offset(0.0, -widget.topPadding * 0.9),
+      begin: Offset(0.0, -widget.topPadding),
+      end: Offset(0.0, -widget.topPadding * 0.7),
     );
 
     _offsetAnimation = offsetTween.animate(
