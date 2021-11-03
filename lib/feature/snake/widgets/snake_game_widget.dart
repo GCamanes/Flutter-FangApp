@@ -8,6 +8,7 @@ import 'package:fangapp/core/widget/size_aware_widget.dart';
 import 'package:fangapp/feature/bonus/presentation/pages/bonus_snake_page.dart';
 import 'package:fangapp/feature/snake/entities/game_board_entity.dart';
 import 'package:fangapp/feature/snake/snake_painter.dart';
+import 'package:fangapp/feature/snake/widgets/opacity_game_over_widget.dart';
 import 'package:fangapp/feature/snake/widgets/opacity_paused_widget.dart';
 import 'package:fangapp/feature/snake/widgets/opacity_start_widget.dart';
 import 'package:fangapp/feature/snake/widgets/opacity_starting_widget.dart';
@@ -59,8 +60,8 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
   }
 
   void _handleEnteringGameOver() {
-    _enableTap = false;
     setState(() {
+      _enableTap = false;
       _gameStatus = GameStatusEnum.enteringGameOver;
     });
     widget.gameNotifier.updateGameStatus(_gameStatus);
@@ -72,7 +73,6 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
       _gameStatus = GameStatusEnum.gameOver;
     });
     widget.gameNotifier.updateGameStatus(_gameStatus);
-    print('Game Over');
   }
 
   void _handleScoreUpdate() {
@@ -98,24 +98,34 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
     });
   }
 
-  void _resumeGame({bool initSnake = false}) {
+  void _initGame({bool restart = false}) {
+    setState(() {
+      _direction = DirectionEnum.up;
+      _gameStatus = GameStatusEnum.starting;
+    });
+    _gameBoardEntity?.initSnakeGame(restart: restart);
+    widget.gameNotifier.updateGameStatus(_gameStatus);
+  }
+
+  void _resumeGame() {
     setState(() {
       _gameStatus = GameStatusEnum.starting;
     });
-    if (initSnake) _gameBoardEntity?.initSnakeGame();
     widget.gameNotifier.updateGameStatus(_gameStatus);
   }
 
   void _startGame() {
     setState(() {
       _gameStatus = GameStatusEnum.started;
+      _enableTap = true;
     });
     _snakeTimer = Timer.periodic(
       const Duration(milliseconds: 200),
       (Timer timer) {
         _gameBoardEntity!.computeNextMatrix(_direction);
-        _enableTap = true;
-        setState(() {});
+        setState(() {
+          _enableTap = _gameStatus == GameStatusEnum.started;
+        });
       },
     );
     widget.gameNotifier.updateGameStatus(_gameStatus);
@@ -197,7 +207,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
             OpacityStartWidget(
               topPadding: _scoreSize.height,
               boardHeight: _boardSize.height,
-              onStart: () => _resumeGame(initSnake: true),
+              onStart: () => _initGame(),
             ),
           if (_gameStatus == GameStatusEnum.starting)
             OpacityStartingWidget(
@@ -207,6 +217,12 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
           if (_gameStatus == GameStatusEnum.paused)
             OpacityPausedWidget(
               topPadding: _scoreSize.height,
+            ),
+          if (_gameStatus == GameStatusEnum.gameOver)
+            OpacityGameOverWidget(
+              topPadding: _scoreSize.height,
+              boardHeight: _boardSize.height,
+              onRestart: () => _initGame(restart: true),
             ),
         ],
       ),

@@ -22,10 +22,8 @@ class GameBoardEntity {
     required this.handleSnakeDying,
   }) {
     _random = Random();
-
     numberOfRows = gameBoardSize.height ~/ AppHelper().snakeBoxSize;
-
-    boxesMatrix = initWithWall ? _initWithWAll() : _initEmpty();
+    initBoard();
   }
 
   // Game board values
@@ -128,7 +126,12 @@ class GameBoardEntity {
     );
   }
 
-  void initSnakeGame() {
+  void initBoard() {
+    boxesMatrix = initWithWall ? _initWithWAll() : _initEmpty();
+  }
+
+  void initSnakeGame({bool restart = false}) {
+    if (restart) initBoard();
     snakeEntity = SnakeEntity(
       startColumnIndex: AppConstants.snakeNumberOfColumns ~/ 2 + 1,
       startRowIndex: numberOfRows ~/ 2 + 1,

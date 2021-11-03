@@ -1,9 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:fangapp/core/enum/direction_enum.dart';
 import 'package:fangapp/core/enum/snake_status_enum.dart';
 import 'package:fangapp/feature/snake/entities/position_entity.dart';
 import 'package:fangapp/feature/snake/entities/snake_box_entity.dart';
-
-import 'package:collection/collection.dart';
 
 class SnakeEntity {
   SnakeEntity({

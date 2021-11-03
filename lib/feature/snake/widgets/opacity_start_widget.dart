@@ -2,7 +2,6 @@ import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/core/widget/app_button_widget.dart';
-import 'package:fangapp/feature/snake/entities/game_board_entity.dart';
 import 'package:fangapp/feature/snake/widgets/tap_tutorial_widget.dart';
 import 'package:flutter/material.dart';
 
