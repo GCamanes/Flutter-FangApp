@@ -3,5 +3,6 @@ enum GameStatusEnum {
   starting,
   started,
   paused,
+  enteringGameOver,
   gameOver,
 }

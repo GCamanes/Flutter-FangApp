@@ -3,6 +3,8 @@ import 'package:fangapp/core/enum/snake_status_enum.dart';
 import 'package:fangapp/feature/snake/entities/position_entity.dart';
 import 'package:fangapp/feature/snake/entities/snake_box_entity.dart';
 
+import 'package:collection/collection.dart';
+
 class SnakeEntity {
   SnakeEntity({
     this.length = 5,
@@ -38,17 +40,28 @@ class SnakeEntity {
     );
   }
 
+  SnakeStatusEnum die() {
+    final SnakeBoxEntity? nextToDie = body.firstWhereOrNull(
+      (SnakeBoxEntity box) => !box.isDead,
+    );
+    if (nextToDie != null) {
+      nextToDie.isDead = true;
+      return SnakeStatusEnum.dying;
+    }
+    return SnakeStatusEnum.dead;
+  }
+
   SnakeStatusEnum move({
     required PositionEntity nextPosition,
     bool isAppleNext = false,
     bool isWallNext = false,
   }) {
-    // Wall case : no movement // TODO: stop game
-    if (isWallNext) return SnakeStatusEnum.dead;
-    // Body case : no movement // TODO: stop game
+    // Wall case : no movement and snake dying
+    if (isWallNext) return die();
+    // Body case : no movement and snake dying
     for (final SnakeBoxEntity box in body) {
       if (box.isSamePosition(nextPosition) && box != body.last) {
-        return SnakeStatusEnum.dead;
+        return die();
       }
     }
     // Update head to new position
@@ -61,7 +74,7 @@ class SnakeEntity {
         rowIndex: nextPosition.rowIndex,
       ),
     );
-    // TODO: increase score in case of apple
+    // Fruit Case : no need to update snake tail
     if (isAppleNext) {
       return SnakeStatusEnum.eatFruit;
     } else {

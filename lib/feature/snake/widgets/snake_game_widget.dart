@@ -58,9 +58,16 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
     super.dispose();
   }
 
+  void _handleEnteringGameOver() {
+    _enableTap = false;
+    setState(() {
+      _gameStatus = GameStatusEnum.enteringGameOver;
+    });
+    widget.gameNotifier.updateGameStatus(_gameStatus);
+  }
+
   void _handleGameOver() {
     _snakeTimer?.cancel();
-    _enableTap = false;
     setState(() {
       _gameStatus = GameStatusEnum.gameOver;
     });
@@ -80,8 +87,9 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
       _scoreSize = scoreSize;
       _gameBoardEntity = GameBoardEntity(
         gameBoardSize: boardSize,
-        handleSnakeDead: () => _handleGameOver(),
-        handleSnakeEatFruit: () => _handleScoreUpdate(),
+        handleSnakeDead: _handleGameOver,
+        handleSnakeEatFruit: _handleScoreUpdate,
+        handleSnakeDying: _handleEnteringGameOver,
       );
       _boardSize = Size(
         AppHelper().deviceSize.width,

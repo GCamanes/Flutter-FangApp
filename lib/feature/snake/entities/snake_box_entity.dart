@@ -8,6 +8,7 @@ class SnakeBoxEntity extends BoxEntity {
   SnakeBoxEntity({
     required int columnIndex,
     required int rowIndex,
+    this.isDead = false,
     this.isHead = false,
     this.isTail = false,
   }) : super(
@@ -15,17 +16,20 @@ class SnakeBoxEntity extends BoxEntity {
           rowIndex: rowIndex,
         );
 
+  late bool isDead;
   late bool isHead;
   late bool isTail;
 
   @override
   void draw(Canvas canvas) {
     final Paint paint = Paint()
-      ..color = isHead
-          ? AppColors.orange
-          : isTail
-              ? AppColors.blueLight
-              : AppColors.blackSmoke
+      ..color = isDead
+          ? AppColors.red
+          : isHead
+              ? AppColors.orange
+              : isTail
+                  ? AppColors.blueLight
+                  : AppColors.blackSmoke
       ..style = PaintingStyle.fill;
     canvas.drawCircle(
       getOffset +
