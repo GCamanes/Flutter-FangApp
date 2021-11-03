@@ -13,14 +13,12 @@ class OpacityStartWidget extends StatelessWidget {
     required this.onStart,
     this.topPadding = 0,
     this.boardHeight = double.infinity,
-    this.gameBoardEntity,
   }) : super(key: key);
 
   final double opacity;
   final Function() onStart;
   final double topPadding;
   final double boardHeight;
-  final GameBoardEntity? gameBoardEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -55,10 +53,7 @@ class OpacityStartWidget extends StatelessWidget {
           Center(
             child: AppButtonWidget(
               text: 'common.start'.translate(),
-              onPressed: () {
-                gameBoardEntity?.initSnakeGame();
-                onStart();
-              },
+              onPressed: onStart,
             ),
           ),
         ],

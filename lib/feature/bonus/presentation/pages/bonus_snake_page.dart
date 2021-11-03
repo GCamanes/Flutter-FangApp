@@ -32,7 +32,7 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
         });
       } else if (_gameNotifier.status == GameStatusEnum.paused) {
         setState(() {
-          _nextGameStatus = GameStatusEnum.started;
+          _nextGameStatus = GameStatusEnum.starting;
         });
       } else {
         setState(() {
@@ -45,7 +45,7 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
 
   IconData? _handleIcon() {
     if (_nextGameStatus == GameStatusEnum.paused) return Icons.pause_outlined;
-    if (_nextGameStatus == GameStatusEnum.started) {
+    if (_nextGameStatus == GameStatusEnum.starting) {
       return Icons.play_arrow_outlined;
     }
     return null;

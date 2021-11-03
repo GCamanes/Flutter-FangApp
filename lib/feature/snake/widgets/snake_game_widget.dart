@@ -10,6 +10,7 @@ import 'package:fangapp/feature/snake/entities/game_board_entity.dart';
 import 'package:fangapp/feature/snake/snake_painter.dart';
 import 'package:fangapp/feature/snake/widgets/opacity_paused_widget.dart';
 import 'package:fangapp/feature/snake/widgets/opacity_start_widget.dart';
+import 'package:fangapp/feature/snake/widgets/opacity_starting_widget.dart';
 import 'package:fangapp/feature/snake/widgets/snake_score_widget.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -43,8 +44,8 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
   void initState() {
     super.initState();
     widget.gameBoardNotifier.addListener(() {
-      if (widget.gameBoardNotifier.nextStatus == GameStatusEnum.started) {
-        _starGameTimer();
+      if (widget.gameBoardNotifier.nextStatus == GameStatusEnum.starting) {
+        _resumeGame();
       } else if (widget.gameBoardNotifier.nextStatus == GameStatusEnum.paused) {
         _pauseGameTimer();
       }
@@ -87,6 +88,21 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
         _gameBoardEntity!.boardSize,
       );
     });
+  }
+
+  void _initGame() {
+    setState(() {
+      _gameStatus = GameStatusEnum.starting;
+    });
+    _gameBoardEntity?.initSnakeGame();
+    widget.gameNotifier.updateGameStatus(_gameStatus);
+  }
+
+  void _resumeGame() {
+    setState(() {
+      _gameStatus = GameStatusEnum.starting;
+    });
+    widget.gameNotifier.updateGameStatus(_gameStatus);
   }
 
   void _starGameTimer() {
@@ -180,8 +196,12 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
             OpacityStartWidget(
               topPadding: _scoreSize.height,
               boardHeight: _boardSize.height,
-              onStart: () => _starGameTimer(),
-              gameBoardEntity: _gameBoardEntity,
+              onStart: _initGame,
+            ),
+          if (_gameStatus == GameStatusEnum.starting)
+            OpacityStartingWidget(
+              topPadding: _scoreSize.height,
+              onCountDownEnd: _starGameTimer,
             ),
           if (_gameStatus == GameStatusEnum.paused)
             OpacityPausedWidget(

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -58,12 +56,12 @@ class _ReadIconWidgetState extends State<ReadIconWidget>
         reverseCurve: Curves.easeIn,
       ),
     )..addStatusListener((AnimationStatus status) async {
-      if (status == AnimationStatus.completed) {
-        if (mounted) {
-          _controller.reverse();
+        if (status == AnimationStatus.completed) {
+          if (mounted) {
+            _controller.reverse();
+          }
         }
-      }
-    });
+      });
 
     if (mounted) {
       _controller.forward();
