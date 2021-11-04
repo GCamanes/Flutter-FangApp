@@ -26,6 +26,10 @@ class SnakeGameWidget extends StatefulWidget {
     required this.snackImageInfo,
     required this.wallImageInfo,
     required this.deadImageInfo,
+    required this.snakeHeadImageInfo,
+    required this.snakeBodyStraightImageInfo,
+    required this.snakeBodyAngleImageInfo,
+    required this.snakeTailImageInfo,
   }) : super(key: key);
 
   final GameNotifier gameNotifier;
@@ -33,6 +37,10 @@ class SnakeGameWidget extends StatefulWidget {
   final ImageInfo snackImageInfo;
   final ImageInfo wallImageInfo;
   final ImageInfo deadImageInfo;
+  final ImageInfo snakeHeadImageInfo;
+  final ImageInfo snakeBodyStraightImageInfo;
+  final ImageInfo snakeBodyAngleImageInfo;
+  final ImageInfo snakeTailImageInfo;
 
   @override
   _SnakeGameWidgetState createState() => _SnakeGameWidgetState();
