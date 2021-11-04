@@ -32,14 +32,28 @@ class SnakeBoxEntity extends BoxEntity {
                   ? AppColors.blueLight
                   : AppColors.blackSmoke
       ..style = PaintingStyle.fill;
-    canvas.drawCircle(
-      getOffset +
-          Offset(
-            AppHelper().snakeBoxSize / 2,
-            AppHelper().snakeBoxSize / 2,
-          ),
-      AppHelper().snakeBoxSize / 2,
-      paint,
-    );
+
+    if (isDead && imageInfo != null) {
+      paintImage(
+        canvas: canvas,
+        rect: Rect.fromLTWH(
+          getOffset.dx,
+          getOffset.dy,
+          getSize.width,
+          getSize.width,
+        ),
+        image: imageInfo.image,
+      );
+    } else {
+      canvas.drawCircle(
+        getOffset +
+            Offset(
+              AppHelper().snakeBoxSize / 2,
+              AppHelper().snakeBoxSize / 2,
+            ),
+        AppHelper().snakeBoxSize / 2,
+        paint,
+      );
+    }
   }
 }

@@ -25,12 +25,14 @@ class SnakeGameWidget extends StatefulWidget {
     required this.gameBoardNotifier,
     required this.snackImageInfo,
     required this.wallImageInfo,
+    required this.deadImageInfo,
   }) : super(key: key);
 
   final GameNotifier gameNotifier;
   final GameBoardNotifier gameBoardNotifier;
   final ImageInfo snackImageInfo;
   final ImageInfo wallImageInfo;
+  final ImageInfo deadImageInfo;
 
   @override
   _SnakeGameWidgetState createState() => _SnakeGameWidgetState();
@@ -246,6 +248,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
                                 gameBoardEntity: _gameBoardEntity!,
                                 snackImageInfo: widget.snackImageInfo,
                                 wallImageInfo: widget.wallImageInfo,
+                                deadImageInfo: widget.deadImageInfo,
                               )
                             : null,
                       ),

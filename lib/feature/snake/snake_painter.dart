@@ -5,17 +5,20 @@ import 'package:fangapp/feature/snake/entities/wall_box_entity.dart';
 import 'package:flutter/material.dart';
 
 import 'entities/game_board_entity.dart';
+import 'entities/snake_box_entity.dart';
 
 class SnakePainter extends CustomPainter {
   SnakePainter({
     required this.gameBoardEntity,
     required this.snackImageInfo,
     required this.wallImageInfo,
+    required this.deadImageInfo,
   });
 
   final GameBoardEntity gameBoardEntity;
   final ImageInfo snackImageInfo;
   final ImageInfo wallImageInfo;
+  final ImageInfo deadImageInfo;
 
   void _drawBackground(Canvas canvas, Size size) {
     final Paint paint1 = Paint()
@@ -32,10 +35,13 @@ class SnakePainter extends CustomPainter {
     gameBoardEntity.applyToMatrix((BoxEntity? box) {
       switch(box.runtimeType) {
         case WallBoxEntity:
-          box?.draw(canvas, imageInfo: wallImageInfo);
+          (box! as WallBoxEntity).draw(canvas, imageInfo: wallImageInfo);
           break;
         case SnackBoxEntity:
-          box?.draw(canvas, imageInfo: snackImageInfo);
+          (box! as SnackBoxEntity).draw(canvas, imageInfo: snackImageInfo);
+          break;
+        case SnakeBoxEntity:
+          (box! as SnakeBoxEntity).draw(canvas, imageInfo: deadImageInfo);
           break;
         default:
           box?.draw(canvas);
