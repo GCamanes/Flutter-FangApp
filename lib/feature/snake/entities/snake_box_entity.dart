@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/feature/snake/entities/box_entity.dart';
+import 'package:flutter/material.dart';
 
 class SnakeBoxEntity extends BoxEntity {
   SnakeBoxEntity({
@@ -21,7 +22,7 @@ class SnakeBoxEntity extends BoxEntity {
   late bool isTail;
 
   @override
-  void draw(Canvas canvas) {
+  void draw(Canvas canvas, {ImageInfo? imageInfo}) {
     final Paint paint = Paint()
       ..color = isDead
           ? AppColors.red

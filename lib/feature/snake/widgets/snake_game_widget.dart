@@ -23,10 +23,14 @@ class SnakeGameWidget extends StatefulWidget {
     Key? key,
     required this.gameNotifier,
     required this.gameBoardNotifier,
+    required this.snackImageInfo,
+    required this.wallImageInfo,
   }) : super(key: key);
 
   final GameNotifier gameNotifier;
   final GameBoardNotifier gameBoardNotifier;
+  final ImageInfo snackImageInfo;
+  final ImageInfo wallImageInfo;
 
   @override
   _SnakeGameWidgetState createState() => _SnakeGameWidgetState();
@@ -52,7 +56,8 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
   void initState() {
     super.initState();
     _playerBestScore = getIt<SharedPreferences>()
-        .getInt(AppConstants.sharedKeySnakeBestScore) ?? 0;
+            .getInt(AppConstants.sharedKeySnakeBestScore) ??
+        0;
     widget.gameBoardNotifier.addListener(() {
       if (widget.gameBoardNotifier.nextStatus == GameStatusEnum.starting) {
         _resumeGame();
@@ -141,7 +146,8 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
       _gameStatus = GameStatusEnum.starting;
       _playerScore = 0;
       _playerBestScore = getIt<SharedPreferences>()
-          .getInt(AppConstants.sharedKeySnakeBestScore) ?? 0;
+              .getInt(AppConstants.sharedKeySnakeBestScore) ??
+          0;
       _snakeSpeed = AppConstants.snakeBaseSpeed;
     });
     _gameBoardEntity?.initSnakeGame(restart: restart);
@@ -238,6 +244,8 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
                         painter: (_gameBoardEntity != null)
                             ? SnakePainter(
                                 gameBoardEntity: _gameBoardEntity!,
+                                snackImageInfo: widget.snackImageInfo,
+                                wallImageInfo: widget.wallImageInfo,
                               )
                             : null,
                       ),

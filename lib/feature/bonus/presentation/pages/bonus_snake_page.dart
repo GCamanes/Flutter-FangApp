@@ -3,6 +3,7 @@ import 'package:fangapp/core/app_life_cycle/presentation/cubit/app_life_cycle_cu
 import 'package:fangapp/core/enum/game_status_enum.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
+import 'package:fangapp/core/utils/image_info_helper.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/core/widget/icon_button_widget.dart';
 import 'package:fangapp/feature/snake/widgets/snake_game_widget.dart';
@@ -21,6 +22,10 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
   GameStatusEnum? _nextGameStatus;
 
   late GameBoardNotifier _gameBoardNotifier;
+
+  late ImageInfo? _snackImageInfo;
+  late ImageInfo? _wallImageInfo;
+  bool _allImageLoaded = false;
 
   @override
   void initState() {
@@ -43,6 +48,26 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
       }
     });
     AnalyticsHelper().sendViewPageEvent(path: RouteConstants.routeBonusSnake);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadImageInfo();
+  }
+
+  Future<void> _loadImageInfo() async {
+    _snackImageInfo = await ImageInfoHelper.getImageInfo(
+      context,
+      'assets/images/snake_apple.png',
+    );
+    _wallImageInfo = await ImageInfoHelper.getImageInfo(
+      context,
+      'assets/images/snake_wall2.png',
+    );
+    setState(() {
+      _allImageLoaded = true;
+    });
   }
 
   IconData? _handleIcon() {
@@ -68,36 +93,41 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.black90,
-      appBar: AppBarWidget(
-        title: 'Snake',
-        actionsList: <Widget>[
-          if (_handleIcon() != null)
-            AppIconButtonWidget(
-              icon: _handleIcon()!,
-              color: _handleIconColor(),
-              onPress: () {
-                _handleIconPressed();
-              },
-            )
-        ],
-      ),
-      body: BlocListener<AppLifeCycleCubit, AppLifeCycleState>(
-        listener: (BuildContext context, AppLifeCycleState state) async {
-          if (state is AppBackground) {
-            if (_gameNotifier.status == GameStatusEnum.starting ||
-                _gameNotifier.status == GameStatusEnum.started) {
-              _gameBoardNotifier.setNextStatus(GameStatusEnum.paused);
-            }
-          }
-        },
-        child: SnakeGameWidget(
-          gameNotifier: _gameNotifier,
-          gameBoardNotifier: _gameBoardNotifier,
+    if (_allImageLoaded) {
+      return Scaffold(
+        backgroundColor: AppColors.black90,
+        appBar: AppBarWidget(
+          title: 'Snake',
+          actionsList: <Widget>[
+            if (_handleIcon() != null)
+              AppIconButtonWidget(
+                icon: _handleIcon()!,
+                color: _handleIconColor(),
+                onPress: () {
+                  _handleIconPressed();
+                },
+              )
+          ],
         ),
-      ),
-    );
+        body: BlocListener<AppLifeCycleCubit, AppLifeCycleState>(
+          listener: (BuildContext context, AppLifeCycleState state) async {
+            if (state is AppBackground) {
+              if (_gameNotifier.status == GameStatusEnum.starting ||
+                  _gameNotifier.status == GameStatusEnum.started) {
+                _gameBoardNotifier.setNextStatus(GameStatusEnum.paused);
+              }
+            }
+          },
+          child: SnakeGameWidget(
+            gameNotifier: _gameNotifier,
+            gameBoardNotifier: _gameBoardNotifier,
+            snackImageInfo: _snackImageInfo!,
+            wallImageInfo: _wallImageInfo!,
+          ),
+        ),
+      );
+    }
+    return const SizedBox();
   }
 }
 

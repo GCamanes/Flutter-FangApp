@@ -30,7 +30,7 @@ class OpacityStartWidget extends StatelessWidget {
         alignment: Alignment.center,
         children: <Widget>[
           SizedBox(
-            height: double.infinity,
+            height: boardHeight,
             child: Opacity(
               opacity: opacity,
               child: Container(

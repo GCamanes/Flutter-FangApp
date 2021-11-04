@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/feature/snake/entities/position_entity.dart';
+import 'package:flutter/cupertino.dart';
 
 abstract class BoxEntity {
   BoxEntity({
@@ -22,5 +23,5 @@ abstract class BoxEntity {
   bool isSamePosition(PositionEntity position) =>
       position.columnIndex == columnIndex && position.rowIndex == rowIndex;
 
-  void draw(Canvas canvas);
+  void draw(Canvas canvas, {ImageInfo? imageInfo});
 }
