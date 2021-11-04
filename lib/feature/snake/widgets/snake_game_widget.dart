@@ -257,6 +257,12 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
                                 snackImageInfo: widget.snackImageInfo,
                                 wallImageInfo: widget.wallImageInfo,
                                 deadImageInfo: widget.deadImageInfo,
+                                snakeHeadImageInfo: widget.snakeHeadImageInfo,
+                                snakeBodyStraightImageInfo:
+                                    widget.snakeBodyStraightImageInfo,
+                                snakeBodyAngleImageInfo:
+                                    widget.snakeBodyAngleImageInfo,
+                                snakeTailImageInfo: widget.snakeTailImageInfo,
                               )
                             : null,
                       ),

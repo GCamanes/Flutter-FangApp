@@ -51,6 +51,7 @@ class SnakeEntity {
   }
 
   SnakeStatusEnum move({
+    required DirectionEnum direction,
     required PositionEntity nextPosition,
     bool isSnackNext = false,
     bool isWallNext = false,
@@ -65,9 +66,11 @@ class SnakeEntity {
     }
     // Update head to new position
     body.first.isHead = false;
+    body.first.direction = direction;
     body.insert(
       0,
       SnakeBoxEntity(
+        direction: direction,
         isHead: true,
         columnIndex: nextPosition.columnIndex,
         rowIndex: nextPosition.rowIndex,

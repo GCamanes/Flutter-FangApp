@@ -13,12 +13,20 @@ class SnakePainter extends CustomPainter {
     required this.snackImageInfo,
     required this.wallImageInfo,
     required this.deadImageInfo,
+    required this.snakeHeadImageInfo,
+    required this.snakeBodyStraightImageInfo,
+    required this.snakeBodyAngleImageInfo,
+    required this.snakeTailImageInfo,
   });
 
   final GameBoardEntity gameBoardEntity;
   final ImageInfo snackImageInfo;
   final ImageInfo wallImageInfo;
   final ImageInfo deadImageInfo;
+  final ImageInfo snakeHeadImageInfo;
+  final ImageInfo snakeBodyStraightImageInfo;
+  final ImageInfo snakeBodyAngleImageInfo;
+  final ImageInfo snakeTailImageInfo;
 
   void _drawBackground(Canvas canvas, Size size) {
     final Paint paint1 = Paint()
@@ -33,7 +41,7 @@ class SnakePainter extends CustomPainter {
     _drawBackground(canvas, size);
     // Draw all box entities
     gameBoardEntity.applyToMatrix((BoxEntity? box) {
-      switch(box.runtimeType) {
+      switch (box.runtimeType) {
         case WallBoxEntity:
           (box! as WallBoxEntity).draw(canvas, imageInfo: wallImageInfo);
           break;
@@ -41,7 +49,16 @@ class SnakePainter extends CustomPainter {
           (box! as SnackBoxEntity).draw(canvas, imageInfo: snackImageInfo);
           break;
         case SnakeBoxEntity:
-          (box! as SnakeBoxEntity).draw(canvas, imageInfo: deadImageInfo);
+          (box! as SnakeBoxEntity).draw(
+            canvas,
+            imageInfo: (box as SnakeBoxEntity).isDead
+                ? deadImageInfo
+                : box.isHead
+                    ? snakeHeadImageInfo
+                    : box.isTail
+                        ? snakeTailImageInfo
+                        : snakeBodyStraightImageInfo,
+          );
           break;
         default:
           box?.draw(canvas);

@@ -172,6 +172,7 @@ class GameBoardEntity {
 
     // Update snake entity
     final SnakeStatusEnum snakeStatus = snakeEntity.move(
+      direction: direction,
       nextPosition: nextPosition,
       isSnackNext: isSnackNext,
       isWallNext: isWallNext,
