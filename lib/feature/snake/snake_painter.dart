@@ -1,3 +1,4 @@
+import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/feature/snake/entities/box_entity.dart';
 import 'package:fangapp/feature/snake/entities/snack_box_entity.dart';
 import 'package:fangapp/feature/snake/entities/wall_box_entity.dart';
@@ -18,7 +19,7 @@ class SnakePainter extends CustomPainter {
 
   void _drawBackground(Canvas canvas, Size size) {
     final Paint paint1 = Paint()
-      ..color = const Color(0xff638965)
+      ..color = AppColors.greyLight
       ..style = PaintingStyle.fill;
     canvas.drawRect(Offset.zero & size, paint1);
   }
