@@ -28,7 +28,8 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
   late ImageInfo? _deadImageInfo;
   late ImageInfo? _snakeHeadImageInfo;
   late ImageInfo? _snakeBodyStraightImageInfo;
-  late ImageInfo? _snakeBodyAngleImageInfo;
+  late ImageInfo? _snakeBodyAngleLeftImageInfo;
+  late ImageInfo? _snakeBodyAngleRightImageInfo;
   late ImageInfo? _snakeTailImageInfo;
   bool _allImageLoaded = false;
 
@@ -82,9 +83,13 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
       context,
       'assets/images/snake_body_straight.png',
     );
-    _snakeBodyAngleImageInfo = await ImageInfoHelper.getImageInfo(
+    _snakeBodyAngleLeftImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/snake_body_angle.png',
+      'assets/images/snake_body_angle_left.png',
+    );
+    _snakeBodyAngleRightImageInfo = await ImageInfoHelper.getImageInfo(
+      context,
+      'assets/images/snake_body_angle_right.png',
     );
     _snakeTailImageInfo = await ImageInfoHelper.getImageInfo(
       context,
@@ -151,7 +156,8 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
             deadImageInfo: _deadImageInfo!,
             snakeHeadImageInfo: _snakeHeadImageInfo!,
             snakeBodyStraightImageInfo: _snakeBodyStraightImageInfo!,
-            snakeBodyAngleImageInfo: _snakeBodyAngleImageInfo!,
+            snakeBodyAngleLeftImageInfo: _snakeBodyAngleLeftImageInfo!,
+            snakeBodyAngleRightImageInfo: _snakeBodyAngleRightImageInfo!,
             snakeTailImageInfo: _snakeTailImageInfo!,
           ),
         ),

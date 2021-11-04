@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:fangapp/core/enum/direction_enum.dart';
-import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/feature/snake/entities/box_entity.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +13,7 @@ class SnakeBoxEntity extends BoxEntity {
     this.isHead = false,
     this.isTail = false,
     this.direction = DirectionEnum.up,
+    this.previousDirection = DirectionEnum.up,
   }) : super(
           columnIndex: columnIndex,
           rowIndex: rowIndex,
@@ -23,6 +23,7 @@ class SnakeBoxEntity extends BoxEntity {
   late bool isHead;
   late bool isTail;
   late DirectionEnum direction;
+  late DirectionEnum previousDirection;
 
   void rotate({
     required Canvas canvas,
@@ -35,7 +36,7 @@ class SnakeBoxEntity extends BoxEntity {
     canvas.translate(-cx, -cy);
   }
 
-  double getAngle() {
+  double getAngle(DirectionEnum direction) {
     switch (direction) {
       case DirectionEnum.left:
         return 90;
@@ -48,11 +49,16 @@ class SnakeBoxEntity extends BoxEntity {
     }
   }
 
+  bool needLeftAngleImage() {
+    final double angleDiff = getAngle(direction) - getAngle(previousDirection);
+    return angleDiff == 90 || angleDiff == -270;
+  }
+
   @override
   void draw(Canvas canvas, {ImageInfo? imageInfo}) {
     if (imageInfo != null) {
       // Compute angle
-      final double angle = getAngle() * 3.14 / 180;
+      final double angle = getAngle(direction) * 3.14 / 180;
       // Rotate canvas to angle
       canvas.save();
       rotate(

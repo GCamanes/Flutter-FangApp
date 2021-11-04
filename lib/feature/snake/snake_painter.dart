@@ -15,7 +15,8 @@ class SnakePainter extends CustomPainter {
     required this.deadImageInfo,
     required this.snakeHeadImageInfo,
     required this.snakeBodyStraightImageInfo,
-    required this.snakeBodyAngleImageInfo,
+    required this.snakeBodyAngleLeftImageInfo,
+    required this.snakeBodyAngleRightImageInfo,
     required this.snakeTailImageInfo,
   });
 
@@ -25,7 +26,8 @@ class SnakePainter extends CustomPainter {
   final ImageInfo deadImageInfo;
   final ImageInfo snakeHeadImageInfo;
   final ImageInfo snakeBodyStraightImageInfo;
-  final ImageInfo snakeBodyAngleImageInfo;
+  final ImageInfo snakeBodyAngleLeftImageInfo;
+  final ImageInfo snakeBodyAngleRightImageInfo;
   final ImageInfo snakeTailImageInfo;
 
   void _drawBackground(Canvas canvas, Size size) {
@@ -33,6 +35,18 @@ class SnakePainter extends CustomPainter {
       ..color = AppColors.greyLight
       ..style = PaintingStyle.fill;
     canvas.drawRect(Offset.zero & size, paint1);
+  }
+
+  ImageInfo selectImageInfo(SnakeBoxEntity box) {
+    if (box.isDead) return deadImageInfo;
+    if (box.isHead) return snakeHeadImageInfo;
+    if (box.isTail) return snakeTailImageInfo;
+    if (box.direction != box.previousDirection) {
+      return box.needLeftAngleImage()
+          ? snakeBodyAngleLeftImageInfo
+          : snakeBodyAngleRightImageInfo;
+    }
+    return snakeBodyStraightImageInfo;
   }
 
   @override
@@ -51,13 +65,7 @@ class SnakePainter extends CustomPainter {
         case SnakeBoxEntity:
           (box! as SnakeBoxEntity).draw(
             canvas,
-            imageInfo: (box as SnakeBoxEntity).isDead
-                ? deadImageInfo
-                : box.isHead
-                    ? snakeHeadImageInfo
-                    : box.isTail
-                        ? snakeTailImageInfo
-                        : snakeBodyStraightImageInfo,
+            imageInfo: selectImageInfo(box as SnakeBoxEntity),
           );
           break;
         default:

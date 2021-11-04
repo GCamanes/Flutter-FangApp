@@ -66,6 +66,7 @@ class SnakeEntity {
     }
     // Update head to new position
     body.first.isHead = false;
+    body.first.previousDirection = body.first.direction;
     body.first.direction = direction;
     body.insert(
       0,

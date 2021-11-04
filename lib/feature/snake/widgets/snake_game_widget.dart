@@ -28,7 +28,8 @@ class SnakeGameWidget extends StatefulWidget {
     required this.deadImageInfo,
     required this.snakeHeadImageInfo,
     required this.snakeBodyStraightImageInfo,
-    required this.snakeBodyAngleImageInfo,
+    required this.snakeBodyAngleLeftImageInfo,
+    required this.snakeBodyAngleRightImageInfo,
     required this.snakeTailImageInfo,
   }) : super(key: key);
 
@@ -39,7 +40,8 @@ class SnakeGameWidget extends StatefulWidget {
   final ImageInfo deadImageInfo;
   final ImageInfo snakeHeadImageInfo;
   final ImageInfo snakeBodyStraightImageInfo;
-  final ImageInfo snakeBodyAngleImageInfo;
+  final ImageInfo snakeBodyAngleLeftImageInfo;
+  final ImageInfo snakeBodyAngleRightImageInfo;
   final ImageInfo snakeTailImageInfo;
 
   @override
@@ -260,8 +262,10 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
                                 snakeHeadImageInfo: widget.snakeHeadImageInfo,
                                 snakeBodyStraightImageInfo:
                                     widget.snakeBodyStraightImageInfo,
-                                snakeBodyAngleImageInfo:
-                                    widget.snakeBodyAngleImageInfo,
+                                snakeBodyAngleLeftImageInfo:
+                                    widget.snakeBodyAngleLeftImageInfo,
+                                snakeBodyAngleRightImageInfo:
+                                    widget.snakeBodyAngleRightImageInfo,
                                 snakeTailImageInfo: widget.snakeTailImageInfo,
                               )
                             : null,
