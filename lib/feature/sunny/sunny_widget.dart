@@ -49,23 +49,23 @@ class _SunnyWidgetState extends State<SunnyWidget> {
   Future<void> _loadImageInfo() async {
     _sunnyImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/one_piece_sunny.png',
+      'assets/images/sunny/one_piece_sunny.png',
     );
     _backgroundImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/wave_background_sunny.png',
+      'assets/images/sunny/wave_background_sunny.png',
     );
     _waveImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/wave_sample.png',
+      'assets/images/sunny/wave_sample.png',
     );
     _prometheusImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/one_piece_prometheus.png',
+      'assets/images/sunny/one_piece_prometheus.png',
     );
     _fishImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/one_piece_fish.png',
+      'assets/images/sunny/one_piece_fish.png',
     );
     setState(() {
       _allImageLoaded = true;

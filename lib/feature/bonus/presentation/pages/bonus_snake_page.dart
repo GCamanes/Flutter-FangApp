@@ -65,35 +65,35 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
   Future<void> _loadImageInfo() async {
     _snackImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/snake_burger.png',
+      'assets/images/snake/snake_burger.png',
     );
     _wallImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/snake_wall.png',
+      'assets/images/snake/snake_wall.png',
     );
     _deadImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/snake_dead.png',
+      'assets/images/snake/snake_dead.png',
     );
     _snakeHeadImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/snake_head.png',
+      'assets/images/snake/snake_head.png',
     );
     _snakeBodyStraightImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/snake_body_straight.png',
+      'assets/images/snake/snake_body_straight.png',
     );
     _snakeBodyAngleLeftImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/snake_body_angle_left.png',
+      'assets/images/snake/snake_body_angle_left.png',
     );
     _snakeBodyAngleRightImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/snake_body_angle_right.png',
+      'assets/images/snake/snake_body_angle_right.png',
     );
     _snakeTailImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/snake_tail.png',
+      'assets/images/snake/snake_tail.png',
     );
     setState(() {
       _allImageLoaded = true;

@@ -119,6 +119,8 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - assets/images/snake/
+    - assets/images/sunny/
     - assets/locales/
 
   # An image asset can refer to one or more resolution-specific "variants", see

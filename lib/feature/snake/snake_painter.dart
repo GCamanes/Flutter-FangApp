@@ -32,7 +32,7 @@ class SnakePainter extends CustomPainter {
 
   void _drawBackground(Canvas canvas, Size size) {
     final Paint paint1 = Paint()
-      ..color = AppColors.greyLight
+      ..color = AppColors.blackSmoke
       ..style = PaintingStyle.fill;
     canvas.drawRect(Offset.zero & size, paint1);
   }
