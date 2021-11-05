@@ -65,7 +65,7 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
   Future<void> _loadImageInfo() async {
     _snackImageInfo = await ImageInfoHelper.getImageInfo(
       context,
-      'assets/images/snake/snake_burger.png',
+      'assets/images/snake/snake_orb.png',
     );
     _wallImageInfo = await ImageInfoHelper.getImageInfo(
       context,
