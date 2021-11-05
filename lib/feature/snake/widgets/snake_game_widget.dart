@@ -94,8 +94,10 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
   }
 
   Future<void> _handleGameOver() async {
-    await getIt<SharedPreferences>()
+    if (_playerScore > _playerBestScore) {
+      await getIt<SharedPreferences>()
         .setInt(AppConstants.sharedKeySnakeBestScore, _playerScore);
+    }
     _snakeTimer?.cancel();
     setState(() {
       _gameStatus = GameStatusEnum.gameOver;
