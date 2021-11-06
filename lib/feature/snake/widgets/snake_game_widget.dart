@@ -27,6 +27,7 @@ class SnakeGameWidget extends StatefulWidget {
     required this.wallImageInfo,
     required this.deadImageInfo,
     required this.snakeHeadImageInfo,
+    required this.snakeHeadEatingImageInfo,
     required this.snakeBodyStraightImageInfo,
     required this.snakeBodyAngleLeftImageInfo,
     required this.snakeBodyAngleRightImageInfo,
@@ -39,6 +40,7 @@ class SnakeGameWidget extends StatefulWidget {
   final ImageInfo wallImageInfo;
   final ImageInfo deadImageInfo;
   final ImageInfo snakeHeadImageInfo;
+  final ImageInfo snakeHeadEatingImageInfo;
   final ImageInfo snakeBodyStraightImageInfo;
   final ImageInfo snakeBodyAngleLeftImageInfo;
   final ImageInfo snakeBodyAngleRightImageInfo;
@@ -96,7 +98,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
   Future<void> _handleGameOver() async {
     if (_playerScore > _playerBestScore) {
       await getIt<SharedPreferences>()
-        .setInt(AppConstants.sharedKeySnakeBestScore, _playerScore);
+          .setInt(AppConstants.sharedKeySnakeBestScore, _playerScore);
     }
     _snakeTimer?.cancel();
     setState(() {
@@ -262,6 +264,8 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
                                 wallImageInfo: widget.wallImageInfo,
                                 deadImageInfo: widget.deadImageInfo,
                                 snakeHeadImageInfo: widget.snakeHeadImageInfo,
+                                snakeHeadEatingImageInfo:
+                                    widget.snakeHeadEatingImageInfo,
                                 snakeBodyStraightImageInfo:
                                     widget.snakeBodyStraightImageInfo,
                                 snakeBodyAngleLeftImageInfo:

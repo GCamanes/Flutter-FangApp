@@ -14,6 +14,7 @@ class SnakePainter extends CustomPainter {
     required this.wallImageInfo,
     required this.deadImageInfo,
     required this.snakeHeadImageInfo,
+    required this.snakeHeadEatingImageInfo,
     required this.snakeBodyStraightImageInfo,
     required this.snakeBodyAngleLeftImageInfo,
     required this.snakeBodyAngleRightImageInfo,
@@ -25,6 +26,7 @@ class SnakePainter extends CustomPainter {
   final ImageInfo wallImageInfo;
   final ImageInfo deadImageInfo;
   final ImageInfo snakeHeadImageInfo;
+  final ImageInfo snakeHeadEatingImageInfo;
   final ImageInfo snakeBodyStraightImageInfo;
   final ImageInfo snakeBodyAngleLeftImageInfo;
   final ImageInfo snakeBodyAngleRightImageInfo;
@@ -39,7 +41,10 @@ class SnakePainter extends CustomPainter {
 
   ImageInfo selectImageInfo(SnakeBoxEntity box) {
     if (box.isDead) return deadImageInfo;
-    if (box.isHead) return snakeHeadImageInfo;
+    if (box.isHead) {
+      if (box.isEating) return snakeHeadEatingImageInfo;
+      return snakeHeadImageInfo;
+    }
     if (box.isTail) return snakeTailImageInfo;
     if (box.direction != box.previousDirection) {
       return box.needLeftAngleImage()

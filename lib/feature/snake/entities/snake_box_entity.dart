@@ -12,6 +12,7 @@ class SnakeBoxEntity extends BoxEntity {
     this.isDead = false,
     this.isHead = false,
     this.isTail = false,
+    this.isEating = false,
     this.direction = DirectionEnum.up,
     this.previousDirection = DirectionEnum.up,
   }) : super(
@@ -22,6 +23,7 @@ class SnakeBoxEntity extends BoxEntity {
   late bool isDead;
   late bool isHead;
   late bool isTail;
+  late bool isEating;
   late DirectionEnum direction;
   late DirectionEnum previousDirection;
 

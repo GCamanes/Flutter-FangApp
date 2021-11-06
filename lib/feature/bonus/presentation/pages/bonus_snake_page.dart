@@ -27,6 +27,7 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
   late ImageInfo? _wallImageInfo;
   late ImageInfo? _deadImageInfo;
   late ImageInfo? _snakeHeadImageInfo;
+  late ImageInfo? _snakeHeadEatingImageInfo;
   late ImageInfo? _snakeBodyStraightImageInfo;
   late ImageInfo? _snakeBodyAngleLeftImageInfo;
   late ImageInfo? _snakeBodyAngleRightImageInfo;
@@ -78,6 +79,10 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
     _snakeHeadImageInfo = await ImageInfoHelper.getImageInfo(
       context,
       'assets/images/snake/snake_head.png',
+    );
+    _snakeHeadEatingImageInfo = await ImageInfoHelper.getImageInfo(
+      context,
+      'assets/images/snake/snake_head_eating.png',
     );
     _snakeBodyStraightImageInfo = await ImageInfoHelper.getImageInfo(
       context,
@@ -155,6 +160,7 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
             wallImageInfo: _wallImageInfo!,
             deadImageInfo: _deadImageInfo!,
             snakeHeadImageInfo: _snakeHeadImageInfo!,
+            snakeHeadEatingImageInfo: _snakeHeadEatingImageInfo!,
             snakeBodyStraightImageInfo: _snakeBodyStraightImageInfo!,
             snakeBodyAngleLeftImageInfo: _snakeBodyAngleLeftImageInfo!,
             snakeBodyAngleRightImageInfo: _snakeBodyAngleRightImageInfo!,

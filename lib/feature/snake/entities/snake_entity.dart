@@ -98,8 +98,10 @@ class SnakeEntity {
     );
     // Snack Case : no need to update snake tail
     if (isSnackNext) {
+      body.first.isEating = true;
       return SnakeStatusEnum.eatSnack;
     } else {
+      body.first.isEating = false;
       // Update new snake tail
       body.remove(body.last);
       body.last.isTail = true;
