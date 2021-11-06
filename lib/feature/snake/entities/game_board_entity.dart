@@ -139,7 +139,7 @@ class GameBoardEntity {
     }
   }
 
-  PositionEntity _getRandomEmptyPosition() {
+  PositionEntity _getRandomEmptyPosition({bool avoidNearSnakeHead = false}) {
     final List<PositionEntity> boxCandidates = <PositionEntity>[];
     // Loop on matrix rows and columns to save empty position
     for (final int columnIndex in List<int>.generate(
@@ -151,12 +151,23 @@ class GameBoardEntity {
         (int rowIndex) => rowIndex,
       )) {
         if (boxesMatrix[columnIndex][rowIndex] == null) {
-          boxCandidates.add(
-            PositionEntity(
-              columnIndex: columnIndex,
-              rowIndex: rowIndex,
-            ),
-          );
+          bool canAdd = true;
+          // Compute square of size 5x5 with snake head as center
+          if (avoidNearSnakeHead &&
+              columnIndex >= snakeEntity.body.first.columnIndex - 2 &&
+              columnIndex <= snakeEntity.body.first.columnIndex + 2 &&
+              rowIndex >= snakeEntity.body.first.rowIndex - 2 &&
+              rowIndex <= snakeEntity.body.first.rowIndex + 2) {
+            canAdd = false;
+          }
+          if (canAdd) {
+            boxCandidates.add(
+              PositionEntity(
+                columnIndex: columnIndex,
+                rowIndex: rowIndex,
+              ),
+            );
+          }
         }
       }
     }
@@ -164,8 +175,10 @@ class GameBoardEntity {
     return boxCandidates[_random.nextInt(boxCandidates.length - 1)];
   }
 
-  SnackBoxEntity _addSnackToMatrix(PositionEntity position,
-      {bool isPoison = false}) {
+  SnackBoxEntity _addSnackToMatrix(
+    PositionEntity position, {
+    bool isPoison = false,
+  }) {
     // Create snack box entity
     final SnackBoxEntity snackBoxEntity = SnackBoxEntity(
       columnIndex: position.columnIndex,
@@ -196,7 +209,7 @@ class GameBoardEntity {
     _addSnakeToMatrix();
     _addSnackToMatrix(_getRandomEmptyPosition());
     _poisonBoxEntity = _addSnackToMatrix(
-      _getRandomEmptyPosition(),
+      _getRandomEmptyPosition(avoidNearSnakeHead: true),
       isPoison: true,
     );
   }
@@ -224,7 +237,7 @@ class GameBoardEntity {
         if (_poisonTimer == AppConstants.snakeTimeBeforePoisonSpawn &&
             _poisonBoxEntity == null) {
           _poisonBoxEntity = _addSnackToMatrix(
-            _getRandomEmptyPosition(),
+            _getRandomEmptyPosition(avoidNearSnakeHead: true),
             isPoison: true,
           );
           _poisonTimer = 0;
