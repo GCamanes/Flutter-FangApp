@@ -16,7 +16,7 @@ import 'box_entity.dart';
 class GameBoardEntity {
   GameBoardEntity({
     required Size gameBoardSize,
-    this.initWithWall = true,
+    this.initWithWall = false,
     required this.handleSnakeDead,
     required this.handleSnakeEatFruit,
     required this.handleSnakeDying,
@@ -133,8 +133,8 @@ class GameBoardEntity {
   void initSnakeGame({bool restart = false}) {
     if (restart) initBoard();
     snakeEntity = SnakeEntity(
-      startColumnIndex: AppConstants.snakeNumberOfColumns ~/ 2 + 1,
-      startRowIndex: numberOfRows ~/ 2 + 1,
+      startColumnIndex: AppConstants.snakeNumberOfColumns ~/ 2,
+      startRowIndex: numberOfRows ~/ 2 - 3,
     );
     _addSnakeToMatrix();
     _addSnackToMatrix(_getRandomEmptyPosition());
@@ -162,7 +162,7 @@ class GameBoardEntity {
 
     // Get next position of snake head
     final PositionEntity nextPosition =
-        snakeEntity.getNextHeadPosition(direction);
+        snakeEntity.getNextHeadPosition(direction, numberOfRows);
 
     // Save if next position is apple or wall box
     final bool isSnackNext = boxesMatrix[nextPosition.columnIndex]

@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/enum/direction_enum.dart';
 import 'package:fangapp/core/enum/snake_status_enum.dart';
 import 'package:fangapp/feature/snake/entities/position_entity.dart';
@@ -24,18 +25,36 @@ class SnakeEntity {
 
   late List<SnakeBoxEntity> body;
 
-  PositionEntity getNextHeadPosition(DirectionEnum direction) {
+  PositionEntity getNextHeadPosition(
+    DirectionEnum direction,
+    int numberOfRows,
+  ) {
+    int nextColumnIndex = direction == DirectionEnum.left
+        ? body.first.columnIndex - 1
+        : direction == DirectionEnum.right
+            ? body.first.columnIndex + 1
+            : body.first.columnIndex;
+    int nextRow = direction == DirectionEnum.up
+        ? body.first.rowIndex - 1
+        : direction == DirectionEnum.down
+            ? body.first.rowIndex + 1
+            : body.first.rowIndex;
+
+    if (nextColumnIndex >= AppConstants.snakeNumberOfColumns) {
+      nextColumnIndex = 0;
+    } else if (nextColumnIndex < 0) {
+      nextColumnIndex = AppConstants.snakeNumberOfColumns - 1;
+    }
+
+    if (nextRow >= numberOfRows) {
+      nextRow = 0;
+    } else if (nextRow < 0) {
+      nextRow = numberOfRows - 1;
+    }
+
     return PositionEntity(
-      columnIndex: direction == DirectionEnum.left
-          ? body.first.columnIndex - 1
-          : direction == DirectionEnum.right
-              ? body.first.columnIndex + 1
-              : body.first.columnIndex,
-      rowIndex: direction == DirectionEnum.up
-          ? body.first.rowIndex - 1
-          : direction == DirectionEnum.down
-              ? body.first.rowIndex + 1
-              : body.first.rowIndex,
+      columnIndex: nextColumnIndex,
+      rowIndex: nextRow,
     );
   }
 
