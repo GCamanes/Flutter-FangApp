@@ -16,7 +16,7 @@ import 'box_entity.dart';
 class GameBoardEntity {
   GameBoardEntity({
     required Size gameBoardSize,
-    this.initWithWall = false,
+    this.initWithWall = true,
     required this.handleSnakeDead,
     required this.handleSnakeEatFruit,
     required this.handleSnakeDying,
@@ -66,10 +66,52 @@ class GameBoardEntity {
       List<List<BoxEntity?>>.generate(AppConstants.snakeNumberOfColumns,
           (int columnIndex) {
         return List<BoxEntity?>.generate(numberOfRows, (int rowIndex) {
-          if (rowIndex == 0 ||
-              rowIndex == numberOfRows - 1 ||
-              columnIndex == 0 ||
-              columnIndex == AppConstants.snakeNumberOfColumns - 1) {
+          bool addWall = false;
+          // Top left wall corner
+          if (columnIndex == 4 && rowIndex >= 4 && rowIndex <= 8) {
+            addWall = true;
+          }
+          if (rowIndex == 4 && columnIndex >= 4 && columnIndex <= 8) {
+            addWall = true;
+          }
+
+          // Top right wall corner
+          if (columnIndex == AppConstants.snakeNumberOfColumns - 5 &&
+              rowIndex >= 4 &&
+              rowIndex <= 8) {
+            addWall = true;
+          }
+          if (rowIndex == 4 &&
+              columnIndex <= AppConstants.snakeNumberOfColumns - 5 &&
+              columnIndex >= AppConstants.snakeNumberOfColumns - 9) {
+            addWall = true;
+          }
+
+          // Bottom left wall corner
+          if (columnIndex == 4 &&
+              rowIndex <= numberOfRows - 5 &&
+              rowIndex >= numberOfRows - 9) {
+            addWall = true;
+          }
+          if (rowIndex == numberOfRows - 5 &&
+              columnIndex >= 4 &&
+              columnIndex <= 8) {
+            addWall = true;
+          }
+
+          // Bottom right wall corner
+          if (columnIndex == AppConstants.snakeNumberOfColumns - 5 &&
+              rowIndex <= numberOfRows - 5 &&
+              rowIndex >= numberOfRows - 9) {
+            addWall = true;
+          }
+          if (rowIndex == numberOfRows - 5 &&
+              columnIndex <= AppConstants.snakeNumberOfColumns - 5 &&
+              columnIndex >= AppConstants.snakeNumberOfColumns - 9) {
+            addWall = true;
+          }
+
+          if (addWall) {
             return WallBoxEntity(
               columnIndex: columnIndex,
               rowIndex: rowIndex,
