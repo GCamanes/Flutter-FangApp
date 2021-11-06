@@ -7,10 +7,13 @@ class SnackBoxEntity extends BoxEntity {
   SnackBoxEntity({
     required int columnIndex,
     required int rowIndex,
+    this.isPoison = false,
   }) : super(
           columnIndex: columnIndex,
           rowIndex: rowIndex,
         );
+
+  final bool isPoison;
 
   @override
   void draw(Canvas canvas, {ImageInfo? imageInfo}) {

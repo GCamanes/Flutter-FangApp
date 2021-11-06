@@ -24,6 +24,7 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
   late GameBoardNotifier _gameBoardNotifier;
 
   late ImageInfo? _snackImageInfo;
+  late ImageInfo? _poisonImageInfo;
   late ImageInfo? _wallImageInfo;
   late ImageInfo? _deadImageInfo;
   late ImageInfo? _snakeHeadImageInfo;
@@ -67,6 +68,10 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
     _snackImageInfo = await ImageInfoHelper.getImageInfo(
       context,
       'assets/images/snake/snake_orb.png',
+    );
+    _poisonImageInfo = await ImageInfoHelper.getImageInfo(
+      context,
+      'assets/images/snake/snake_bad_orb.png',
     );
     _wallImageInfo = await ImageInfoHelper.getImageInfo(
       context,
@@ -157,6 +162,7 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
             gameNotifier: _gameNotifier,
             gameBoardNotifier: _gameBoardNotifier,
             snackImageInfo: _snackImageInfo!,
+            poisonImageInfo: _poisonImageInfo!,
             wallImageInfo: _wallImageInfo!,
             deadImageInfo: _deadImageInfo!,
             snakeHeadImageInfo: _snakeHeadImageInfo!,

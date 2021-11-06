@@ -160,11 +160,12 @@ class GameBoardEntity {
     return boxCandidates[_random.nextInt(boxCandidates.length - 1)];
   }
 
-  void _addSnackToMatrix(PositionEntity position) {
+  void _addSnackToMatrix(PositionEntity position, {bool isPoison = false}) {
     // Set apple box entity to selected position
     boxesMatrix[position.columnIndex][position.rowIndex] = SnackBoxEntity(
       columnIndex: position.columnIndex,
       rowIndex: position.rowIndex,
+      isPoison: isPoison,
     );
   }
 
@@ -180,6 +181,7 @@ class GameBoardEntity {
     );
     _addSnakeToMatrix();
     _addSnackToMatrix(_getRandomEmptyPosition());
+    _addSnackToMatrix(_getRandomEmptyPosition(), isPoison: true);
   }
 
   void handleSnakeStatus(SnakeStatusEnum snakeStatus) {
@@ -206,9 +208,17 @@ class GameBoardEntity {
     final PositionEntity nextPosition =
         snakeEntity.getNextHeadPosition(direction, numberOfRows);
 
-    // Save if next position is apple or wall box
+    // Save if next position is snack or wall box
     final bool isSnackNext = boxesMatrix[nextPosition.columnIndex]
-        [nextPosition.rowIndex] is SnackBoxEntity;
+            [nextPosition.rowIndex] is SnackBoxEntity &&
+        !(boxesMatrix[nextPosition.columnIndex][nextPosition.rowIndex]!
+                as SnackBoxEntity)
+            .isPoison;
+    final bool isPoisonNext = boxesMatrix[nextPosition.columnIndex]
+            [nextPosition.rowIndex] is SnackBoxEntity &&
+        (boxesMatrix[nextPosition.columnIndex][nextPosition.rowIndex]!
+                as SnackBoxEntity)
+            .isPoison;
     final bool isWallNext = boxesMatrix[nextPosition.columnIndex]
         [nextPosition.rowIndex] is WallBoxEntity;
 
@@ -217,6 +227,7 @@ class GameBoardEntity {
       direction: direction,
       nextPosition: nextPosition,
       isSnackNext: isSnackNext,
+      isPoisonNext: isPoisonNext,
       isWallNext: isWallNext,
     );
 

@@ -11,6 +11,7 @@ class SnakePainter extends CustomPainter {
   SnakePainter({
     required this.gameBoardEntity,
     required this.snackImageInfo,
+    required this.poisonImageInfo,
     required this.wallImageInfo,
     required this.deadImageInfo,
     required this.snakeHeadImageInfo,
@@ -23,6 +24,7 @@ class SnakePainter extends CustomPainter {
 
   final GameBoardEntity gameBoardEntity;
   final ImageInfo snackImageInfo;
+  final ImageInfo poisonImageInfo;
   final ImageInfo wallImageInfo;
   final ImageInfo deadImageInfo;
   final ImageInfo snakeHeadImageInfo;
@@ -65,7 +67,12 @@ class SnakePainter extends CustomPainter {
           (box! as WallBoxEntity).draw(canvas, imageInfo: wallImageInfo);
           break;
         case SnackBoxEntity:
-          (box! as SnackBoxEntity).draw(canvas, imageInfo: snackImageInfo);
+          (box! as SnackBoxEntity).draw(
+            canvas,
+            imageInfo: (box as SnackBoxEntity).isPoison
+                ? poisonImageInfo
+                : snackImageInfo,
+          );
           break;
         case SnakeBoxEntity:
           (box! as SnakeBoxEntity).draw(

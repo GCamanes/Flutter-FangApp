@@ -19,11 +19,12 @@ class SnakeEntity {
         isTail: index == length - 1,
       );
     });
+    isStopped = false;
   }
 
   late int length;
-
   late List<SnakeBoxEntity> body;
+  late bool isStopped;
 
   PositionEntity getNextHeadPosition(
     DirectionEnum direction,
@@ -59,6 +60,7 @@ class SnakeEntity {
   }
 
   SnakeStatusEnum die() {
+    isStopped = true;
     final SnakeBoxEntity? nextToDie = body.firstWhereOrNull(
       (SnakeBoxEntity box) => !box.isDead,
     );
@@ -73,8 +75,11 @@ class SnakeEntity {
     required DirectionEnum direction,
     required PositionEntity nextPosition,
     bool isSnackNext = false,
+    bool isPoisonNext = false,
     bool isWallNext = false,
   }) {
+    // Stopped case (Wall, Body, Poison death) : dying animation
+    if (isStopped) return die();
     // Wall case : no movement and snake dying
     if (isWallNext) return die();
     // Body case : no movement and snake dying
@@ -105,6 +110,9 @@ class SnakeEntity {
       // Update new snake tail
       body.remove(body.last);
       body.last.isTail = true;
+      // Poison case (stopped after eating poison) : no more movement
+      if (isPoisonNext) return die();
+      // Normal case : continue movement
       return SnakeStatusEnum.ok;
     }
   }

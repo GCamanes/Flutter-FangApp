@@ -24,6 +24,7 @@ class SnakeGameWidget extends StatefulWidget {
     required this.gameNotifier,
     required this.gameBoardNotifier,
     required this.snackImageInfo,
+    required this.poisonImageInfo,
     required this.wallImageInfo,
     required this.deadImageInfo,
     required this.snakeHeadImageInfo,
@@ -37,6 +38,7 @@ class SnakeGameWidget extends StatefulWidget {
   final GameNotifier gameNotifier;
   final GameBoardNotifier gameBoardNotifier;
   final ImageInfo snackImageInfo;
+  final ImageInfo poisonImageInfo;
   final ImageInfo wallImageInfo;
   final ImageInfo deadImageInfo;
   final ImageInfo snakeHeadImageInfo;
@@ -261,6 +263,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
                             ? SnakePainter(
                                 gameBoardEntity: _gameBoardEntity!,
                                 snackImageInfo: widget.snackImageInfo,
+                                poisonImageInfo: widget.poisonImageInfo,
                                 wallImageInfo: widget.wallImageInfo,
                                 deadImageInfo: widget.deadImageInfo,
                                 snakeHeadImageInfo: widget.snakeHeadImageInfo,
