@@ -87,4 +87,6 @@ abstract class AppConstants {
   static const int snakeNumberOfColumns = 25;
   static const int snakePointPerSnack = 100;
   static const int snakePointPerLevel = 500;
+  static const int snakeTimeBeforePoisonDisappear = 30;
+  static const int snakeTimeBeforePoisonSpawn = 10;
 }

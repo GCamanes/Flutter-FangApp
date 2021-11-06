@@ -35,6 +35,10 @@ class GameBoardEntity {
   late SnakeEntity snakeEntity;
   late List<List<BoxEntity?>> boxesMatrix;
 
+  SnackBoxEntity? _poisonBoxEntity;
+
+  late int _poisonTimer;
+
   // Getters
   double get boardSize => numberOfRows * AppHelper().snakeBoxSize;
 
@@ -160,17 +164,27 @@ class GameBoardEntity {
     return boxCandidates[_random.nextInt(boxCandidates.length - 1)];
   }
 
-  void _addSnackToMatrix(PositionEntity position, {bool isPoison = false}) {
-    // Set apple box entity to selected position
-    boxesMatrix[position.columnIndex][position.rowIndex] = SnackBoxEntity(
+  SnackBoxEntity _addSnackToMatrix(PositionEntity position,
+      {bool isPoison = false}) {
+    // Create snack box entity
+    final SnackBoxEntity snackBoxEntity = SnackBoxEntity(
       columnIndex: position.columnIndex,
       rowIndex: position.rowIndex,
       isPoison: isPoison,
     );
+    // Set apple box entity to selected position
+    boxesMatrix[position.columnIndex][position.rowIndex] = snackBoxEntity;
+
+    return snackBoxEntity;
+  }
+
+  void _removeSnackFromMatrix(SnackBoxEntity snackBoxEntity) {
+    boxesMatrix[snackBoxEntity.columnIndex][snackBoxEntity.rowIndex] = null;
   }
 
   void initBoard() {
     boxesMatrix = initWithWall ? _initWithWAll() : _initEmpty();
+    _poisonTimer = 0;
   }
 
   void initSnakeGame({bool restart = false}) {
@@ -181,7 +195,10 @@ class GameBoardEntity {
     );
     _addSnakeToMatrix();
     _addSnackToMatrix(_getRandomEmptyPosition());
-    _addSnackToMatrix(_getRandomEmptyPosition(), isPoison: true);
+    _poisonBoxEntity = _addSnackToMatrix(
+      _getRandomEmptyPosition(),
+      isPoison: true,
+    );
   }
 
   void handleSnakeStatus(SnakeStatusEnum snakeStatus) {
@@ -197,10 +214,28 @@ class GameBoardEntity {
         handleSnakeDying();
         break;
       default:
+        // Handle poison box presence
+        if (_poisonTimer >= AppConstants.snakeTimeBeforePoisonDisappear &&
+            _poisonBoxEntity != null) {
+          _removeSnackFromMatrix(_poisonBoxEntity!);
+          _poisonBoxEntity = null;
+          _poisonTimer = 0;
+        }
+        if (_poisonTimer == AppConstants.snakeTimeBeforePoisonSpawn &&
+            _poisonBoxEntity == null) {
+          _poisonBoxEntity = _addSnackToMatrix(
+            _getRandomEmptyPosition(),
+            isPoison: true,
+          );
+          _poisonTimer = 0;
+        }
     }
   }
 
   void computeNextMatrix(DirectionEnum direction) {
+    // Handle poison timer
+    _poisonTimer += 1;
+
     // Remove snake from matrix
     _removeSnakeFromMatrix();
 
