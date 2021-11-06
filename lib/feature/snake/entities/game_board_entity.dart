@@ -18,7 +18,7 @@ class GameBoardEntity {
     required Size gameBoardSize,
     this.initWithWall = true,
     required this.handleSnakeDead,
-    required this.handleSnakeEatFruit,
+    required this.handleSnakeEatSnack,
     required this.handleSnakeDying,
   }) {
     _random = Random();
@@ -40,7 +40,7 @@ class GameBoardEntity {
 
   // Functions to handle snake status
   Function() handleSnakeDead;
-  Function() handleSnakeEatFruit;
+  Function() handleSnakeEatSnack;
   Function() handleSnakeDying;
 
   // Function to apply a function on every matrix boxes
@@ -189,7 +189,7 @@ class GameBoardEntity {
         break;
       case SnakeStatusEnum.eatSnack:
         _addSnackToMatrix(_getRandomEmptyPosition());
-        handleSnakeEatFruit();
+        handleSnakeEatSnack();
         break;
       case SnakeStatusEnum.dying:
         handleSnakeDying();

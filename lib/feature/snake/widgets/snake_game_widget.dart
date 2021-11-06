@@ -146,7 +146,7 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
       _gameBoardEntity = GameBoardEntity(
         gameBoardSize: boardSize,
         handleSnakeDead: _handleGameOver,
-        handleSnakeEatFruit: _handleScoreUpdate,
+        handleSnakeEatSnack: _handleScoreUpdate,
         handleSnakeDying: _handleEnteringGameOver,
       );
       _boardSize = Size(
