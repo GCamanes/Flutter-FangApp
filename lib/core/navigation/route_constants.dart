@@ -9,6 +9,7 @@ abstract class RouteConstants {
   static const String routeChapters = '/main/home/chapters';
   static const String routeChapterReading = '/main/home/chapters/reading';
 
+  static const String routeBonusSnake= '/main/bonus/snake';
   static const String routeBonusSunny= '/main/bonus/sunny';
 }
 
