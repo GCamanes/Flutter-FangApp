@@ -5,6 +5,7 @@ import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/feature/snake/entities/box_entity.dart';
 import 'package:flutter/material.dart';
 
+// Class dedicated to snake body
 class SnakeBoxEntity extends BoxEntity {
   SnakeBoxEntity({
     required int columnIndex,
@@ -38,7 +39,7 @@ class SnakeBoxEntity extends BoxEntity {
     canvas.translate(-cx, -cy);
   }
 
-  double getAngle(DirectionEnum direction) {
+  double _getAngle(DirectionEnum direction) {
     switch (direction) {
       case DirectionEnum.left:
         return 90;
@@ -52,7 +53,8 @@ class SnakeBoxEntity extends BoxEntity {
   }
 
   bool needLeftAngleImage() {
-    final double angleDiff = getAngle(direction) - getAngle(previousDirection);
+    final double angleDiff =
+        _getAngle(direction) - _getAngle(previousDirection);
     return angleDiff == 90 || angleDiff == -270;
   }
 
@@ -60,7 +62,7 @@ class SnakeBoxEntity extends BoxEntity {
   void draw(Canvas canvas, {ImageInfo? imageInfo}) {
     if (imageInfo != null) {
       // Compute angle
-      final double angle = getAngle(direction) * 3.14 / 180;
+      final double angle = _getAngle(direction) * 3.14 / 180;
       // Rotate canvas to angle
       canvas.save();
       rotate(

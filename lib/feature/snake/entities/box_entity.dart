@@ -4,6 +4,8 @@ import 'package:fangapp/core/utils/app_helper.dart';
 import 'package:fangapp/feature/snake/entities/position_entity.dart';
 import 'package:flutter/cupertino.dart';
 
+// Generic class entity : all box entity extend it
+// position and draw method
 abstract class BoxEntity {
   BoxEntity({
     required this.columnIndex,

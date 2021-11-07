@@ -41,7 +41,7 @@ class SnakePainter extends CustomPainter {
     canvas.drawRect(Offset.zero & size, paint1);
   }
 
-  ImageInfo selectImageInfo(SnakeBoxEntity box) {
+  ImageInfo _selectImageInfo(SnakeBoxEntity box) {
     if (box.isDead) return deadImageInfo;
     if (box.isHead) {
       if (box.isEating) return snakeHeadEatingImageInfo;
@@ -77,7 +77,7 @@ class SnakePainter extends CustomPainter {
         case SnakeBoxEntity:
           (box! as SnakeBoxEntity).draw(
             canvas,
-            imageInfo: selectImageInfo(box as SnakeBoxEntity),
+            imageInfo: _selectImageInfo(box as SnakeBoxEntity),
           );
           break;
         default:

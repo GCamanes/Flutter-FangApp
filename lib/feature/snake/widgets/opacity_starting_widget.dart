@@ -27,7 +27,7 @@ class _OpacityStartingWidgetState extends State<OpacityStartingWidget>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late Animation<double> _sizeAnimation;
-  int timerValue = 3;
+  int _timerValue = 3;
 
   @override
   void initState() {
@@ -56,11 +56,11 @@ class _OpacityStartingWidgetState extends State<OpacityStartingWidget>
           }
         }
         if (status == AnimationStatus.dismissed) {
-          if (timerValue == 1) {
+          if (_timerValue == 1) {
             widget.onCountDownEnd();
           } else {
             setState(() {
-              timerValue -= 1;
+              _timerValue -= 1;
             });
             _controller.forward();
           }
@@ -98,7 +98,7 @@ class _OpacityStartingWidgetState extends State<OpacityStartingWidget>
             builder: (_, Widget? child) {
               return Center(
                 child: Text(
-                  timerValue.toString(),
+                  _timerValue.toString(),
                   style: AppStyles.highTitle(
                     color: AppColors.white,
                     size: _sizeAnimation.value,

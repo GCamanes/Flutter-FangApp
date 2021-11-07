@@ -5,6 +5,7 @@ import 'package:fangapp/core/enum/snake_status_enum.dart';
 import 'package:fangapp/feature/snake/entities/position_entity.dart';
 import 'package:fangapp/feature/snake/entities/snake_box_entity.dart';
 
+// Class dedicated to snake entity
 class SnakeEntity {
   SnakeEntity({
     this.length = 5,
@@ -41,12 +42,12 @@ class SnakeEntity {
             ? body.first.rowIndex + 1
             : body.first.rowIndex;
 
+    // Part needed to allow snake to cross screen borders
     if (nextColumnIndex >= AppConstants.snakeNumberOfColumns) {
       nextColumnIndex = 0;
     } else if (nextColumnIndex < 0) {
       nextColumnIndex = AppConstants.snakeNumberOfColumns - 1;
     }
-
     if (nextRow >= numberOfRows) {
       nextRow = 0;
     } else if (nextRow < 0) {
@@ -59,11 +60,14 @@ class SnakeEntity {
     );
   }
 
-  SnakeStatusEnum die() {
+  SnakeStatusEnum _die() {
+    // Flag to stop snake movement
     isStopped = true;
+    // Set box to dead one by one
     final SnakeBoxEntity? nextToDie = body.firstWhereOrNull(
       (SnakeBoxEntity box) => !box.isDead,
     );
+    // Manage distinction between dying and dead snake
     if (nextToDie != null) {
       nextToDie.isDead = true;
       return SnakeStatusEnum.dying;
@@ -79,13 +83,13 @@ class SnakeEntity {
     bool isWallNext = false,
   }) {
     // Stopped case (Wall, Body, Poison death) : dying animation
-    if (isStopped) return die();
+    if (isStopped) return _die();
     // Wall case : no movement and snake dying
-    if (isWallNext) return die();
+    if (isWallNext) return _die();
     // Body case : no movement and snake dying
     for (final SnakeBoxEntity box in body) {
       if (box.isSamePosition(nextPosition) && box != body.last) {
-        return die();
+        return _die();
       }
     }
     // Update head to new position
@@ -111,7 +115,7 @@ class SnakeEntity {
       body.remove(body.last);
       body.last.isTail = true;
       // Poison case (stopped after eating poison) : no more movement
-      if (isPoisonNext) return die();
+      if (isPoisonNext) return _die();
       // Normal case : continue movement
       return SnakeStatusEnum.ok;
     }

@@ -1,3 +1,4 @@
+// Class to manage position (column, row index) easily
 class PositionEntity {
   PositionEntity({
     required this.columnIndex,

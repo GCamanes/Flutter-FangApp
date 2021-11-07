@@ -57,24 +57,25 @@ class OpacityStartWidget extends StatelessWidget {
             text: 'common.start'.translate(),
             onPressed: onStart,
           ),
-          Positioned(
-            top: 100,
-            child: Align(
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: const BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                ),
-                child: Text(
-                  'common.bestScore'.translateWithArgs(
-                    args: <String>[playerBestScore.toString()],
+          if (playerBestScore > 0)
+            Positioned(
+              top: 100,
+              child: Align(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),
-                  style: AppStyles.highTitle(size: 13),
+                  child: Text(
+                    'common.bestScore'.translateWithArgs(
+                      args: <String>[playerBestScore.toString()],
+                    ),
+                    style: AppStyles.highTitle(size: 13),
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

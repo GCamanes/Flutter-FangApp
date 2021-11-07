@@ -13,6 +13,8 @@ import 'package:fangapp/feature/snake/entities/wall_box_entity.dart';
 
 import 'box_entity.dart';
 
+// Class that hold all entities needed to draw the snake game
+// Principal attribute : matrix (columns, rows) of box entities
 class GameBoardEntity {
   GameBoardEntity({
     required Size gameBoardSize,
@@ -21,22 +23,24 @@ class GameBoardEntity {
     required this.handleSnakeEatSnack,
     required this.handleSnakeDying,
   }) {
+    // Random used when adding snack to matrix
     _random = Random();
+    // Dynamic number of rows according to device and available screen height
     numberOfRows = gameBoardSize.height ~/ AppHelper().snakeBoxSize;
-    initBoard();
+    // Init game board with wall (or not) and int timer used for poisoned snack
+    _initBoard();
   }
 
   // Game board values
   late final Random _random;
-
   late final int numberOfRows;
-
   late bool initWithWall;
-  late SnakeEntity snakeEntity;
+  // Matrix of box entities
   late List<List<BoxEntity?>> boxesMatrix;
-
+  // Snake entity that will be updated during game
+  late SnakeEntity snakeEntity;
+  // Poisoned snack entity (need to add and remove) and timer (spawn, disappear)
   SnackBoxEntity? _poisonBoxEntity;
-
   late int _poisonTimer;
 
   // Getters
@@ -126,14 +130,14 @@ class GameBoardEntity {
       });
 
   void _addSnakeToMatrix() {
-    // Add snake to matrix
+    // Loop on snake box entity to add them in matrix
     for (final SnakeBoxEntity box in snakeEntity.body) {
       boxesMatrix[box.columnIndex][box.rowIndex] = box;
     }
   }
 
   void _removeSnakeFromMatrix() {
-    // Remove snake from matrix
+    // Loop on snake box entity to remove them from matrix
     for (final SnakeBoxEntity box in snakeEntity.body) {
       boxesMatrix[box.columnIndex][box.rowIndex] = null;
     }
@@ -193,28 +197,34 @@ class GameBoardEntity {
 
   void _removeSnackFromMatrix(SnackBoxEntity snackBoxEntity) {
     boxesMatrix[snackBoxEntity.columnIndex][snackBoxEntity.rowIndex] = null;
+    if (snackBoxEntity.isPoison) _poisonBoxEntity = null;
   }
 
-  void initBoard() {
+  void _initBoard() {
     boxesMatrix = initWithWall ? _initWithWAll() : _initEmpty();
     _poisonTimer = 0;
   }
 
   void initSnakeGame({bool restart = false}) {
-    if (restart) initBoard();
+    // Clear matrix and init it only with wall
+    if (restart) _initBoard();
+    // Create snake entity with position in center of screen
     snakeEntity = SnakeEntity(
       startColumnIndex: AppConstants.snakeNumberOfColumns ~/ 2,
       startRowIndex: numberOfRows ~/ 2 - 3,
     );
+    // Update matrix with snake box entities
     _addSnakeToMatrix();
+    // Add snack box entity to matrix with random position
     _addSnackToMatrix(_getRandomEmptyPosition());
+    // Add and save poisoned snack entity with random position
     _poisonBoxEntity = _addSnackToMatrix(
       _getRandomEmptyPosition(avoidNearSnakeHead: true),
       isPoison: true,
     );
   }
 
-  void handleSnakeStatus(SnakeStatusEnum snakeStatus) {
+  void _handleSnakeStatus(SnakeStatusEnum snakeStatus) {
     switch (snakeStatus) {
       case SnakeStatusEnum.dead:
         handleSnakeDead();
@@ -231,7 +241,6 @@ class GameBoardEntity {
         if (_poisonTimer >= AppConstants.snakeTimeBeforePoisonDisappear &&
             _poisonBoxEntity != null) {
           _removeSnackFromMatrix(_poisonBoxEntity!);
-          _poisonBoxEntity = null;
           _poisonTimer = 0;
         }
         if (_poisonTimer == AppConstants.snakeTimeBeforePoisonSpawn &&
@@ -283,6 +292,6 @@ class GameBoardEntity {
     _addSnakeToMatrix();
 
     // Update game according to snake status
-    handleSnakeStatus(snakeStatus);
+    _handleSnakeStatus(snakeStatus);
   }
 }

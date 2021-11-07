@@ -57,23 +57,27 @@ class _SnakeGameWidgetState extends State<SnakeGameWidget> {
   Size _boardSize = Size.zero;
   GameBoardEntity? _gameBoardEntity;
 
+  // Used to handle game status
   GameStatusEnum _gameStatus = GameStatusEnum.notStarted;
 
+  // Used to move and draw snake game
   Timer? _snakeTimer;
   int _snakeSpeed = AppConstants.snakeBaseSpeed;
-
   DirectionEnum _direction = DirectionEnum.up;
   bool _enableTap = false;
 
+  // Score values
   int _playerScore = 0;
   int _playerBestScore = 0;
 
   @override
   void initState() {
     super.initState();
+    // Retrieve updated best player score
     _playerBestScore = getIt<SharedPreferences>()
             .getInt(AppConstants.sharedKeySnakeBestScore) ??
         0;
+    // Listener to handle play and pause button pressed
     widget.gameBoardNotifier.addListener(() {
       if (widget.gameBoardNotifier.nextStatus == GameStatusEnum.starting) {
         _resumeGame();
