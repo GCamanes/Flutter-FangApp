@@ -1,9 +1,11 @@
 import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/app_life_cycle/presentation/cubit/app_life_cycle_cubit.dart';
 import 'package:fangapp/core/enum/game_status_enum.dart';
+import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/image_info_helper.dart';
+import 'package:fangapp/core/utils/interaction_helper.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/core/widget/icon_button_widget.dart';
 import 'package:fangapp/feature/snake/widgets/snake_game_widget.dart';
@@ -131,46 +133,73 @@ class _BonusSnakePageState extends State<BonusSnakePage> {
     }
   }
 
+  Future<bool> _managePopEvent() async {
+    return false;
+  }
+
+  Future<void> _onBackPressed() async {
+    if (_gameNotifier.status != GameStatusEnum.notStarted &&
+        _gameNotifier.status != GameStatusEnum.gameOver) {
+      setState(() {
+        _nextGameStatus = GameStatusEnum.starting;
+      });
+      _gameBoardNotifier.setNextStatus(GameStatusEnum.paused);
+      final bool needToQuit = await InteractionHelper.showModal(
+            text: 'common.exitGame'.translate(),
+          ) ??
+          false;
+      if (needToQuit) {
+        Navigator.of(context).pop(true);
+      }
+    } else {
+      Navigator.of(context).pop(true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_allImageLoaded) {
-      return Scaffold(
-        backgroundColor: AppColors.black90,
-        appBar: AppBarWidget(
-          title: 'Snake',
-          actionsList: <Widget>[
-            if (_handleIcon() != null)
-              AppIconButtonWidget(
-                icon: _handleIcon()!,
-                color: _handleIconColor(),
-                onPress: () {
-                  _handleIconPressed();
-                },
-              )
-          ],
-        ),
-        body: BlocListener<AppLifeCycleCubit, AppLifeCycleState>(
-          listener: (BuildContext context, AppLifeCycleState state) async {
-            if (state is AppBackground) {
-              if (_gameNotifier.status == GameStatusEnum.starting ||
-                  _gameNotifier.status == GameStatusEnum.started) {
-                _gameBoardNotifier.setNextStatus(GameStatusEnum.paused);
+      return WillPopScope(
+        onWillPop: _managePopEvent,
+        child: Scaffold(
+          backgroundColor: AppColors.black90,
+          appBar: AppBarWidget(
+            title: 'Snake',
+            onBackPressed: _onBackPressed,
+            actionsList: <Widget>[
+              if (_handleIcon() != null)
+                AppIconButtonWidget(
+                  icon: _handleIcon()!,
+                  color: _handleIconColor(),
+                  onPress: () {
+                    _handleIconPressed();
+                  },
+                )
+            ],
+          ),
+          body: BlocListener<AppLifeCycleCubit, AppLifeCycleState>(
+            listener: (BuildContext context, AppLifeCycleState state) async {
+              if (state is AppBackground) {
+                if (_gameNotifier.status == GameStatusEnum.starting ||
+                    _gameNotifier.status == GameStatusEnum.started) {
+                  _gameBoardNotifier.setNextStatus(GameStatusEnum.paused);
+                }
               }
-            }
-          },
-          child: SnakeGameWidget(
-            gameNotifier: _gameNotifier,
-            gameBoardNotifier: _gameBoardNotifier,
-            snackImageInfo: _snackImageInfo!,
-            poisonImageInfo: _poisonImageInfo!,
-            wallImageInfo: _wallImageInfo!,
-            deadImageInfo: _deadImageInfo!,
-            snakeHeadImageInfo: _snakeHeadImageInfo!,
-            snakeHeadEatingImageInfo: _snakeHeadEatingImageInfo!,
-            snakeBodyStraightImageInfo: _snakeBodyStraightImageInfo!,
-            snakeBodyAngleLeftImageInfo: _snakeBodyAngleLeftImageInfo!,
-            snakeBodyAngleRightImageInfo: _snakeBodyAngleRightImageInfo!,
-            snakeTailImageInfo: _snakeTailImageInfo!,
+            },
+            child: SnakeGameWidget(
+              gameNotifier: _gameNotifier,
+              gameBoardNotifier: _gameBoardNotifier,
+              snackImageInfo: _snackImageInfo!,
+              poisonImageInfo: _poisonImageInfo!,
+              wallImageInfo: _wallImageInfo!,
+              deadImageInfo: _deadImageInfo!,
+              snakeHeadImageInfo: _snakeHeadImageInfo!,
+              snakeHeadEatingImageInfo: _snakeHeadEatingImageInfo!,
+              snakeBodyStraightImageInfo: _snakeBodyStraightImageInfo!,
+              snakeBodyAngleLeftImageInfo: _snakeBodyAngleLeftImageInfo!,
+              snakeBodyAngleRightImageInfo: _snakeBodyAngleRightImageInfo!,
+              snakeTailImageInfo: _snakeTailImageInfo!,
+            ),
           ),
         ),
       );

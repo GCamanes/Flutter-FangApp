@@ -78,7 +78,7 @@ class OpacityGameOverWidget extends StatelessWidget {
                     onPressed: onRestart,
                   ),
                   AppButtonWidget(
-                    text: 'common.exitGame'.translate(),
+                    text: 'common.closeGame'.translate(),
                     color: AppColors.grey,
                     onPressed: () {
                       Navigator.of(context).pop(true);
