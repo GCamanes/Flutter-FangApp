@@ -43,6 +43,7 @@ class _TrackingWidgetState extends State<TrackingWidget> {
         Switch(
           value: _isTrackingOn,
           onChanged: (bool value) => _updateTracking(value),
+          activeColor: AppColors.orange,
         ),
       ],
     );

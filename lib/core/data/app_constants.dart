@@ -60,10 +60,10 @@ abstract class AppConstants {
   // Shared preferences keys
   static const String sharedKeyDateEnterBackground =
       'SharedKeyDateEnterBackground';
-  static const String sharedKeyLastChapterRead =
-      'lastChapterRead';
+  static const String sharedKeyLastChapterRead = 'lastChapterRead';
   static const String sharedKeyAcceptAnalyticsTracking =
       'acceptAnalyticsTracking';
+  static const String sharedKeySnakeBestScore = 'snakeBestScore';
 
   // Times
   static const Duration backgroundTimeToShowWelcomeBack = Duration(minutes: 5);
@@ -79,4 +79,14 @@ abstract class AppConstants {
   static const int numberOfTilePerLine = 4;
   static const double spacingBetweenTile = 1;
   static const double tileAspectRatio = 2;
+
+  // Snake game
+  static const int snakeBaseSpeed = 200;
+  static const int snakeMinSpeed = 50;
+  static const double snakeSpeedIncreasePerLevel = 0.05;
+  static const int snakeNumberOfColumns = 25;
+  static const int snakePointPerSnack = 100;
+  static const int snakePointPerLevel = 500;
+  static const int snakeTimeBeforePoisonDisappear = 65;
+  static const int snakeTimeBeforePoisonSpawn = 10;
 }

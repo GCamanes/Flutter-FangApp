@@ -1,6 +1,6 @@
 import 'package:fangapp/core/enum/animation_enum.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
-import 'package:fangapp/feature/bonus/presentation/animation/sunny/sunny_particle_entity.dart';
+import 'package:fangapp/feature/sunny/sunny_particle_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_animations/timeline_tween/timeline_tween.dart';
 

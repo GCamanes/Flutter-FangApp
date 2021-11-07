@@ -2,10 +2,9 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:fangapp/core/enum/animation_enum.dart';
+import 'package:fangapp/feature/bonus/presentation/animation/particle_entity.dart';
 import 'package:flutter/animation.dart';
 import 'package:simple_animations/simple_animations.dart';
-
-import '../particle_entity.dart';
 
 class FishParticleEntity extends ParticleEntity {
   FishParticleEntity({

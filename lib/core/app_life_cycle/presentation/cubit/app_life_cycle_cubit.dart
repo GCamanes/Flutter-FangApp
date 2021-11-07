@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 part 'app_life_cycle_state.dart';
 
-class AppLifeCycleBloc extends Cubit<AppLifeCycleState> {
-  AppLifeCycleBloc({
+class AppLifeCycleCubit extends Cubit<AppLifeCycleState> {
+  AppLifeCycleCubit({
     required SharedPreferences sharedPreferences,
   })  : _sharedPreferences = sharedPreferences,
         _wasInBackgroundBefore = false,

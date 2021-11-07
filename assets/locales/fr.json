@@ -6,6 +6,16 @@
   "common.all": "Tous",
   "common.favorites": "Favoris",
   "common.exit": "Voulez-vous fermer FangApp ?",
+  "common.start": "Jouer",
+  "common.pause": "Pause",
+  "common.gameOver": "Game Over",
+  "common.restart": "Rejouer",
+  "common.paused": "En pause",
+  "common.playerScore": "Score: %s",
+  "common.exitGame": "Quitter le jeu",
+  "common.level": "Niveau %s",
+  "common.bestScore": "Record: %s",
+  "common.newBestScore": "Nouveau record !",
 
   "login.title": "Connexion",
   "login.enterApp": "C'est parti !",
@@ -44,5 +54,8 @@
   "reading.considerChapterAsRead": "voulez-vous considérer le chapitre %s comme lu ?",
 
   "tracking.askConsent": "Nous autorisez-vous à collecter des données pendant que vous utilisez FangApp ? Vous pourrez modifier ce choix plus tard dans la page des paramètres",
-  "tracking.title": "Collecte de données"
+  "tracking.title": "Collecte de données",
+
+  "snake.tutorialLeft": "Toucher ici\npour tourner\nà gauche",
+  "snake.tutorialRight": "Toucher ici\npour tourner\nà droite"
 }
