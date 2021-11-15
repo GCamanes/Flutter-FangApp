@@ -122,26 +122,29 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
       child: BlocBuilder<ChapterReadingCubit, ChapterReadingState>(
         bloc: _chapterReadingCubit,
         builder: (BuildContext context, ChapterReadingState state) {
-          return Scaffold(
-            appBar: AppBarWidget(
-              title: widget.manga?.title ?? '',
-              subTitle: _chapter?.number ?? '',
-              actionsList: state is ChapterReadingLoaded
-                  ? <Widget>[
-                      PageCounterWidget(
-                        currentPage: _currentPage,
-                        numberOfPage: _numberOfPage,
-                      ),
-                      ReadIconWidget(
-                        isRead: _chapter?.isRead ?? false,
-                        onPress: () {
-                          _askMarkChapterAsRead();
-                        },
-                      ),
-                    ]
-                  : <Widget>[],
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: Scaffold(
+              appBar: AppBarWidget(
+                title: widget.manga?.title ?? '',
+                subTitle: _chapter?.number ?? '',
+                actionsList: state is ChapterReadingLoaded
+                    ? <Widget>[
+                  PageCounterWidget(
+                    currentPage: _currentPage,
+                    numberOfPage: _numberOfPage,
+                  ),
+                  ReadIconWidget(
+                    isRead: _chapter?.isRead ?? false,
+                    onPress: () {
+                      _askMarkChapterAsRead();
+                    },
+                  ),
+                ]
+                    : <Widget>[],
+              ),
+              body: _buildBody(state),
             ),
-            body: _buildBody(state),
           );
         },
       ),
