@@ -5,8 +5,10 @@ Back managed with Python3 and Firebase.
 
 ## Screenshots
 > Login
-<img src="./assets/images/screenshots/fangapp_login.png" width="250" height="445"/>
-<img src="./assets/images/screenshots/fangapp_login_form.png" width="250" height="445"/>
+<p float="left">
+   <img src="./assets/images/screenshots/fangapp_login.png" width="250" height="445"/>
+   <img src="./assets/images/screenshots/fangapp_login_form.png" width="250" height="445"/>
+</p>
 
 ## Getting Started
 
