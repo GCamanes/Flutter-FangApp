@@ -24,7 +24,7 @@ Back managed with Python3 and Firebase.
 
 > Bonuses
 <p float="left">
-   <img src="./assets/images/screenshots/fangapp_bonus_snake.png" width="250" height="445"/>
+   <img src="./assets/images/screenshots/fangapp_bonus_snake.gif" width="250" height="445"/>
    <img src="./assets/images/screenshots/fangapp_bonus_sunny.gif" width="250" height="445"/>
 </p>
 
