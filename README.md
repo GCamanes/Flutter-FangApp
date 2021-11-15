@@ -1,7 +1,12 @@
 # FangApp
 
-A flutter app to read mangas.
+A flutter app to read mangas and see extra bonus content.
 Back managed with Python3 and Firebase.
+
+## Screenshots
+> Login
+<img src="./assets/images/screenshots/fangapp_login.png" width="250" height="445"/>
+<img src="./assets/images/screenshots/fangapp_login_form.png" width="250" height="445"/>
 
 ## Getting Started
 
