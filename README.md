@@ -10,6 +10,24 @@ Back managed with Python3 and Firebase.
    <img src="./assets/images/screenshots/fangapp_login_form.png" width="250" height="445"/>
 </p>
 
+> Mangas, chapters and read feature
+<p float="left">
+   <img src="./assets/images/screenshots/fangapp_home.png" width="250" height="445"/>
+   <img src="./assets/images/screenshots/fangapp_chapters.png" width="250" height="445"/>
+   <img src="./assets/images/screenshots/fangapp_reading.png" width="250" height="445"/>
+</p>
+
+> Settings
+<p float="left">
+   <img src="./assets/images/screenshots/fangapp_settings.png" width="250" height="445"/>
+</p>
+
+> Bonuses
+<p float="left">
+   <img src="./assets/images/screenshots/fangapp_bonus_snake.png" width="250" height="445"/>
+   <img src="./assets/images/screenshots/fangapp_bonus_sunny.png" width="250" height="445"/>
+</p>
+
 ## Getting Started
 
 ### Python3
