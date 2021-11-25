@@ -58,7 +58,7 @@ class FunctionHelper:
     # Function to build manga info url
     @staticmethod
     def buildMangaInfoUrl(link):
-        return "{}{}".format(Constants.WEBSITE[:-1], link)
+        return "{}Manga{}".format(Constants.WEBSITE, link)
 
     # Function to rename file with real extension
     @staticmethod

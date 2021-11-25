@@ -38,9 +38,20 @@ class MangaManager:
         # build search url
         url = FunctionHelper.buildMangaInfoUrl(link)
         # build command line
-        output = subprocess.check_output(
-            "curl -s '{}'".format(url), shell=True, text=True)
-        content = output.split('\n')
+        # output = subprocess.check_output(
+        #    "curl -s '{}'".format(url), shell=True, text=True)
+        # content = output.split('\n')
+
+        # Get html content
+        os.system("curl -s '{}' > {}".format(url, Constants.MANGA_INFO_PATH))
+        # Remove non ascii characters
+        os.system("bash ./python/remove_non_ascii.sh {}".format(Constants.MANGA_INFO_PATH))
+        # read the file
+        f = open(Constants.MANGA_INFO_PATH, 'r')
+        content = f.readlines()
+        f.close()
+        # delete temporary file
+        os.system('rm {}'.format(Constants.MANGA_INFO_PATH))
 
         return MangaInfoModel.fromHtmlContent(link, content)
 

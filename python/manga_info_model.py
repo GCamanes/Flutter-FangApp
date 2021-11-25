@@ -25,54 +25,50 @@ class MangaInfoModel:
         obj = cls()
 
         obj.link = link
-        obj.key = link[1:]
+        obj.key = link[1:].replace('_', '-')
 
         nextLineMangaCover = False
+        nextLineMangaInfo = False
+        mangaInfoLines = 0
+
+        nextLineMangaLastChapter = False
+        nextLineMangaFirstChapter = False
 
         for line in htmlContent:
             if nextLineMangaCover:
                 nextLineMangaCover = False
                 try:
-                    obj.coverLink = line.split('data-src="')[-1].split('"')[0].split(':')[0]
-                    obj.coverLink = '{}{}'.format(Constants.HTTPS, obj.coverLink)
+                    obj.coverLink = line.split('<img src="')[-1].split('"')[0]
                 except:
                     pass
-
-            if '<div class="img-cover">' in line:
+            if '<div class="manga_series_image">' in line:
                 nextLineMangaCover = True
-            if '<h1>' in line:
-                try:
-                    if Constants.ERROR_404 in line:
-                        obj = cls()
-                        break
-                    title = line.split('<h1>')[1].split('</h1>')[0]
-                    obj.title = title
-                except:
-                    pass
-            if '/authors/' in line:
-                try:
-                    newAuthor = line.split('title="')[1].split('"')[0]
-                    obj.authors.append(newAuthor)
-                except:
-                    pass
-            if '/status/' in line:
-                try:
-                    status = line.split('/status/')[1].split('"')[0]
-                    obj.status = status
-                except:
-                    pass
-            if '<ul class="chapter-list"' in line:
-                try:
-                    lastChapter = line.split('<a href="')[1].split('"')[0]
-                    title = line.split('title="')[1].split('"')[0].lower()
-                    if 'chapter' in title:
-                        obj.lastRelease = title.split('chapter ')[-1].split(':')[0]
-                    obj.lastChapter = lastChapter
-                    firstChapter = line.split('<a href="')[-1].split('"')[0]
-                    obj.firstChapter = firstChapter
-                except:
-                    pass
+            if nextLineMangaInfo:
+                if mangaInfoLines == 0:
+                    obj.title = line.split('<h5>')[-1].split('</h5>')[0]
+                elif mangaInfoLines == 2:
+                    obj.status = line.split('<div>')[-1].split('</div>')[0]
+                elif mangaInfoLines == 4:
+                    obj.authors.append(line.split('<div>')[-1].split('</div>')[0])
+                if mangaInfoLines > 4:
+                    nextLineMangaInfo = False
+                mangaInfoLines += 1
+            if '<div class="manga_series_data">' in line:
+                nextLineMangaInfo = True
+            if nextLineMangaLastChapter and 'href="' in line:
+                lastChapter = line.split('href="')[-1].split('"')[0]
+                obj.lastChapter = lastChapter
+                obj.lastRelease = lastChapter
+                nextLineMangaLastChapter = False
+            if '<div class="series_sub_chapter_list">' in line:
+                nextLineMangaLastChapter = True
+            if nextLineMangaFirstChapter and 'href="' in line:
+                obj.firstChapter = line.split('href="')[-1].split('"')[0]
+                nextLineMangaFirstChapter = False
+            if '<th>Title</th>' in line:
+                nextLineMangaFirstChapter = True
 
+        print(obj.toString())
         return obj
 
     @classmethod
@@ -105,8 +101,9 @@ class MangaInfoModel:
 
     def toString(self):
         return 'Title: {} ({})\nAuthors: {}\nStatus: {}' \
-               '\nLast chapter: {}'.format(self.title, self.link, ', '.join(self.authors),
-                                           self.status, self.lastRelease)
+               '\nFirst chapter : {}\nLast chapter: {}'.format(self.title, self.link,
+                                                               ', '.join(self.authors), self.status,
+                                                               self.lastRelease, self.firstChapter)
 
     def toDict(self):
         return {

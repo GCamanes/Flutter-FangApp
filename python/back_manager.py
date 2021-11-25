@@ -78,7 +78,7 @@ class DataManager:
 
         mangaInfo = self.mangaManager.getMangaInfo(mangaLink)
 
-        if mangaInfo.checking():
+        """if mangaInfo.checking():
             # Create directory if needed
             mangaInfo.createMangaDirectory()
             # Save info to json
@@ -87,7 +87,7 @@ class DataManager:
             self.downloadMangaChapters(mangaInfo, mangaChapterLink)
 
         else:
-            print('\n/!\\ No result on link {}'.format(mangaLink))
+            print('\n/!\\ No result on link {}'.format(mangaLink))"""
 
     # Function to update downloaded manga
     def updateDownloadManga(self, link):
