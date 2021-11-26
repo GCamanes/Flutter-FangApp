@@ -158,6 +158,7 @@ class MangaInfoModel:
         else:
             oldMangaInfo = MangaInfoModel.fromJson(self.key)
             self.coverLink = oldMangaInfo.coverLink
+            self.authors = oldMangaInfo.authors
 
     def saveMangaInfoToJson(self):
         with open('{}/{}.json'.format(self.buildMangaPath(), self.key), "w") as outfile:
