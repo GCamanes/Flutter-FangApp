@@ -29,7 +29,7 @@ class ConstantsHandler(object):
 
     @constant
     def MANGA_INFO_PATH(self):
-        return '{}/mangaInfo.txt'.format(self.PATH)
+        return '{}/mangaInfo'.format(self.PATH)
 
     @constant
     def MANGA_CHAPTERS_PATH(self):
@@ -37,7 +37,7 @@ class ConstantsHandler(object):
 
     @constant
     def CHAPTER_INFO_PATH(self):
-        return '{}/chapterInfo.txt'.format(self.PATH)
+        return '{}/chapterInfo'.format(self.PATH)
 
     @constant
     def MANGA_CHAPTER_PAGE_PATH(self):

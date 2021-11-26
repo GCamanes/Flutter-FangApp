@@ -107,6 +107,8 @@ class DataManager:
                 downloaded = chapterInfo.downloadChapterPages()
                 if downloaded:
                     print('CHAPTER {} downloaded !'.format(chapterInfo.link))
+                else:
+                    break
             except:
                 print('ERROR while downloading {}'.format(chapterLink))
 
@@ -118,6 +120,8 @@ class DataManager:
                 downloaded = chapterInfo.downloadChapterPages()
                 if downloaded:
                     print('CHAPTER {} downloaded !'.format(chapterInfo.link))
+                else:
+                    break
             except:
                 print('ERROR while downloading {}'.format(chapterLink))
 

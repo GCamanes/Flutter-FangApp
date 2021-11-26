@@ -43,15 +43,16 @@ class MangaManager:
         # content = output.split('\n')
 
         # Get html content
-        os.system("curl -s '{}' > {}".format(url, Constants.MANGA_INFO_PATH))
+        tmpFilePath = '{}_{}.txt'.format(Constants.MANGA_INFO_PATH, link[1:])
+        os.system("curl -s '{}' > {}".format(url, tmpFilePath))
         # Remove non ascii characters
-        os.system("bash ./python/remove_non_ascii.sh {}".format(Constants.MANGA_INFO_PATH))
+        os.system("bash ./python/remove_non_ascii.sh {}".format(tmpFilePath))
         # read the file
-        f = open(Constants.MANGA_INFO_PATH, 'r')
+        f = open(tmpFilePath, 'r')
         content = f.readlines()
         f.close()
         # delete temporary file
-        os.system('rm {}'.format(Constants.MANGA_INFO_PATH))
+        os.system('rm {}'.format(tmpFilePath))
 
         return MangaInfoModel.fromHtmlContent(link, content)
 
@@ -62,14 +63,15 @@ class MangaManager:
         url = FunctionHelper.buildChapterInfoUrl(link)
 
         # Get html content
-        os.system("curl -s '{}' > {}".format(url, Constants.CHAPTER_INFO_PATH))
+        tmpFilePath = '{}_{}.txt'.format(Constants.CHAPTER_INFO_PATH, link[1:])
+        os.system("curl -s '{}' > {}".format(url, tmpFilePath))
         # Remove non ascii characters
-        os.system("bash ./python/remove_non_ascii.sh {}".format(Constants.CHAPTER_INFO_PATH))
+        os.system("bash ./python/remove_non_ascii.sh {}".format(tmpFilePath))
         # read the file
-        f = open(Constants.CHAPTER_INFO_PATH, 'r')
+        f = open(tmpFilePath, 'r')
         content = f.readlines()
         f.close()
         # delete temporary file
-        # os.system('rm {}'.format(Constants.CHAPTER_INFO_PATH))
+        os.system('rm {}'.format(tmpFilePath))
 
         return ChapterInfoModel(mangaInfo, link, content)

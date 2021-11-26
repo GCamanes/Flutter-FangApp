@@ -102,9 +102,9 @@ class MangaInfoModel:
     def toString(self):
         return 'Title: {} ({})\nAuthors: {}\nStatus: {}\nCover: {}' \
                '\nFirst chapter : {}\nLast chapter: {}'.format(self.title, self.link,
-                                                               ', '.join(self.authors), self.status,
-                                                               self.coverLink, self.lastRelease,
-                                                               self.firstChapter)
+                                                               ', '.join(self.authors),
+                                                               self.status, self.coverLink,
+                                                               self.firstChapter, self.lastRelease)
 
     def toDict(self):
         return {
