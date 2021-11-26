@@ -70,6 +70,6 @@ class MangaManager:
         content = f.readlines()
         f.close()
         # delete temporary file
-        os.system('rm {}'.format(Constants.CHAPTER_INFO_PATH))
+        # os.system('rm {}'.format(Constants.CHAPTER_INFO_PATH))
 
         return ChapterInfoModel(mangaInfo, link, content)

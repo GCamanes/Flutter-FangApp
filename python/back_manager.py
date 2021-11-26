@@ -104,8 +104,9 @@ class DataManager:
         for chapterLink in mangaInfo.allChapters:
             try:
                 chapterInfo = self.mangaManager.getChapterInfo(mangaInfo, chapterLink)
-                chapterInfo.downloadChapterPages()
-                print('CHAPTER {} downloaded !'.format(chapterInfo.link))
+                downloaded = chapterInfo.downloadChapterPages()
+                if downloaded:
+                    print('CHAPTER {} downloaded !'.format(chapterInfo.link))
             except:
                 print('ERROR while downloading {}'.format(chapterLink))
 
@@ -114,8 +115,9 @@ class DataManager:
         for chapterLink in mangaInfo.allChapters.__reversed__():
             try:
                 chapterInfo = self.mangaManager.getChapterInfo(mangaInfo, chapterLink)
-                chapterInfo.downloadChapterPages()
-                print('CHAPTER {} downloaded !'.format(chapterInfo.link))
+                downloaded = chapterInfo.downloadChapterPages()
+                if downloaded:
+                    print('CHAPTER {} downloaded !'.format(chapterInfo.link))
             except:
                 print('ERROR while downloading {}'.format(chapterLink))
 
