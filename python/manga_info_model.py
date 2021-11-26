@@ -12,6 +12,7 @@ class MangaInfoModel:
     def __init__(self):
         self.authors = []
         self.link = ''
+        self.keyRaw = ''
         self.key = ''
         self.title = ''
         self.status = Constants.WRONG_LINK_CHECKING
@@ -19,20 +20,21 @@ class MangaInfoModel:
         self.firstChapter = ''
         self.coverLink = ''
         self.lastRelease = ''
+        self.allChapters = []
 
     @classmethod
     def fromHtmlContent(cls, link, htmlContent):
         obj = cls()
 
         obj.link = link
-        obj.key = link[1:].replace('_', '-')
+        obj.keyRaw = link[1:]
+        obj.key = obj.keyRaw.replace('_', '-').lower()
 
         nextLineMangaCover = False
         nextLineMangaInfo = False
         mangaInfoLines = 0
 
-        nextLineMangaLastChapter = False
-        nextLineMangaFirstChapter = False
+        chaptersLink = []
 
         for line in htmlContent:
             if nextLineMangaCover:
@@ -41,9 +43,9 @@ class MangaInfoModel:
                     obj.coverLink = line.split('<img src="')[-1].split('"')[0]
                 except:
                     pass
-            if '<div class="manga_series_image">' in line:
+            elif '<div class="manga_series_image">' in line:
                 nextLineMangaCover = True
-            if nextLineMangaInfo:
+            elif nextLineMangaInfo:
                 if mangaInfoLines == 0:
                     obj.title = line.split('<h5>')[-1].split('</h5>')[0]
                 elif mangaInfoLines == 2:
@@ -53,22 +55,17 @@ class MangaInfoModel:
                 if mangaInfoLines > 4:
                     nextLineMangaInfo = False
                 mangaInfoLines += 1
-            if '<div class="manga_series_data">' in line:
+            elif '<div class="manga_series_data">' in line:
                 nextLineMangaInfo = True
-            if nextLineMangaLastChapter and 'href="' in line:
-                lastChapter = line.split('href="')[-1].split('"')[0]
-                obj.lastChapter = lastChapter
-                obj.lastRelease = lastChapter
-                nextLineMangaLastChapter = False
-            if '<div class="series_sub_chapter_list">' in line:
-                nextLineMangaLastChapter = True
-            if nextLineMangaFirstChapter and 'href="' in line:
-                obj.firstChapter = line.split('href="')[-1].split('"')[0]
-                nextLineMangaFirstChapter = False
-            if '<th>Title</th>' in line:
-                nextLineMangaFirstChapter = True
+            elif '<td><a href="/' in line and obj.keyRaw in line:
+                chapterLink = line.split('href="')[-1].split('"')[0]
+                chaptersLink.append(chapterLink)
 
-        print(obj.toString())
+        obj.allChapters = chaptersLink
+        obj.firstChapter = chaptersLink[0]
+        obj.lastChapter = chaptersLink[-1]
+        obj.lastRelease = chaptersLink[-1]
+
         return obj
 
     @classmethod
@@ -83,6 +80,7 @@ class MangaInfoModel:
                 jsonObject = json.load(fp)
                 obj.authors = jsonObject['authors']
                 obj.link = jsonObject['link']
+                obj.keyRaw = jsonObject['keyRaw']
                 obj.key = jsonObject['key']
                 obj.title = jsonObject['title']
                 obj.coverLink = jsonObject['coverLink']
@@ -90,6 +88,7 @@ class MangaInfoModel:
                 obj.lastChapter = jsonObject['lastChapter']
                 obj.firstChapter = jsonObject['firstChapter']
                 obj.lastRelease = jsonObject['lastRelease']
+                obj.allChapters = jsonObject['allChapters']
 
         except:
             pass
@@ -97,25 +96,28 @@ class MangaInfoModel:
         return obj
 
     def checking(self):
-        return self.status != Constants.WRONG_LINK_CHECKING
+        return self.key != '' and self.status != Constants.WRONG_LINK_CHECKING
 
     def toString(self):
-        return 'Title: {} ({})\nAuthors: {}\nStatus: {}' \
+        return 'Title: {} ({})\nAuthors: {}\nStatus: {}\nCover: {}' \
                '\nFirst chapter : {}\nLast chapter: {}'.format(self.title, self.link,
                                                                ', '.join(self.authors), self.status,
-                                                               self.lastRelease, self.firstChapter)
+                                                               self.coverLink, self.lastRelease,
+                                                               self.firstChapter)
 
     def toDict(self):
         return {
             "title": self.title,
             "link": self.link,
             "coverLink": self.coverLink,
+            "keyRaw": self.keyRaw,
             "key": self.key,
             "authors": self.authors,
             "status": self.status,
             "firstChapter": self.firstChapter,
             "lastChapter": self.lastChapter,
             "lastRelease": self.lastRelease,
+            "allChapters": self.allChapters,
         }
 
     def toDictForFirebase(self, chapterKeys):
@@ -131,7 +133,7 @@ class MangaInfoModel:
 
     # Function to build manga dl path
     def buildMangaPath(self):
-        return '{}{}/'.format(Constants.MANGA_DL_PATH, self.link)
+        return '{}/{}/'.format(Constants.MANGA_DL_PATH, self.key)
 
     # Function to create manga dl directory
     def createMangaDirectory(self):
@@ -142,7 +144,7 @@ class MangaInfoModel:
             os.makedirs(mangaPath)
             # Save cover file
             fileNamePath = '{}{}'.format(
-                self.buildMangaPath(), self.coverLink.split('/')[-1])
+                self.buildMangaPath(), self.coverLink.split('/')[-1].replace('_', '-'))
 
             commandLine = "curl -o '{}' '{}'".format(fileNamePath, self.coverLink)
             # Download img file
@@ -151,7 +153,7 @@ class MangaInfoModel:
             self.coverLink = FunctionHelper.renameFileExtension(fileNamePath) \
                 .split(Constants.MANGA_DL_PATH + '/')[-1]
         else:
-            oldMangaInfo = MangaInfoModel.fromJson(self.link)
+            oldMangaInfo = MangaInfoModel.fromJson(self.key)
             self.coverLink = oldMangaInfo.coverLink
 
     def saveMangaInfoToJson(self):
