@@ -57,13 +57,19 @@ class MangaManager:
 
     # Function to get all info on a chapter
     @staticmethod
-    def getChapterInfo(link):
+    def getChapterInfo(mangaInfo, link):
         # build search url
-        url = FunctionHelper.buildMangaInfoUrl(link)
-        # build command line
+        url = FunctionHelper.buildChapterInfoUrl(link)
 
-        output = subprocess.check_output(
-            "curl -s '{}'".format(url), shell=True, text=True)
-        content = output.split('\n')
+        # Get html content
+        os.system("curl -s '{}' > {}".format(url, Constants.CHAPTER_INFO_PATH))
+        # Remove non ascii characters
+        os.system("bash ./python/remove_non_ascii.sh {}".format(Constants.CHAPTER_INFO_PATH))
+        # read the file
+        f = open(Constants.CHAPTER_INFO_PATH, 'r')
+        content = f.readlines()
+        f.close()
+        # delete temporary file
+        os.system('rm {}'.format(Constants.CHAPTER_INFO_PATH))
 
-        return ChapterInfoModel(link, content)
+        return ChapterInfoModel(mangaInfo, link, content)

@@ -1,4 +1,5 @@
 import os
+import subprocess
 import json
 
 from constants import ConstantsHandler
@@ -145,10 +146,12 @@ class MangaInfoModel:
             # Save cover file
             fileNamePath = '{}{}'.format(
                 self.buildMangaPath(), self.coverLink.split('/')[-1].replace('_', '-'))
-
-            commandLine = "curl -o '{}' '{}'".format(fileNamePath, self.coverLink)
             # Download img file
-            os.system(commandLine)
+            subprocess.run(
+                ['curl', '-o', fileNamePath, self.coverLink],
+                capture_output=True,
+                text=True,
+            )
             # Rename file with real extension
             self.coverLink = FunctionHelper.renameFileExtension(fileNamePath) \
                 .split(Constants.MANGA_DL_PATH + '/')[-1]
