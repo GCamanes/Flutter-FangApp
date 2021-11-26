@@ -43,16 +43,17 @@ class MangaManager:
         # content = output.split('\n')
 
         # Get html content
-        tmpFilePath = '{}_{}.txt'.format(Constants.MANGA_INFO_PATH, link[1:])
-        os.system("curl -s '{}' > {}".format(url, tmpFilePath))
+        filePath = '{}_{}.txt'.format(Constants.MANGA_INFO_PATH, link[1:])
+        tmpFilePath = '{}_{}_tmp.txt'.format(Constants.MANGA_INFO_PATH, link[1:])
+        os.system("curl -s '{}' > {}".format(url, filePath))
         # Remove non ascii characters
-        os.system("bash ./python/remove_non_ascii.sh {}".format(tmpFilePath))
+        os.system("bash ./python/remove_non_ascii.sh {} {}".format(filePath, tmpFilePath))
         # read the file
-        f = open(tmpFilePath, 'r')
+        f = open(filePath, 'r')
         content = f.readlines()
         f.close()
         # delete temporary file
-        os.system('rm {}'.format(tmpFilePath))
+        os.system('rm {}'.format(filePath))
 
         return MangaInfoModel.fromHtmlContent(link, content)
 
@@ -63,15 +64,16 @@ class MangaManager:
         url = FunctionHelper.buildChapterInfoUrl(link)
 
         # Get html content
-        tmpFilePath = '{}_{}.txt'.format(Constants.CHAPTER_INFO_PATH, link[1:])
-        os.system("curl -s '{}' > {}".format(url, tmpFilePath))
+        filePath = '{}_{}.txt'.format(Constants.CHAPTER_INFO_PATH, link[1:])
+        tmpFilePath = '{}_{}_tmp.txt'.format(Constants.CHAPTER_INFO_PATH, link[1:])
+        os.system("curl -s '{}' > {}".format(url, filePath))
         # Remove non ascii characters
-        os.system("bash ./python/remove_non_ascii.sh {}".format(tmpFilePath))
+        os.system("bash ./python/remove_non_ascii.sh {} {}".format(filePath, tmpFilePath))
         # read the file
-        f = open(tmpFilePath, 'r')
+        f = open(filePath, 'r')
         content = f.readlines()
         f.close()
         # delete temporary file
-        os.system('rm {}'.format(tmpFilePath))
+        os.system('rm {}'.format(filePath))
 
         return ChapterInfoModel(mangaInfo, link, content)
