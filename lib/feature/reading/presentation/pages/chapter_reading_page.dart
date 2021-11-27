@@ -188,8 +188,8 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
                 child: MessageWidget(message: ''),
               );
             },
-            initialScale: PhotoViewComputedScale.contained,
-            minScale: PhotoViewComputedScale.contained,
+            initialScale: PhotoViewComputedScale.contained * 0.9999,
+            minScale: PhotoViewComputedScale.contained * 0.9999,
             maxScale: PhotoViewComputedScale.contained * 4,
           );
         },
