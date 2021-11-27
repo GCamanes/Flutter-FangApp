@@ -59,24 +59,11 @@ class DataManager:
             pass
         return storageUrl
 
-    # Function to search manga on search term
-    def searchManga(self, searchTerm):
-        print("\nSEARCHING for : {}...".format(searchTerm))
-        searchResults = self.mangaManager.searchManga(searchTerm)
-        for (result, index) in zip(searchResults, range(1, len(searchResults) + 1)):
-            print('{} : {}'.format(index, result.toString()))
-
     # Function to download a manga
     def downloadManga(self, link):
         print("\nDOWNLOADING {}...".format(link))
 
-        mangaLink = link
-        mangaChapterLink = None
-        if len(link.split('/')) == 3:
-            mangaLink = '/'.join(link.split('/')[:-1])
-            mangaChapterLink = link
-
-        mangaInfo = self.mangaManager.getMangaInfo(mangaLink)
+        mangaInfo = self.mangaManager.getMangaInfo(link)
 
         if mangaInfo.checking():
             # Create directory if needed
@@ -84,22 +71,15 @@ class DataManager:
             # Save info to json
             mangaInfo.saveMangaInfoToJson()
             # Download chapters
-            self.downloadMangaChapters(mangaInfo, mangaChapterLink)
-
+            self.downloadMangaChapters(mangaInfo)
         else:
-            print('\n/!\\ No result on link {}'.format(mangaLink))
+            print('\n/!\\ No result on link {}'.format(link))
 
     # Function to update downloaded manga
     def updateDownloadManga(self, link):
         print("\nUPDATING DOWNLOAD {}...".format(link))
 
-        mangaLink = link
-        mangaChapterLink = None
-        if len(link.split('/')) == 3:
-            mangaLink = '/'.join(link.split('/')[:-1])
-            mangaChapterLink = link
-
-        mangaInfo = self.mangaManager.getMangaInfo(mangaLink)
+        mangaInfo = self.mangaManager.getMangaInfo(link)
 
         if mangaInfo.checking():
             # Create directory if needed
@@ -107,36 +87,36 @@ class DataManager:
             # Save info to json
             mangaInfo.saveMangaInfoToJson()
             # Download chapters
-            self.updateDownloadMangaChapters(mangaInfo, mangaChapterLink)
+            self.updateDownloadMangaChapters(mangaInfo)
 
         else:
             print('\n/!\\ No result on link {}'.format(link))
 
     # Function to download chapters
-    def downloadMangaChapters(self, mangaInfo, mangaChapterLink):
-        chapterLinkToDownload = mangaInfo.firstChapter
-        if mangaChapterLink is not None:
-            chapterLinkToDownload = mangaChapterLink
-
-        while chapterLinkToDownload is not None:
-            chapterInfo = self.mangaManager.getChapterInfo(chapterLinkToDownload)
-            chapterInfo.downloadChapterPages()
-            chapterLinkToDownload = chapterInfo.nextLink
-            if chapterLinkToDownload is None:
-                print(chapterInfo.toString())
+    def downloadMangaChapters(self, mangaInfo):
+        for chapterLink in mangaInfo.allChapters:
+            try:
+                chapterInfo = self.mangaManager.getChapterInfo(mangaInfo, chapterLink)
+                downloaded = chapterInfo.downloadChapterPages()
+                if downloaded:
+                    print('CHAPTER {} downloaded !'.format(chapterInfo.link))
+                else:
+                    break
+            except:
+                print('ERROR while downloading {}'.format(chapterLink))
 
     # Function to update downloaded chapters
-    def updateDownloadMangaChapters(self, mangaInfo, mangaChapterLink):
-        chapterLinkToDownload = mangaInfo.lastChapter
-        if mangaChapterLink is not None:
-            chapterLinkToDownload = mangaChapterLink
-        needToDownload = True
-        while needToDownload:
-            chapterInfo = self.mangaManager.getChapterInfo(chapterLinkToDownload)
-            needToDownload = chapterInfo.downloadChapterPages()
-            chapterLinkToDownload = chapterInfo.prevLink
-            if not needToDownload:
-                print(chapterInfo.toString())
+    def updateDownloadMangaChapters(self, mangaInfo):
+        for chapterLink in mangaInfo.allChapters.__reversed__():
+            try:
+                chapterInfo = self.mangaManager.getChapterInfo(mangaInfo, chapterLink)
+                downloaded = chapterInfo.downloadChapterPages()
+                if downloaded:
+                    print('CHAPTER {} downloaded !'.format(chapterInfo.link))
+                else:
+                    break
+            except:
+                print('ERROR while downloading {}'.format(chapterLink))
 
     def updateMangaOnFirebase(self, mangaKey, chapterKeys):
         mangaInfo = MangaInfoModel.fromJson(mangaKey)
@@ -275,9 +255,6 @@ def main():
     parser.add_argument('-d', '--delete', nargs=1,
                         help='delete a manga from firestore (use "mangaKey")',
                         action='store', type=str)
-    parser.add_argument('-s', '--search', nargs=1,
-                        help='search manga',
-                        action='store', type=str)
     parser.add_argument('--dlmanga', nargs=1,
                         help='download manga (use "/mangaLink")',
                         action='store', type=str)
@@ -299,10 +276,6 @@ def main():
 
     if args.list:
         dataManager.showMangasOnFirestore()
-        sys.exit()
-
-    elif args.search is not None:
-        dataManager.searchManga(args.search[0])
         sys.exit()
 
     elif args.dlmanga is not None:
