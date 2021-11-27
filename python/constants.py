@@ -23,6 +23,26 @@ class ConstantsHandler(object):
     def MANGA_DL_PATH(self):
         return './manga-dl'
 
+    @constant
+    def MANGA_SEARCH_PATH(self):
+        return '{}/search.txt'.format(self.PATH)
+
+    @constant
+    def MANGA_INFO_PATH(self):
+        return '{}/mangaInfo'.format(self.PATH)
+
+    @constant
+    def MANGA_CHAPTERS_PATH(self):
+        return '{}/mangaChapterslist.txt'.format(self.PATH)
+
+    @constant
+    def CHAPTER_INFO_PATH(self):
+        return '{}/chapterInfo'.format(self.PATH)
+
+    @constant
+    def MANGA_CHAPTER_PAGE_PATH(self):
+        return '{}/mangaChapterPage.txt'.format(self.PATH)
+
     # FIREBASE
     @constant
     def SERVICE_ACCOUNT_KEY_PATH(self):
@@ -35,16 +55,7 @@ class ConstantsHandler(object):
 
     @constant
     def WEBSITE(self):
-        return 'https://mangabuddy.com/'
-
-    @constant
-    def SEARCH_PART(self):
-        return 'search?q='
-
-    # MANGA VALUES
-    @constant
-    def ERROR_404(self):
-        return '404'
+        return 'https://w12.mangafreak.net/'
 
     @constant
     def WRONG_LINK_CHECKING(self):
