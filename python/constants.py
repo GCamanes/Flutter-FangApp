@@ -58,15 +58,6 @@ class ConstantsHandler(object):
         return 'https://w12.mangafreak.net/'
 
     @constant
-    def SEARCH_PART(self):
-        return 'search?q='
-
-    # MANGA VALUES
-    @constant
-    def ERROR_404(self):
-        return '404'
-
-    @constant
     def WRONG_LINK_CHECKING(self):
         return 'WRONG_LINK'
 

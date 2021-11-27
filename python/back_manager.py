@@ -59,13 +59,6 @@ class DataManager:
             pass
         return storageUrl
 
-    # Function to search manga on search term
-    def searchManga(self, searchTerm):
-        print("\nSEARCHING for : {}...".format(searchTerm))
-        searchResults = self.mangaManager.searchManga(searchTerm)
-        for (result, index) in zip(searchResults, range(1, len(searchResults) + 1)):
-            print('{} : {}'.format(index, result.toString()))
-
     # Function to download a manga
     def downloadManga(self, link):
         print("\nDOWNLOADING {}...".format(link))
@@ -262,9 +255,6 @@ def main():
     parser.add_argument('-d', '--delete', nargs=1,
                         help='delete a manga from firestore (use "mangaKey")',
                         action='store', type=str)
-    parser.add_argument('-s', '--search', nargs=1,
-                        help='search manga',
-                        action='store', type=str)
     parser.add_argument('--dlmanga', nargs=1,
                         help='download manga (use "/mangaLink")',
                         action='store', type=str)
@@ -286,10 +276,6 @@ def main():
 
     if args.list:
         dataManager.showMangasOnFirestore()
-        sys.exit()
-
-    elif args.search is not None:
-        dataManager.searchManga(args.search[0])
         sys.exit()
 
     elif args.dlmanga is not None:

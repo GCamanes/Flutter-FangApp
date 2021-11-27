@@ -49,12 +49,6 @@ class FunctionHelper:
             strPage = "0" + strPage
         return strPage
 
-    # Function to build search url
-    @staticmethod
-    def buildSearchUrl(searchTerm):
-        formattedSearchTerm = searchTerm.replace(' ', '+')
-        return "{}{}{}".format(Constants.WEBSITE, Constants.SEARCH_PART, formattedSearchTerm)
-
     # Function to build manga info url
     @staticmethod
     def buildMangaInfoUrl(link):
