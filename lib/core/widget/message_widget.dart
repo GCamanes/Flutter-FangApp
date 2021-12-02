@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class MessageWidget extends StatelessWidget {
   const MessageWidget({
     Key? key,
-    required this.message,
+    this.message = '',
   }) : super(key: key);
 
   final String message;
@@ -20,7 +20,7 @@ class MessageWidget extends StatelessWidget {
           'assets/images/app_luffy_error.png',
           width: size.width * 0.6,
         ),
-        Padding(
+        if (message.isNotEmpty) Padding(
           padding: const EdgeInsets.all(20),
           child: Text(
             message,

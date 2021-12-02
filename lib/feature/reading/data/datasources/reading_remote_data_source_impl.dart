@@ -50,13 +50,12 @@ class ReadingRemoteDataSourceImpl implements ReadingRemoteDataSource {
     }
 
     return chapter.pages;
-
-    final List<String> pageUrls = <String>[];
+    /*final List<String> pageUrls = <String>[];
     await Future.forEach(chapter.pages, (String page) async {
       final String downloadURL = await getPageUrl(page);
       pageUrls.add(downloadURL);
     });
 
-    return pageUrls;
+    return pageUrls;*/
   }
 }

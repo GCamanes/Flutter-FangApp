@@ -14,6 +14,7 @@ import 'package:fangapp/feature/chapters/domain/entities/light_chapter_entity.da
 import 'package:fangapp/feature/chapters/presentation/cubit/chapters_cubit.dart';
 import 'package:fangapp/feature/mangas/domain/entities/manga_entity.dart';
 import 'package:fangapp/feature/reading/presentation/cubit/chapter_reading_cubit.dart';
+import 'package:fangapp/feature/reading/presentation/widgets/zoomable_image_widget.dart';
 import 'package:fangapp/get_it_injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,7 +59,9 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
       mangaKey: widget.manga?.key ?? '',
     );
 
-    _scaleStateController.outputScaleStateStream.listen((event) {
+    _scaleStateController.outputScaleStateStream.listen((
+      PhotoViewScaleState event,
+    ) {
       print(event);
     });
 
@@ -160,6 +163,10 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
 
   Widget _buildBody(ChapterReadingState state) {
     if (state is ChapterReadingLoaded) {
+      return ZoomableImageWidget(
+        url: state.pageUrls.first,
+        scaleStateController: _scaleStateController,
+      );
       return PhotoViewGallery.builder(
         itemCount: state.pageUrls.length,
         loadingBuilder: (BuildContext context, ImageChunkEvent? event) {
@@ -193,7 +200,7 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
               StackTrace? stackTrace,
             ) {
               return const Center(
-                child: MessageWidget(message: ''),
+                child: MessageWidget(),
               );
             },
             initialScale: PhotoViewComputedScale.contained * 0.9999,
