@@ -5,7 +5,7 @@ import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/navigation/routes.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/theme/app_styles.dart';
-import 'package:fangapp/core/widget/icon_button_widget.dart';
+import 'package:fangapp/core/widget/app_icon_button_widget.dart';
 import 'package:fangapp/feature/mangas/domain/entities/manga_entity.dart';
 import 'package:fangapp/feature/mangas/presentation/cubit/mangas_cubit.dart';
 import 'package:flutter/material.dart';

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fangapp/core/analytics/analytics_helper.dart';
+import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/extensions/int_extension.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
@@ -13,6 +14,7 @@ import 'package:fangapp/feature/chapters/domain/entities/light_chapter_entity.da
 import 'package:fangapp/feature/chapters/presentation/cubit/chapters_cubit.dart';
 import 'package:fangapp/feature/mangas/domain/entities/manga_entity.dart';
 import 'package:fangapp/feature/reading/presentation/cubit/chapter_reading_cubit.dart';
+import 'package:fangapp/feature/reading/presentation/widgets/reading_button_widget.dart';
 import 'package:fangapp/feature/reading/presentation/widgets/zoomable_image_widget.dart';
 import 'package:fangapp/get_it_injection.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +47,8 @@ class _ChapterReadingPageState extends State<ChapterReadingPage>
 
   late PhotoViewScaleStateController _scaleStateController;
   late TabController _tabController;
-  late ScrollPhysics _tabScrollPhysics;
+  bool _tabScrollEnabled = true;
+  bool _navigateButtonEnabled = true;
 
   @override
   void initState() {
@@ -57,7 +60,6 @@ class _ChapterReadingPageState extends State<ChapterReadingPage>
 
     // Manage scroll physics with image zoom
     _scaleStateController = PhotoViewScaleStateController();
-    _tabScrollPhysics = const AlwaysScrollableScrollPhysics();
     _scaleStateController.outputScaleStateStream.listen(_handleImageZoomed);
 
     _chapterReadingCubit.getPageUrls(
@@ -95,19 +97,32 @@ class _ChapterReadingPageState extends State<ChapterReadingPage>
   void _handleImageZoomed(PhotoViewScaleState event) {
     setState(() {
       // Disable scroll when image is zoomed
-      _tabScrollPhysics = event == PhotoViewScaleState.initial
-          ? const AlwaysScrollableScrollPhysics()
-          : const NeverScrollableScrollPhysics();
+      _tabScrollEnabled = event == PhotoViewScaleState.initial;
     });
   }
 
-  @override
-  void dispose() {
-    _chapterReadingCubit.close();
-    _tabController.removeListener(_handleImageScrolled);
-    _tabController.dispose();
-    _scaleStateController.dispose();
-    super.dispose();
+  void _navigateTo({bool isForward = true}) {
+    late int nextIndex;
+    if (isForward) {
+      nextIndex = _currentPageIndex + 10 > _numberOfPage - 1
+          ? _numberOfPage - 1
+          : _currentPageIndex + 10;
+    } else {
+      nextIndex = _currentPageIndex - 10 < 0 ? 0 : _currentPageIndex - 10;
+    }
+    setState(() {
+      _navigateButtonEnabled = false;
+    });
+    _tabController.animateTo(
+      nextIndex,
+      duration: AppConstants.animReadingNavDuration,
+    );
+    Timer(
+      AppConstants.animReadingLoadDuration,
+      () => setState(() {
+        _navigateButtonEnabled = true;
+      }),
+    );
   }
 
   Future<void> _markChapterAsRead({bool fromLastPage = false}) async {
@@ -136,6 +151,15 @@ class _ChapterReadingPageState extends State<ChapterReadingPage>
         _markChapterAsRead();
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _chapterReadingCubit.close();
+    _tabController.removeListener(_handleImageScrolled);
+    _tabController.dispose();
+    _scaleStateController.dispose();
+    super.dispose();
   }
 
   @override
@@ -197,18 +221,45 @@ class _ChapterReadingPageState extends State<ChapterReadingPage>
 
   Widget _buildBody(ChapterReadingState state) {
     if (state is ChapterReadingLoaded) {
-      return TabBarView(
-        controller: _tabController,
-        physics: _tabScrollPhysics,
-        children: List<ZoomableImageWidget>.generate(
-          state.pageUrls.length,
-          (int index) => ZoomableImageWidget(
-            url: state.pageUrls[index],
-            index: index,
-            currentIndex: _currentPageIndex,
-            scaleStateController: _scaleStateController,
+      return Stack(
+        children: <Widget>[
+          TabBarView(
+            controller: _tabController,
+            physics: _tabScrollEnabled
+                ? const AlwaysScrollableScrollPhysics()
+                : const NeverScrollableScrollPhysics(),
+            children: List<ZoomableImageWidget>.generate(
+              state.pageUrls.length,
+              (int index) => ZoomableImageWidget(
+                url: state.pageUrls[index],
+                index: index,
+                currentIndex: _currentPageIndex,
+                scaleStateController: _scaleStateController,
+              ),
+            ),
           ),
-        ),
+          Positioned(
+            left: 0,
+            child: Visibility(
+              visible: _tabScrollEnabled,
+              child: ReadingButtonWidget(
+                isForward: false,
+                onPressed: _navigateButtonEnabled
+                    ? () => _navigateTo(isForward: false)
+                    : null,
+              ),
+            ),
+          ),
+          Positioned(
+            right: 0,
+            child: Visibility(
+              visible: _tabScrollEnabled,
+              child: ReadingButtonWidget(
+                onPressed: _navigateButtonEnabled ? () => _navigateTo() : null,
+              ),
+            ),
+          ),
+        ],
       );
     }
     if (state is ChapterReadingLoading) {

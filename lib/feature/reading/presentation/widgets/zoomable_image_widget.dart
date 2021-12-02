@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/storage/presentation/cubit/storage_image_cubit.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/widget/loading_widget.dart';
@@ -60,7 +61,7 @@ class _ZoomableImageWidgetState extends State<ZoomableImageWidget> {
     _timer?.cancel();
     if (!_imageLoaded && widget.index == widget.currentIndex) {
       _timer = Timer(
-        const Duration(milliseconds: 250),
+        AppConstants.animReadingLoadDuration,
         () => _storageImageCubit.getStorageImageUrl(url: widget.url),
       );
     }
