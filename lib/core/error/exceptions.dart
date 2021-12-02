@@ -18,14 +18,6 @@ class ChapterNotFoundException implements Exception {
   final String errorType;
 }
 
-class ImageNotFoundException implements Exception {
-  ImageNotFoundException({
-    this.errorType = AppConstants.imageNotFoundException,
-  });
-
-  final String errorType;
-}
-
 class OfflineException implements Exception {
   OfflineException({this.errorType = AppConstants.offlineException});
 

@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:fangapp/core/data/app_constants.dart';
+import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/storage/presentation/cubit/storage_image_cubit.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
+import 'package:fangapp/core/widget/app_button_widget.dart';
 import 'package:fangapp/core/widget/loading_widget.dart';
 import 'package:fangapp/core/widget/message_widget.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +69,21 @@ class _ZoomableImageWidgetState extends State<ZoomableImageWidget> {
     }
   }
 
+  Widget _buildError() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const MessageWidget(),
+        const SizedBox(height: 10),
+        AppButtonWidget(
+          text: 'common.reload'.translate(),
+          onPressed: () =>
+              _storageImageCubit.getStorageImageUrl(url: widget.url),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<StorageImageCubit, StorageImageState>(
@@ -91,18 +108,14 @@ class _ZoomableImageWidgetState extends State<ZoomableImageWidget> {
               Object error,
               StackTrace? stackTrace,
             ) {
-              return const Center(
-                child: MessageWidget(),
-              );
+              return _buildError();
             },
             initialScale: PhotoViewComputedScale.contained,
             minScale: PhotoViewComputedScale.contained,
             maxScale: PhotoViewComputedScale.contained * 4,
           );
         } else if (state is StorageImageError) {
-          return const Center(
-            child: MessageWidget(),
-          );
+          return _buildError();
         }
         return const LoadingWidget();
       },

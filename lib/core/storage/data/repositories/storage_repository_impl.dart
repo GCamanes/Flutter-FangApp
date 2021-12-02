@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:fangapp/core/error/exceptions.dart';
 import 'package:fangapp/core/error/failure.dart';
 import 'package:fangapp/core/storage/data/datasources/storage_remote_data_source.dart';
 import 'package:fangapp/core/storage/domain/repositories/storage_repository.dart';
@@ -20,7 +19,7 @@ class StorageRepositoryImpl implements StorageRepository {
         url: url,
       );
       return Right<Failure, String>(pageUrl);
-    } on ImageNotFoundException {
+    } catch (error) {
       return Left<Failure, String>(
         ImageNotFoundFailure(),
       );
