@@ -49,6 +49,8 @@ class ReadingRemoteDataSourceImpl implements ReadingRemoteDataSource {
       throw ChapterNotFoundException();
     }
 
+    return chapter.pages;
+
     final List<String> pageUrls = <String>[];
     await Future.forEach(chapter.pages, (String page) async {
       final String downloadURL = await getPageUrl(page);
