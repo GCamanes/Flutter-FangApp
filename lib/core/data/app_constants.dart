@@ -27,6 +27,7 @@ abstract class AppConstants {
   static const String objectNotFoundException = 'ObjectNotFoundException';
   static const String noChapterFoundException = 'NoChapterFoundException';
   static const String chapterNotFoundException = 'ChapterNotFoundException';
+  static const String imageNotFoundException = 'ImageNotFoundException';
 
   // Firebase exception
   static const String userNotFoundFirebaseException = 'user-not-found';
