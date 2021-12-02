@@ -1,4 +1,4 @@
-import 'package:fangapp/core/data/app_constants.dart';
+import 'package:fangapp/core/error/exceptions.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import 'storage_remote_data_source.dart';
@@ -11,7 +11,7 @@ class StorageRemoteDataSourceImpl implements StorageRemoteDataSource {
           .ref(url)
           .getDownloadURL();
     } catch (e) {
-      throw AppConstants.objectNotFoundException;
+      throw ImageNotFoundException();
     }
   }
 }
