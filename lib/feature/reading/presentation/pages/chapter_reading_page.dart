@@ -38,14 +38,15 @@ class ChapterReadingPage extends StatefulWidget {
   _ChapterReadingPageState createState() => _ChapterReadingPageState();
 }
 
-class _ChapterReadingPageState extends State<ChapterReadingPage> {
+class _ChapterReadingPageState extends State<ChapterReadingPage>
+    with TickerProviderStateMixin {
   late final ChapterReadingCubit _chapterReadingCubit;
   late LightChapterEntity? _chapter;
   int _currentPage = 0;
   late int _numberOfPage;
 
-  final PhotoViewScaleStateController _scaleStateController =
-      PhotoViewScaleStateController();
+  late PhotoViewScaleStateController _scaleStateController;
+  late TabController _tabController;
 
   @override
   void initState() {
@@ -54,6 +55,9 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
     _currentPage = 0;
     _numberOfPage = 0;
     _chapterReadingCubit = ChapterReadingCubit(getPages: getIt());
+
+    _scaleStateController = PhotoViewScaleStateController();
+
     _chapterReadingCubit.getPageUrls(
       chapterKey: _chapter?.key ?? '',
       mangaKey: widget.manga?.key ?? '',
@@ -68,6 +72,26 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
     AnalyticsHelper().sendViewPageEvent(
       path: '${RouteConstants.routeChapterReading}/${_chapter?.key}',
     );
+  }
+
+  void initTabController() {
+    _tabController = TabController(
+      vsync: this,
+      length: _numberOfPage,
+    );
+    _tabController.addListener(() {
+      setState(() {
+        _currentPage = _tabController.index + 1;
+        if (_tabController.index == _numberOfPage - 1) {
+          Timer(
+            300.milliseconds,
+                () => _markChapterAsRead(
+              fromLastPage: true,
+            ),
+          );
+        }
+      });
+    });
   }
 
   @override
@@ -116,6 +140,7 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
                 _currentPage = 1;
                 _numberOfPage = state.pageUrls.length;
               });
+              initTabController();
             }
           },
         ),
@@ -163,6 +188,17 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
 
   Widget _buildBody(ChapterReadingState state) {
     if (state is ChapterReadingLoaded) {
+      return TabBarView(
+        controller: _tabController,
+        children: state.pageUrls
+            .map(
+              (String url) => ZoomableImageWidget(
+                url: url,
+                scaleStateController: _scaleStateController,
+              ),
+            )
+            .toList(),
+      );
       return ZoomableImageWidget(
         url: state.pageUrls.first,
         scaleStateController: _scaleStateController,
