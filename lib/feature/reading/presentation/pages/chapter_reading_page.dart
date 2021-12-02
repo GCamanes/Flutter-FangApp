@@ -4,7 +4,6 @@ import 'package:fangapp/core/analytics/analytics_helper.dart';
 import 'package:fangapp/core/extensions/int_extension.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
-import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/interaction_helper.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/core/widget/loading_widget.dart';
@@ -20,7 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
 
 import '../widgets/page_counter_widget.dart';
 
@@ -42,61 +40,73 @@ class _ChapterReadingPageState extends State<ChapterReadingPage>
     with TickerProviderStateMixin {
   late final ChapterReadingCubit _chapterReadingCubit;
   late LightChapterEntity? _chapter;
-  int _currentPage = 0;
+  int _currentPageIndex = 0;
   late int _numberOfPage;
 
   late PhotoViewScaleStateController _scaleStateController;
   late TabController _tabController;
+  late ScrollPhysics _tabScrollPhysics;
 
   @override
   void initState() {
     super.initState();
     _chapter = widget.chapter;
-    _currentPage = 0;
+    _currentPageIndex = 0;
     _numberOfPage = 0;
     _chapterReadingCubit = ChapterReadingCubit(getPages: getIt());
 
+    // Manage scroll physics with image zoom
     _scaleStateController = PhotoViewScaleStateController();
+    _tabScrollPhysics = const AlwaysScrollableScrollPhysics();
+    _scaleStateController.outputScaleStateStream.listen(_handleImageZoomed);
 
     _chapterReadingCubit.getPageUrls(
       chapterKey: _chapter?.key ?? '',
       mangaKey: widget.manga?.key ?? '',
     );
 
-    _scaleStateController.outputScaleStateStream.listen((
-      PhotoViewScaleState event,
-    ) {
-      print(event);
-    });
-
     AnalyticsHelper().sendViewPageEvent(
       path: '${RouteConstants.routeChapterReading}/${_chapter?.key}',
     );
   }
 
-  void initTabController() {
+  void _handleImageScrolled() {
+    setState(() {
+      _currentPageIndex = _tabController.index;
+      if (_tabController.index == _numberOfPage - 1) {
+        Timer(
+          200.milliseconds,
+          () => _markChapterAsRead(
+            fromLastPage: true,
+          ),
+        );
+      }
+    });
+  }
+
+  void _initTabController() {
     _tabController = TabController(
       vsync: this,
       length: _numberOfPage,
     );
-    _tabController.addListener(() {
-      setState(() {
-        _currentPage = _tabController.index + 1;
-        if (_tabController.index == _numberOfPage - 1) {
-          Timer(
-            300.milliseconds,
-                () => _markChapterAsRead(
-              fromLastPage: true,
-            ),
-          );
-        }
-      });
+    _tabController.addListener(_handleImageScrolled);
+  }
+
+  void _handleImageZoomed(PhotoViewScaleState event) {
+    setState(() {
+      // Disable scroll when image is zoomed
+      _tabScrollPhysics = event == PhotoViewScaleState.initial
+          ? const AlwaysScrollableScrollPhysics()
+          : const NeverScrollableScrollPhysics();
     });
   }
 
   @override
   void dispose() {
     _chapterReadingCubit.close();
+    _tabController.removeListener(_handleImageScrolled);
+    _tabController.dispose();
+    _scaleStateController.dispose();
     super.dispose();
   }
 
@@ -137,10 +147,9 @@ class _ChapterReadingPageState extends State<ChapterReadingPage>
           listener: (BuildContext context, ChapterReadingState state) {
             if (state is ChapterReadingLoaded) {
               setState(() {
-                _currentPage = 1;
                 _numberOfPage = state.pageUrls.length;
               });
-              initTabController();
+              _initTabController();
             }
           },
         ),
@@ -166,7 +175,7 @@ class _ChapterReadingPageState extends State<ChapterReadingPage>
                 actionsList: state is ChapterReadingLoaded
                     ? <Widget>[
                         PageCounterWidget(
-                          currentPage: _currentPage,
+                          currentPage: _currentPageIndex + 1,
                           numberOfPage: _numberOfPage,
                         ),
                         ReadIconWidget(
@@ -190,60 +199,16 @@ class _ChapterReadingPageState extends State<ChapterReadingPage>
     if (state is ChapterReadingLoaded) {
       return TabBarView(
         controller: _tabController,
-        children: state.pageUrls
-            .map(
-              (String url) => ZoomableImageWidget(
-                url: url,
-                scaleStateController: _scaleStateController,
-              ),
-            )
-            .toList(),
-      );
-      return ZoomableImageWidget(
-        url: state.pageUrls.first,
-        scaleStateController: _scaleStateController,
-      );
-      return PhotoViewGallery.builder(
-        itemCount: state.pageUrls.length,
-        loadingBuilder: (BuildContext context, ImageChunkEvent? event) {
-          return const Center(
-            child: LoadingWidget(),
-          );
-        },
-        backgroundDecoration: const BoxDecoration(
-          color: AppColors.white,
-        ),
-        onPageChanged: (int index) {
-          setState(() {
-            _currentPage = index + 1;
-            if (index == _numberOfPage - 1) {
-              Timer(
-                300.milliseconds,
-                () => _markChapterAsRead(
-                  fromLastPage: true,
-                ),
-              );
-            }
-          });
-        },
-        builder: (BuildContext context, int index) {
-          return PhotoViewGalleryPageOptions(
-            imageProvider: NetworkImage(state.pageUrls[index]),
+        physics: _tabScrollPhysics,
+        children: List<ZoomableImageWidget>.generate(
+          state.pageUrls.length,
+          (int index) => ZoomableImageWidget(
+            url: state.pageUrls[index],
+            index: index,
+            currentIndex: _currentPageIndex,
             scaleStateController: _scaleStateController,
-            errorBuilder: (
-              BuildContext context,
-              Object error,
-              StackTrace? stackTrace,
-            ) {
-              return const Center(
-                child: MessageWidget(),
-              );
-            },
-            initialScale: PhotoViewComputedScale.contained * 0.9999,
-            minScale: PhotoViewComputedScale.contained * 0.9999,
-            maxScale: PhotoViewComputedScale.contained * 4,
-          );
-        },
+          ),
+        ),
       );
     }
     if (state is ChapterReadingLoading) {
