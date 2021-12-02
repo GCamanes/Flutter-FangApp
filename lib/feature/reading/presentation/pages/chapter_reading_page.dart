@@ -43,17 +43,24 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
   int _currentPage = 0;
   late int _numberOfPage;
 
+  final PhotoViewScaleStateController _scaleStateController =
+      PhotoViewScaleStateController();
+
   @override
   void initState() {
     super.initState();
     _chapter = widget.chapter;
     _currentPage = 0;
     _numberOfPage = 0;
-    _chapterReadingCubit = ChapterReadingCubit(getPageUrls: getIt());
+    _chapterReadingCubit = ChapterReadingCubit(getPages: getIt());
     _chapterReadingCubit.getPageUrls(
       chapterKey: _chapter?.key ?? '',
       mangaKey: widget.manga?.key ?? '',
     );
+
+    _scaleStateController.outputScaleStateStream.listen((event) {
+      print(event);
+    });
 
     AnalyticsHelper().sendViewPageEvent(
       path: '${RouteConstants.routeChapterReading}/${_chapter?.key}',
@@ -130,17 +137,17 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
                 subTitle: _chapter?.number ?? '',
                 actionsList: state is ChapterReadingLoaded
                     ? <Widget>[
-                  PageCounterWidget(
-                    currentPage: _currentPage,
-                    numberOfPage: _numberOfPage,
-                  ),
-                  ReadIconWidget(
-                    isRead: _chapter?.isRead ?? false,
-                    onPress: () {
-                      _askMarkChapterAsRead();
-                    },
-                  ),
-                ]
+                        PageCounterWidget(
+                          currentPage: _currentPage,
+                          numberOfPage: _numberOfPage,
+                        ),
+                        ReadIconWidget(
+                          isRead: _chapter?.isRead ?? false,
+                          onPress: () {
+                            _askMarkChapterAsRead();
+                          },
+                        ),
+                      ]
                     : <Widget>[],
               ),
               body: _buildBody(state),
@@ -179,6 +186,7 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
         builder: (BuildContext context, int index) {
           return PhotoViewGalleryPageOptions(
             imageProvider: NetworkImage(state.pageUrls[index]),
+            scaleStateController: _scaleStateController,
             errorBuilder: (
               BuildContext context,
               Object error,

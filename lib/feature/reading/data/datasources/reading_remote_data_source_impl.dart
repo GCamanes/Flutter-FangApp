@@ -25,7 +25,7 @@ class ReadingRemoteDataSourceImpl implements ReadingRemoteDataSource {
   }
 
   @override
-  Future<List<String>> getPageUrls({
+  Future<List<String>> getPages({
     required String chapterKey,
     required String mangaKey,
   }) async {

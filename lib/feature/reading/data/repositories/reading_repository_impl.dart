@@ -14,12 +14,12 @@ class ReadingRepositoryImpl implements ReadingRepository {
   final ReadingRemoteDataSource remoteDataSource;
 
   @override
-  Future<Either<Failure, List<String>>> getPageUrls({
+  Future<Either<Failure, List<String>>> getPages({
     required String chapterKey,
     required String mangaKey,
   }) async {
     try {
-      final List<String> pageUrls = await remoteDataSource.getPageUrls(
+      final List<String> pageUrls = await remoteDataSource.getPages(
         chapterKey: chapterKey,
         mangaKey: mangaKey,
       );

@@ -26,7 +26,7 @@ import 'package:fangapp/feature/reading/data/datasources/reading_remote_data_sou
 import 'package:fangapp/feature/reading/data/datasources/reading_remote_data_source_impl.dart';
 import 'package:fangapp/feature/reading/data/repositories/reading_repository_impl.dart';
 import 'package:fangapp/feature/reading/domain/repositories/reading_repository.dart';
-import 'package:fangapp/feature/reading/domain/usecases/get_page_urls_use_case.dart';
+import 'package:fangapp/feature/reading/domain/usecases/get_pages_use_case.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -118,7 +118,7 @@ void _featureChapters() {
 
 void _featureChapterReading() {
   // Use cases
-  getIt.registerLazySingleton(() => GetPageUrls(getIt()));
+  getIt.registerLazySingleton(() => GetPages(getIt()));
 
   // Repository
   getIt.registerLazySingleton<ReadingRepository>(
