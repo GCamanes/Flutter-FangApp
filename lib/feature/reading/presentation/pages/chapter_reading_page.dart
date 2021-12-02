@@ -240,23 +240,21 @@ class _ChapterReadingPageState extends State<ChapterReadingPage>
           ),
           Positioned(
             left: 0,
-            child: Visibility(
-              visible: _tabScrollEnabled,
-              child: ReadingButtonWidget(
-                isForward: false,
-                onPressed: _navigateButtonEnabled
-                    ? () => _navigateTo(isForward: false)
-                    : null,
-              ),
+            child: ReadingButtonWidget(
+              isForward: false,
+              show: _tabScrollEnabled,
+              onPressed: _tabScrollEnabled && _navigateButtonEnabled
+                  ? () => _navigateTo(isForward: false)
+                  : null,
             ),
           ),
           Positioned(
             right: 0,
-            child: Visibility(
-              visible: _tabScrollEnabled,
-              child: ReadingButtonWidget(
-                onPressed: _navigateButtonEnabled ? () => _navigateTo() : null,
-              ),
+            child: ReadingButtonWidget(
+              show: _tabScrollEnabled,
+              onPressed: _tabScrollEnabled && _navigateButtonEnabled
+                  ? () => _navigateTo()
+                  : null,
             ),
           ),
         ],
