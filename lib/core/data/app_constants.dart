@@ -27,6 +27,7 @@ abstract class AppConstants {
   static const String objectNotFoundException = 'ObjectNotFoundException';
   static const String noChapterFoundException = 'NoChapterFoundException';
   static const String chapterNotFoundException = 'ChapterNotFoundException';
+  static const String imageNotFoundException = 'ImageNotFoundException';
 
   // Firebase exception
   static const String userNotFoundFirebaseException = 'user-not-found';
@@ -52,6 +53,8 @@ abstract class AppConstants {
   static const Duration animLoginFormDuration = Duration(milliseconds: 600);
   static const Duration animLoginCloudDuration = animDefaultDuration;
   static const Duration animLoginFadeDuration = Duration(milliseconds: 200);
+  static const Duration animReadingNavDuration = Duration(milliseconds: 50);
+  static const Duration animReadingLoadDuration = Duration(milliseconds: 100);
 
   // Firebase
   static const String firebaseMangasCollection = 'mangas';

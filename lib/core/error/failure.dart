@@ -39,6 +39,11 @@ class ChapterNotFoundFailure extends Failure {
   String get failureCode => AppConstants.chapterNotFoundException;
 }
 
+class ImageNotFoundFailure extends Failure {
+  @override
+  String get failureCode => AppConstants.imageNotFoundException;
+}
+
 class OfflineFailure extends Failure {
   @override
   String get failureCode => AppConstants.offlineException;

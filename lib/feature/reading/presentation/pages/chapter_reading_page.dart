@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:fangapp/core/analytics/analytics_helper.dart';
+import 'package:fangapp/core/data/app_constants.dart';
 import 'package:fangapp/core/extensions/int_extension.dart';
 import 'package:fangapp/core/extensions/string_extension.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
-import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/interaction_helper.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
 import 'package:fangapp/core/widget/loading_widget.dart';
@@ -14,12 +14,13 @@ import 'package:fangapp/feature/chapters/domain/entities/light_chapter_entity.da
 import 'package:fangapp/feature/chapters/presentation/cubit/chapters_cubit.dart';
 import 'package:fangapp/feature/mangas/domain/entities/manga_entity.dart';
 import 'package:fangapp/feature/reading/presentation/cubit/chapter_reading_cubit.dart';
+import 'package:fangapp/feature/reading/presentation/widgets/reading_button_widget.dart';
+import 'package:fangapp/feature/reading/presentation/widgets/zoomable_image_widget.dart';
 import 'package:fangapp/get_it_injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
 
 import '../widgets/page_counter_widget.dart';
 
@@ -37,19 +38,30 @@ class ChapterReadingPage extends StatefulWidget {
   _ChapterReadingPageState createState() => _ChapterReadingPageState();
 }
 
-class _ChapterReadingPageState extends State<ChapterReadingPage> {
+class _ChapterReadingPageState extends State<ChapterReadingPage>
+    with TickerProviderStateMixin {
   late final ChapterReadingCubit _chapterReadingCubit;
   late LightChapterEntity? _chapter;
-  int _currentPage = 0;
+  int _currentPageIndex = 0;
   late int _numberOfPage;
+
+  late PhotoViewScaleStateController _scaleStateController;
+  late TabController _tabController;
+  bool _tabScrollEnabled = true;
+  bool _navigateButtonEnabled = true;
 
   @override
   void initState() {
     super.initState();
     _chapter = widget.chapter;
-    _currentPage = 0;
+    _currentPageIndex = 0;
     _numberOfPage = 0;
-    _chapterReadingCubit = ChapterReadingCubit(getPageUrls: getIt());
+    _chapterReadingCubit = ChapterReadingCubit(getPages: getIt());
+
+    // Manage scroll physics with image zoom
+    _scaleStateController = PhotoViewScaleStateController();
+    _scaleStateController.outputScaleStateStream.listen(_handleImageZoomed);
+
     _chapterReadingCubit.getPageUrls(
       chapterKey: _chapter?.key ?? '',
       mangaKey: widget.manga?.key ?? '',
@@ -60,10 +72,57 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
     );
   }
 
-  @override
-  void dispose() {
-    _chapterReadingCubit.close();
-    super.dispose();
+  void _handleImageScrolled() {
+    setState(() {
+      _currentPageIndex = _tabController.index;
+      if (_tabController.index == _numberOfPage - 1) {
+        Timer(
+          200.milliseconds,
+          () => _markChapterAsRead(
+            fromLastPage: true,
+          ),
+        );
+      }
+    });
+  }
+
+  void _initTabController() {
+    _tabController = TabController(
+      vsync: this,
+      length: _numberOfPage,
+    );
+    _tabController.addListener(_handleImageScrolled);
+  }
+
+  void _handleImageZoomed(PhotoViewScaleState event) {
+    setState(() {
+      // Disable scroll when image is zoomed
+      _tabScrollEnabled = event == PhotoViewScaleState.initial;
+    });
+  }
+
+  void _navigateTo({bool isForward = true}) {
+    late int nextIndex;
+    if (isForward) {
+      nextIndex = _currentPageIndex + 10 > _numberOfPage - 1
+          ? _numberOfPage - 1
+          : _currentPageIndex + 10;
+    } else {
+      nextIndex = _currentPageIndex - 10 < 0 ? 0 : _currentPageIndex - 10;
+    }
+    setState(() {
+      _navigateButtonEnabled = false;
+    });
+    _tabController.animateTo(
+      nextIndex,
+      duration: AppConstants.animReadingNavDuration,
+    );
+    Timer(
+      AppConstants.animReadingLoadDuration,
+      () => setState(() {
+        _navigateButtonEnabled = true;
+      }),
+    );
   }
 
   Future<void> _markChapterAsRead({bool fromLastPage = false}) async {
@@ -95,6 +154,15 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
   }
 
   @override
+  void dispose() {
+    _chapterReadingCubit.close();
+    _tabController.removeListener(_handleImageScrolled);
+    _tabController.dispose();
+    _scaleStateController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: <BlocListener<dynamic, dynamic>>[
@@ -103,9 +171,9 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
           listener: (BuildContext context, ChapterReadingState state) {
             if (state is ChapterReadingLoaded) {
               setState(() {
-                _currentPage = 1;
                 _numberOfPage = state.pageUrls.length;
               });
+              _initTabController();
             }
           },
         ),
@@ -130,17 +198,17 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
                 subTitle: _chapter?.number ?? '',
                 actionsList: state is ChapterReadingLoaded
                     ? <Widget>[
-                  PageCounterWidget(
-                    currentPage: _currentPage,
-                    numberOfPage: _numberOfPage,
-                  ),
-                  ReadIconWidget(
-                    isRead: _chapter?.isRead ?? false,
-                    onPress: () {
-                      _askMarkChapterAsRead();
-                    },
-                  ),
-                ]
+                        PageCounterWidget(
+                          currentPage: _currentPageIndex + 1,
+                          numberOfPage: _numberOfPage,
+                        ),
+                        ReadIconWidget(
+                          isRead: _chapter?.isRead ?? false,
+                          onPress: () {
+                            _askMarkChapterAsRead();
+                          },
+                        ),
+                      ]
                     : <Widget>[],
               ),
               body: _buildBody(state),
@@ -153,46 +221,43 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
 
   Widget _buildBody(ChapterReadingState state) {
     if (state is ChapterReadingLoaded) {
-      return PhotoViewGallery.builder(
-        itemCount: state.pageUrls.length,
-        loadingBuilder: (BuildContext context, ImageChunkEvent? event) {
-          return const Center(
-            child: LoadingWidget(),
-          );
-        },
-        backgroundDecoration: const BoxDecoration(
-          color: AppColors.white,
-        ),
-        onPageChanged: (int index) {
-          setState(() {
-            _currentPage = index + 1;
-            if (index == _numberOfPage - 1) {
-              Timer(
-                300.milliseconds,
-                () => _markChapterAsRead(
-                  fromLastPage: true,
-                ),
-              );
-            }
-          });
-        },
-        builder: (BuildContext context, int index) {
-          return PhotoViewGalleryPageOptions(
-            imageProvider: NetworkImage(state.pageUrls[index]),
-            errorBuilder: (
-              BuildContext context,
-              Object error,
-              StackTrace? stackTrace,
-            ) {
-              return const Center(
-                child: MessageWidget(message: ''),
-              );
-            },
-            initialScale: PhotoViewComputedScale.contained,
-            minScale: PhotoViewComputedScale.contained,
-            maxScale: PhotoViewComputedScale.contained * 4,
-          );
-        },
+      return Stack(
+        children: <Widget>[
+          TabBarView(
+            controller: _tabController,
+            physics: _tabScrollEnabled
+                ? const AlwaysScrollableScrollPhysics()
+                : const NeverScrollableScrollPhysics(),
+            children: List<ZoomableImageWidget>.generate(
+              state.pageUrls.length,
+              (int index) => ZoomableImageWidget(
+                url: state.pageUrls[index],
+                index: index,
+                currentIndex: _currentPageIndex,
+                scaleStateController: _scaleStateController,
+              ),
+            ),
+          ),
+          Positioned(
+            left: 0,
+            child: ReadingButtonWidget(
+              isForward: false,
+              show: _tabScrollEnabled,
+              onPressed: _tabScrollEnabled && _navigateButtonEnabled
+                  ? () => _navigateTo(isForward: false)
+                  : null,
+            ),
+          ),
+          Positioned(
+            right: 0,
+            child: ReadingButtonWidget(
+              show: _tabScrollEnabled,
+              onPressed: _tabScrollEnabled && _navigateButtonEnabled
+                  ? () => _navigateTo()
+                  : null,
+            ),
+          ),
+        ],
       );
     }
     if (state is ChapterReadingLoading) {

@@ -14,14 +14,21 @@ class MangasRemoteDataSourceImpl implements MangasRemoteDataSource {
 
   final SharedPreferences sharedPreferences;
 
-  Future<String> getCoverUrl(String partialLink) async {
+  Future<MangaModel> getMangaWithCoverUrl(MangaModel manga) async {
+    late String coverUrl;
     try {
-      return await firebase_storage.FirebaseStorage.instance
-          .ref(partialLink)
+      coverUrl = await firebase_storage.FirebaseStorage.instance
+          .ref(manga.coverLink)
           .getDownloadURL();
     } catch (e) {
-      return AppConstants.objectNotFoundException;
+      coverUrl = AppConstants.objectNotFoundException;
     }
+    final bool isFavorite = sharedPreferences.getBool(manga.key) ?? false;
+    return MangaModel.fromManga(
+      manga: manga,
+      coverDownloadedLink: coverUrl,
+      isFavorite: isFavorite,
+    );
   }
 
   @override
@@ -40,19 +47,8 @@ class MangasRemoteDataSourceImpl implements MangasRemoteDataSource {
         )
         .toList();
 
-    final List<MangaModel> mangasWithCover = <MangaModel>[];
-    await Future.forEach(mangas, (MangaModel manga) async {
-      final String downloadURL = await getCoverUrl(manga.coverLink);
-      final bool isFavorite = sharedPreferences.getBool(manga.key) ?? false;
-      mangasWithCover.add(
-        MangaModel.fromManga(
-          manga: manga,
-          coverDownloadedLink: downloadURL,
-          isFavorite: isFavorite,
-        ),
-      );
-    });
-
-    return mangasWithCover;
+    return Future.wait(
+      mangas.map((MangaModel manga) => getMangaWithCoverUrl(manga)).toList(),
+    );
   }
 }

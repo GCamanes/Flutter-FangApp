@@ -5,7 +5,7 @@ import 'package:fangapp/core/localization/app_localizations.dart';
 import 'package:fangapp/core/navigation/route_constants.dart';
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
-import 'package:fangapp/core/widget/icon_button_widget.dart';
+import 'package:fangapp/core/widget/app_icon_button_widget.dart';
 import 'package:fangapp/core/widget/loading_widget.dart';
 import 'package:fangapp/core/widget/message_widget.dart';
 import 'package:fangapp/core/widget/reload_icon_widget.dart';
