@@ -1,7 +1,7 @@
 import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
-import 'icon_button_widget.dart';
+import 'app_icon_button_widget.dart';
 
 class TabBarButtonWidget extends StatelessWidget {
   const TabBarButtonWidget({

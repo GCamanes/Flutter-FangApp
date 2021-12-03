@@ -7,7 +7,7 @@ import 'package:fangapp/core/theme/app_colors.dart';
 import 'package:fangapp/core/utils/image_info_helper.dart';
 import 'package:fangapp/core/utils/interaction_helper.dart';
 import 'package:fangapp/core/widget/app_bar_widget.dart';
-import 'package:fangapp/core/widget/icon_button_widget.dart';
+import 'package:fangapp/core/widget/app_icon_button_widget.dart';
 import 'package:fangapp/feature/snake/widgets/snake_game_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

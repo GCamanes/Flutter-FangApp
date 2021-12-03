@@ -25,7 +25,7 @@ class ReadingRemoteDataSourceImpl implements ReadingRemoteDataSource {
   }
 
   @override
-  Future<List<String>> getPageUrls({
+  Future<List<String>> getPages({
     required String chapterKey,
     required String mangaKey,
   }) async {
@@ -49,12 +49,6 @@ class ReadingRemoteDataSourceImpl implements ReadingRemoteDataSource {
       throw ChapterNotFoundException();
     }
 
-    final List<String> pageUrls = <String>[];
-    await Future.forEach(chapter.pages, (String page) async {
-      final String downloadURL = await getPageUrl(page);
-      pageUrls.add(downloadURL);
-    });
-
-    return pageUrls;
+    return chapter.pages;
   }
 }

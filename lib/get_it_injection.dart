@@ -5,6 +5,11 @@ import 'package:fangapp/core/analytics/repositories/analytics_repository_impl.da
 import 'package:fangapp/core/localization/app_localizations.dart';
 import 'package:fangapp/core/localization/language_preference_data_source.dart';
 import 'package:fangapp/core/navigation/routes.dart';
+import 'package:fangapp/core/storage/data/datasources/storage_remote_data_source.dart';
+import 'package:fangapp/core/storage/data/datasources/storage_remote_data_source_impl.dart';
+import 'package:fangapp/core/storage/data/repositories/storage_repository_impl.dart';
+import 'package:fangapp/core/storage/domain/repositories/storage_repository.dart';
+import 'package:fangapp/core/storage/domain/usecases/get_storage_image_url_use_case.dart';
 import 'package:fangapp/feature/chapters/data/datasources/chapters_remote_data_source.dart';
 import 'package:fangapp/feature/chapters/data/datasources/chapters_remote_data_source_impl.dart';
 import 'package:fangapp/feature/chapters/data/repositories/chapters_repository_impl.dart';
@@ -26,7 +31,7 @@ import 'package:fangapp/feature/reading/data/datasources/reading_remote_data_sou
 import 'package:fangapp/feature/reading/data/datasources/reading_remote_data_source_impl.dart';
 import 'package:fangapp/feature/reading/data/repositories/reading_repository_impl.dart';
 import 'package:fangapp/feature/reading/domain/repositories/reading_repository.dart';
-import 'package:fangapp/feature/reading/domain/usecases/get_page_urls_use_case.dart';
+import 'package:fangapp/feature/reading/domain/usecases/get_pages_use_case.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,11 +61,31 @@ Future<void> init() async {
     () => AnalyticsRepositoryImpl(analyticsDataSource: getIt()),
   );
 
+  // Core
+  _coreStorage();
+
   // Features
   _featureLogin();
   _featureMangas();
   _featureChapters();
   _featureChapterReading();
+}
+
+void _coreStorage() {
+  // Use cases
+  getIt.registerLazySingleton(() => GetStorageImageUrl(getIt()));
+
+  // Repository
+  getIt.registerLazySingleton<StorageRepository>(
+    () => StorageRepositoryImpl(
+      remoteDataSource: getIt(),
+    ),
+  );
+
+  // Data sources
+  getIt.registerLazySingleton<StorageRemoteDataSource>(
+    () => StorageRemoteDataSourceImpl(),
+  );
 }
 
 void _featureLogin() {
@@ -118,7 +143,7 @@ void _featureChapters() {
 
 void _featureChapterReading() {
   // Use cases
-  getIt.registerLazySingleton(() => GetPageUrls(getIt()));
+  getIt.registerLazySingleton(() => GetPages(getIt()));
 
   // Repository
   getIt.registerLazySingleton<ReadingRepository>(
