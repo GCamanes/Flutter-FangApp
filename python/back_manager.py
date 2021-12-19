@@ -121,6 +121,13 @@ class DataManager:
     # Function to update downloaded chapters of all manga
     def updateDownloadAllManga(self):
         print("UPDATING DOWNLOAD ALL MANGA...")
+        elementsInPath = glob.glob(Constants.MANGA_DL_PATH + '/*')
+        for fileOrDir in sorted(elementsInPath):
+            if os.path.isdir(fileOrDir):
+                mangaKey = fileOrDir.split('/')[-1]
+                mangaInfo = MangaInfoModel.fromJson(mangaKey)
+                if mangaInfo.checking():
+                    self.updateDownloadManga(mangaInfo.link)
 
     def updateMangaOnFirebase(self, mangaKey, chapterKeys):
         mangaInfo = MangaInfoModel.fromJson(mangaKey)
