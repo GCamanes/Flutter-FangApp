@@ -118,6 +118,10 @@ class DataManager:
             except:
                 print('ERROR while downloading {}'.format(chapterLink))
 
+    # Function to update downloaded chapters of all manga
+    def updateDownloadAllManga(self):
+        print("UPDATING DOWNLOAD ALL MANGA...")
+
     def updateMangaOnFirebase(self, mangaKey, chapterKeys):
         mangaInfo = MangaInfoModel.fromJson(mangaKey)
         self.store.collection(Constants.MANGAS_COLLECTION).document(mangaInfo.key).set(
@@ -261,6 +265,9 @@ def main():
     parser.add_argument('--udlmanga', nargs=1,
                         help='update downloaded manga (use "/mangaLink")',
                         action='store', type=str)
+    parser.add_argument('--udlall',
+                        help='update downloaded all manga in manga path',
+                        action="store_true")
     parser.add_argument('--upload', nargs=1,
                         help='upload downloaded manga to firebase storage (use "mangaKey")',
                         action='store', type=str)
@@ -284,6 +291,10 @@ def main():
 
     elif args.udlmanga is not None:
         dataManager.updateDownloadManga(args.udlmanga[0])
+        sys.exit()
+
+    elif args.udlall is not None:
+        dataManager.updateDownloadAllManga()
         sys.exit()
 
     elif args.upload is not None:
