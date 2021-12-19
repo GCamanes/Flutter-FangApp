@@ -118,6 +118,17 @@ class DataManager:
             except:
                 print('ERROR while downloading {}'.format(chapterLink))
 
+    # Function to update downloaded chapters of all manga
+    def updateDownloadAllManga(self):
+        print("UPDATING DOWNLOAD ALL MANGA...")
+        elementsInPath = glob.glob(Constants.MANGA_DL_PATH + '/*')
+        for fileOrDir in sorted(elementsInPath):
+            if os.path.isdir(fileOrDir):
+                mangaKey = fileOrDir.split('/')[-1]
+                mangaInfo = MangaInfoModel.fromJson(mangaKey)
+                if mangaInfo.checking():
+                    self.updateDownloadManga(mangaInfo.link)
+
     def updateMangaOnFirebase(self, mangaKey, chapterKeys):
         mangaInfo = MangaInfoModel.fromJson(mangaKey)
         self.store.collection(Constants.MANGAS_COLLECTION).document(mangaInfo.key).set(
@@ -205,15 +216,25 @@ class DataManager:
         else:
             print('/!\\ ERROR : path {} not fount'.format(pathToUpload))
 
+    def uploadAllMangaToFirebase(self):
+        try:
+            mangasCollection = self.store.collection(Constants.MANGAS_COLLECTION).get()
+            for manga in mangasCollection:
+                mangaFirebase = MangaFirebaseModel.fromDict(
+                    self.store.collection(Constants.MANGAS_COLLECTION).document(manga.id)
+                        .get().to_dict())
+                self.uploadMangaToFirebase(mangaFirebase.key)
+        except Exception as error:
+            print('\n/!\\ ERROR in uploading manga :', str(error))
+            sys.exit()
+
     def showMangasOnFirestore(self):
         try:
             mangasCollection = self.store.collection(Constants.MANGAS_COLLECTION).get()
             for (manga, index) in zip(mangasCollection, range(1, len(mangasCollection) + 1)):
                 mangaFirebase = MangaFirebaseModel.fromDict(
                     self.store.collection(Constants.MANGAS_COLLECTION).document(manga.id)
-                        .get().to_dict()
-
-                )
+                        .get().to_dict())
                 print('{} : {}'.format(index, mangaFirebase.title))
         except Exception as error:
             print('\n/!\\ ERROR in show manga list :', str(error))
@@ -261,9 +282,15 @@ def main():
     parser.add_argument('--udlmanga', nargs=1,
                         help='update downloaded manga (use "/mangaLink")',
                         action='store', type=str)
+    parser.add_argument('--udlall',
+                        help='update downloaded all manga in manga path',
+                        action="store_true")
     parser.add_argument('--upload', nargs=1,
                         help='upload downloaded manga to firebase storage (use "mangaKey")',
                         action='store', type=str)
+    parser.add_argument('--uploadall',
+                        help='upload all downloaded manga to firebase storage',
+                        action='store_true')
     parser.add_argument('-f', '--fixe', nargs=1,
                         help='fixe file page names in path',
                         action='store', type=str)
@@ -286,8 +313,16 @@ def main():
         dataManager.updateDownloadManga(args.udlmanga[0])
         sys.exit()
 
+    elif args.udlall:
+        dataManager.updateDownloadAllManga()
+        sys.exit()
+
     elif args.upload is not None:
         dataManager.uploadMangaToFirebase(args.upload[0])
+        sys.exit()
+
+    elif args.uploadall:
+        dataManager.uploadAllMangaToFirebase()
         sys.exit()
 
     elif args.fixe is not None:
