@@ -32,9 +32,11 @@ Back managed with Python3 and Firebase.
 
 ### Python3
 > This part is needed to download manga from website and upload them to firebase project
-1. Android Studio => Tools => Sync Python Requirements...
-2. Select Python3 module
-3. Firebase : open python file ```python/back_manager.py``` and follow SETUP instruction
+1. Install python community plugins
+2. Add python interpreter
+3. Android Studio => Tools => Sync Python Requirements...
+4. Select Python3 module
+5. Firebase : open python file ```python/back_manager.py``` and follow SETUP instruction
 
 ### Flutter/ DART
 > This part is needed to configure Android Studio and run the project

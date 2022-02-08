@@ -48,6 +48,7 @@ app.*.map.json
 /*.p12
 
 # Python Firebase
+venv/
 /python/ServiceAccountKey.json
 
 # Manga dl files
